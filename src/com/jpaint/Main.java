@@ -8,6 +8,7 @@ import java.awt.*;
  *    CS 338     *
  *    JPaint     *
 \* * * * * * * * */
+
 public class Main {
     private static void setupWindow(int width, int height) {
         JFrame.setDefaultLookAndFeelDecorated(true);
