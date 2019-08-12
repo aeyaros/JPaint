@@ -6,9 +6,10 @@ import java.util.Deque;
 public class ImageModel {
     private Deque<Canvas> _pastStates; //previous states
     private Deque<Canvas> _undoneStates; //"future states" that were undone
-    private Canvas _currentState;
+    private Canvas _currentState; //current state of the drawing
     private ImageView _imageView; //a view for the model to update
 
+    //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
     private final int MAX_REDO = 10;
 
