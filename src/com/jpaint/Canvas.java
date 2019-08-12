@@ -1,5 +1,6 @@
 package com.jpaint;
 
+import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 //Canvas: part of the model: contains an argb-integer image
@@ -52,14 +53,14 @@ class Canvas {
     }
 
     //export a buffered image for the view
-    BufferedImage getImage() {
+    ImageIcon getImage() {
         BufferedImage bufferedImage = new BufferedImage(_width, _height, BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < _width; i++) {
             for(int j = 0; j < _height; j++) {
                 //set the current pixel in the buffered image to argb int from the pixels array
                 bufferedImage.setRGB(i, j, _pixels[i][j]);
             }
-        } return bufferedImage;
+        } return new ImageIcon(bufferedImage);
     }
 
     /*====== MODIFIERS ======*/

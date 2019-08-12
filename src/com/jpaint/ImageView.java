@@ -15,8 +15,8 @@ public class ImageView extends JLabel {
     }
 
     //update the view
-    void refresh(BufferedImage bufferedImage) {
-        _icon = new ImageIcon(bufferedImage);
+    void refresh(ImageIcon icon) {
+        _icon = icon;
         this.setIcon(_icon);
     }
 }

@@ -2,12 +2,12 @@ package com.jpaint;
 
 
 public class ToolPaintBrush extends Tool implements EditCanvas {
-    ToolPaintBrush(String name, ImageModel model) {
-        super(name, model);
+    ToolPaintBrush(String name, ImageModel model, String iconSource) {
+        super(name, model, iconSource);
     }
 
     @Override
-    public void paint(int x, int y, Color color) {
-        _imageModel.editPixel(x, y, color);
+    public void clickCanvas(int x, int y, Color color) {
+        _model.setPixel(x, y, color);
     }
 }

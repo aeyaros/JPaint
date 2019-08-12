@@ -18,6 +18,11 @@ public class ImageModel {
     ImageModel(int w, int h, ImageView imageView) {
         _currentState = new Canvas(w, h);
         _imageView = imageView;
+        refresh();
+    }
+
+    //refresh the view
+    void refresh() {
         _imageView.refresh(_currentState.getImage());
     }
 
@@ -26,12 +31,18 @@ public class ImageModel {
         return _currentState;
     }
 
+    //before a tool is used, save state to past states
+    public void saveCurrentState() {
+        _pastStates.addFirst(new Canvas(_currentState));
+    }
+
+
+    /*====== UNDOING AND REDOING ======*/
+
     //update the current state (note: is used for undo/redo)
     private void updateCurrentState(Canvas canvas) {
         _currentState = new Canvas(canvas);
     }
-
-    /*====== UNDOING AND REDOING ======*/
 
     public boolean canUndo() {
         if(_pastStates.size() > 0) return true; //if stuff was done previously, we can undo
@@ -72,14 +83,19 @@ public class ImageModel {
     }
 
     /*====== ACCESSING CANVAS ======*/
+    public int getWidth() {
+        return _currentState.getWidth();
+    }
+
+    public int getHeight() {
+        return _currentState.getHeight();
+    }
+
     public Color getPixel(int x, int y) {
         return getCurrentState().getColor(x,y);
     }
 
-    public void editPixel(int x, int y, Color color) {
-        Canvas canvas = getCurrentState();
-
-
-        updateCurrentState(canvas);
+    public void setPixel(int x, int y, Color color) {
+        _currentState.setPixel(x,y,color);
     }
 }

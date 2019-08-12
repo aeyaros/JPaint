@@ -5,32 +5,42 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 
 //MouseController: This is a controller class for mouse stuff
-public class MouseController implements MouseListener, MouseMotionListener {
-    private boolean mousedown;
+public class ImageController implements MouseListener, MouseMotionListener {
+    private ImageModel _model;
+    private boolean _mouseDown;
 
-    MouseController() {
-        mousedown = false;
+    ImageController(ImageModel model) {
+        _model = model;
+        _mouseDown = false;
     }
 
     //MouseListener
     @Override
     public void mouseClicked(MouseEvent e) {
         System.out.println("Clicked");
+        int x = e.getX();
+        int y = e.getY();
+        _model.setPixel(x,y,new Color(255,0,0,0));
+        _model.refresh();
     }
+
     @Override
     public void mousePressed(MouseEvent e) {
         System.out.println("Pressed");
-        mousedown = true;
+        _mouseDown = true;
     }
+
     @Override
     public void mouseReleased(MouseEvent e) {
         System.out.println("Released");
-        mousedown = false;
+        _mouseDown = false;
     }
+
     @Override
     public void mouseEntered(MouseEvent e) {
         System.out.println("Entered");
     }
+
     @Override
     public void mouseExited(MouseEvent e) {
         System.out.println("Exited");
