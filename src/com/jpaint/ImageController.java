@@ -49,7 +49,7 @@ public class ImageController implements MouseListener, MouseMotionListener {
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
-        System.out.print("Dragged");
+        //System.out.print("Dragged");
         int currentX = e.getX();
         int currentY = e.getY();
         _model.setPixel(currentX,currentY,new Color(255,0,0,0));
@@ -58,7 +58,6 @@ public class ImageController implements MouseListener, MouseMotionListener {
         System.out.print(" drag: x: "); System.out.print(currentX);
         System.out.print(", y: "); System.out.print(currentY);
         System.out.print(", color: "); System.out.println(Main.image.getPixel(currentX,currentY).printValues());
-
          */
     }
 
