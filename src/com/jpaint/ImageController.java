@@ -26,44 +26,48 @@ public class ImageController implements MouseListener, MouseMotionListener {
 
     @Override
     public void mousePressed(MouseEvent e) {
-        System.out.println("Pressed");
+        //System.out.println("Pressed");
         _mouseDown = true;
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-        System.out.println("Released");
+        //System.out.println("Released");
         _mouseDown = false;
     }
 
     @Override
     public void mouseEntered(MouseEvent e) {
-        System.out.println("Entered");
+        //System.out.println("Entered");
     }
 
     @Override
     public void mouseExited(MouseEvent e) {
-        System.out.println("Exited");
+        //System.out.println("Exited");
     }
 
     //MouseMotionListener
     @Override
     public void mouseDragged(MouseEvent e) {
         System.out.print("Dragged");
-        /*int currentX = e.getX();
+        int currentX = e.getX();
         int currentY = e.getY();
+        _model.setPixel(currentX,currentY,new Color(255,0,0,0));
+        _model.refresh();
+        /*
         System.out.print(" drag: x: "); System.out.print(currentX);
         System.out.print(", y: "); System.out.print(currentY);
         System.out.print(", color: "); System.out.println(Main.image.getPixel(currentX,currentY).printValues());
-        Main.image.draw(currentX, currentY, new Color(0,0,0,255));*/
+
+         */
     }
 
     @Override
     public void mouseMoved(MouseEvent e) {
-        System.out.print("Moved");
-        int currentX = e.getX();
+        //System.out.print("Moved");
+        /*int currentX = e.getX();
         int currentY = e.getY();
         System.out.print(" move: x: "); System.out.print(currentX);
-        System.out.print(", y: "); System.out.print(currentY);
+        System.out.print(", y: "); System.out.print(currentY);*/
     }
 }

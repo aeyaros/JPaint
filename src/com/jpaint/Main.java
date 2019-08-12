@@ -124,7 +124,9 @@ public class Main {
         /*====== CONTROLLER ======*/
         //create the mouse controller and add it to the view
         ImageController imageController = new ImageController(theModel);
+        //note: this must be added as both mouselistener and mousemotionlistener
         theView.addMouseListener(imageController);
+        theView.addMouseMotionListener(imageController);
 
 
         /*====== SHOW WINDOW ======*/
