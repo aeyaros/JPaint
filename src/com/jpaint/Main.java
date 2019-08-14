@@ -77,23 +77,29 @@ public class Main {
 
         //tools panel
         JPanel toolsPanel = new JPanel();
-        toolsPanel.setLayout(new GridLayout(1, 2));
-        sidePanel.add(toolsPanel, BorderLayout.NORTH);
+        toolsPanel.setLayout(new GridLayout(2, 2));
+
+        /*====== TOOLS ARRAY ======*/
+
         //create tools
         ArrayList<Tool> tools= new ArrayList<>();
+        tools.add(new ToolPencil("Pencil", theModel, "icons/pencil.png"));
+        tools.add(new ToolColorPicker("Picker", theModel, "icons/colorpicker.png"));
         tools.add(new ToolPaintBrush("Brush", theModel, "icons/paintbrush.png"));
         tools.add(new ToolPaintBucket("Bucket", theModel, "icons/paintbucket.png"));
         //add the tools to the tools panel on the sidebar
         for(int i = 0; i < tools.size(); i++) {
             toolsPanel.add(tools.get(i), i);
         }
+        sidePanel.add(toolsPanel, BorderLayout.NORTH);
+
 
         //colors panel
         JPanel colorsPanel = new JPanel();
         colorsPanel.setLayout(new GridLayout(5, 2));
         sidePanel.add(colorsPanel, BorderLayout.CENTER);
         //default preset colors
-        Color[] colorPresets = {
+        Color[] presetColors = {
             new Color(255,  0,  0,  0), //black
             new Color(255,255,255,255), //white
             new Color(255,255,  0,  0), //red
@@ -106,10 +112,14 @@ public class Main {
             new Color(255,255,  0,255)  //magenta
         };
         //add colors to colorsPanel
-        for(int i = 0; i < colorPresets.length; i++) {
-            colorsPanel.add(new ColorPreset(colorPresets[i]), i);
+        for(int i = 0; i < presetColors.length; i++) {
+            colorsPanel.add(new ColorPreset(presetColors[i]), i);
         }
 
+        //color manager for managing selected colors and giving tools access to them
+        //created with three initial colors
+        ColorManager colorManager = new ColorManager(tools, presetColors[0], presetColors[2], presetColors[1]);
+        colorManager.notifyTools();
         /*====== TOP PANEL ======*/
         //top panel with card layout
         JPanel topPanel = new JPanel();
@@ -121,12 +131,13 @@ public class Main {
         topPanel.setMinimumSize(topCardMinimum);
         topPanel.add(new JButton("lol"));
 
-        /*====== CONTROLLER ======*/
-        //create the mouse controller and add it to the view
-        ImageController imageController = new ImageController(theModel);
-        //note: this must be added as both mouselistener and mousemotionlistener
-        theView.addMouseListener(imageController);
-        theView.addMouseMotionListener(imageController);
+        /*====== CONTROLLERS ======*/
+        //create both static and motion mouse controllers and add them to the view
+        MouseStaticController mouseStaticController = new MouseStaticController(tools.get(0));
+        MouseMotionController mouseMotionController = new MouseMotionController(tools.get(0));
+
+        theView.addMouseListener(mouseStaticController);
+        theView.addMouseMotionListener(mouseMotionController);
 
 
         /*====== SHOW WINDOW ======*/

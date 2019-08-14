@@ -23,7 +23,7 @@ public class ImageModel {
     }
 
     //refresh the view
-    void refresh() {
+    private void refresh() {
         _imageView.refresh(_currentState.getImage());
     }
 
@@ -98,5 +98,6 @@ public class ImageModel {
 
     public void setPixel(int x, int y, Color color) {
         _currentState.setPixel(x,y,color);
+        refresh();
     }
 }
