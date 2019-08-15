@@ -8,6 +8,7 @@ import java.awt.event.MouseMotionListener;
 public class MouseMotionController extends MouseController implements MouseMotionListener {
     MouseMotionController(Tool initialTool) { super(initialTool); }
     @Override public void mouseDragged(MouseEvent e) {
+        System.out.print(_currentTool.getName());
         _currentTool.toolDragged(e);
     }
     @Override public void mouseMoved(MouseEvent e) {

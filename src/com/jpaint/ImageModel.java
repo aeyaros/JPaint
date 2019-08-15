@@ -1,11 +1,11 @@
 package com.jpaint;
 
-import java.util.Deque;
+import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
 public class ImageModel {
-    private Deque<Canvas> _pastStates; //previous states
-    private Deque<Canvas> _undoneStates; //"future states" that were undone
+    private ArrayDeque<Canvas> _pastStates; //previous states
+    private ArrayDeque<Canvas> _undoneStates; //"future states" that were undone
     private Canvas _currentState; //current state of the drawing
     private ImageView _imageView; //a view for the model to update
 
@@ -19,11 +19,11 @@ public class ImageModel {
     ImageModel(int w, int h, ImageView imageView) {
         _currentState = new Canvas(w, h);
         _imageView = imageView;
-        refresh();
+        refresh(); //dont remove
     }
 
     //refresh the view
-    private void refresh() {
+    void refresh() {
         _imageView.refresh(_currentState.getImage());
     }
 
@@ -33,7 +33,7 @@ public class ImageModel {
     }
 
     //before a tool is used, save state to past states
-    public void saveCurrentState() {
+    void saveCurrentState() {
         _pastStates.addFirst(new Canvas(_currentState));
     }
 
@@ -45,14 +45,13 @@ public class ImageModel {
         _currentState = new Canvas(canvas);
     }
 
-    public boolean canUndo() {
-        if(_pastStates.size() > 0) return true; //if stuff was done previously, we can undo
-        else return false; //no past states to revert to
+    boolean canUndo() {
+        //no past states to revert to
+        return _pastStates.size() > 0; //returns true if number of past states > 0
     }
 
-    public boolean canRedo() {
-        if (_undoneStates.size() > 0) return true;
-        else return false;
+    boolean canRedo() {
+        return _undoneStates.size() > 0; //returns true if number of undoed states > 0
     }
 
     //add to past states - this happens if we take any action to change the canvas, or if we redo
@@ -84,20 +83,26 @@ public class ImageModel {
     }
 
     /*====== ACCESSING CANVAS ======*/
-    public int getWidth() {
+    int getWidth() {
         return _currentState.getWidth();
     }
 
-    public int getHeight() {
+    int getHeight() {
         return _currentState.getHeight();
     }
 
-    public Color getPixel(int x, int y) {
+    Color getPixel(int x, int y) {
         return getCurrentState().getColor(x,y);
     }
 
-    public void setPixel(int x, int y, Color color) {
-        _currentState.setPixel(x,y,color);
-        refresh();
+    void setPixel(int x, int y, int argb) {
+        _currentState.setPixel(x,y,argb);
     }
+
+    void setPixel(int x, int y, Color color) {
+        _currentState.setPixel(x,y,color.getARGB());
+    }
+
+
+
 }

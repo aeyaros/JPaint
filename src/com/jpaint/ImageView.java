@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 //ImageView: THIS IS THE MAIN VIEW CLASS
 public class ImageView extends JLabel {
-    private ImageIcon _icon;
+    //private ImageIcon _icon;
 
     ImageView() {
         super();
@@ -16,7 +16,7 @@ public class ImageView extends JLabel {
 
     //update the view
     void refresh(ImageIcon icon) {
-        _icon = icon;
-        this.setIcon(_icon);
+        //_icon = icon;
+        this.setIcon(icon); //was _icon
     }
 }

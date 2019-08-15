@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 //Canvas: part of the model: contains an argb-integer image
-class Canvas {
+public class Canvas {
     private int[][] _pixels; //the image
     private int _width;
     private int _height;
@@ -18,7 +18,7 @@ class Canvas {
         _pixels = new int[_width][_height];
         for(int i = 0; i < _width; i++) {
             for(int j = 0; j < _height; j++) {
-                _pixels[i][j] = new Color(128,255,128,0).getARGB();
+                _pixels[i][j] = new Color(255,255,255,255).getARGB();
             }
         }
     }
@@ -68,16 +68,17 @@ class Canvas {
         try {
             _pixels[x][y] = color;
         } catch (Exception e) {
-            System.out.println(e.getStackTrace());
+            //System.out.println(e.getStackTrace());
         }
     }
-
-    public void setPixel(int x, int y, Color color) {
+    //for performance reasons I really shouldn't use this
+    //should just convert to argb in the image model
+    /*public void setPixel(int x, int y, Color color) {
         try {
             _pixels[x][y] = color.getARGB();
         } catch (Exception e) {
             System.out.println(e.getStackTrace());
         }
-    }
+    }*/
 
 }

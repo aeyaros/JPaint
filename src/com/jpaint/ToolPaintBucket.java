@@ -1,27 +1,22 @@
 package com.jpaint;
 
+import javax.swing.*;
 import java.awt.event.MouseEvent;
-import java.util.Deque;
+import java.util.ArrayDeque;
 
 public class ToolPaintBucket extends Tool {
-    ToolPaintBucket(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
-    }
-
-    @Override
-    public void toolDragged(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolMoved(MouseEvent e) {
-
-    }
-
+    //boundaries of cannvas
     private int lowX = 0;
     private int lowY = 0;
     private int highX = _model.getWidth();
     private int highY = _model.getHeight();
+
+    ToolPaintBucket(String name, ImageModel model, String iconSource) {
+        super(name, model, iconSource);
+        //set up upper card
+        _upperCard.add(new JButton("bucket button"));
+    }
+
 
     //Node object for flood algorithm
     private class Node {
@@ -69,7 +64,7 @@ public class ToolPaintBucket extends Tool {
         _model.saveCurrentState();
 
         _model.setPixel(x, y, targetColor); // 3. Set the color of node to replacement-color.
-        Deque<Node> nodes = null;      // 4. Set Q to the empty queue.
+        ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
 
         while(nodes.size() > 0) { // 6. While Q is not empty:
@@ -106,24 +101,10 @@ public class ToolPaintBucket extends Tool {
         //14. Return.
     }
 
-    @Override
-    public void toolPressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolExited(MouseEvent e) {
-
-    }
-
+    @Override public void toolDragged(MouseEvent e) { }
+    @Override public void toolMoved(MouseEvent e) { }
+    @Override public void toolPressed(MouseEvent e) { }
+    @Override public void toolReleased(MouseEvent e) { }
+    @Override public void toolEntered(MouseEvent e) { }
+    @Override public void toolExited(MouseEvent e) { }
 }

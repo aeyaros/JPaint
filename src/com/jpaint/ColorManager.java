@@ -9,7 +9,6 @@ public class ColorManager {
     private Color _left;
     private Color _middle;
     private Color _right;
-
     private ArrayList<Tool> _observers;
 
     ColorManager(ArrayList<Tool> tools, Color leftClickColor, Color middleClickColor, Color rightClickColor) {
@@ -17,13 +16,13 @@ public class ColorManager {
         _middle = middleClickColor;
         _right = rightClickColor;
         _observers = tools;
-        //notifyTools();
+        notifyTools();
     }
 
     //when a color is changed, send new colors to observers
-    public void notifyTools() {
-        for(int i = 0; i < _observers.size(); i++) {
-            _observers.get(i).updateColors(_left, _middle, _right);
+    void notifyTools() {
+        for (Tool observer : _observers) {
+            observer.updateColors(_left, _middle, _right);
         }
     }
 

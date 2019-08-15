@@ -83,8 +83,8 @@ public class Color {
 
     //print out the values of the color to console
     public void print() {
-        for(int i = 0; i < _channels.length; i++) {
-            System.out.print(_channels[i] + " ");
+        for (short channel : _channels) {
+            System.out.print(channel + " ");
         } System.out.print("\n");
     }
 
