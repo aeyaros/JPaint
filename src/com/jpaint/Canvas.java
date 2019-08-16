@@ -15,7 +15,7 @@ class Canvas {
         pixels = new int[width][height];
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                pixels[i][j] = new Color(128,0,255,0).getARGB();
+                pixels[i][j] = new Color(255,255,255,255).getARGB();
             }
         }
     }
