@@ -4,13 +4,16 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.awt.Graphics;
 
-class WindowSetup {
+class ApplicationWindow {
     final static int TOOL_BUTTON_SIZE = 48;
     final static int COLOR_BUTTON_SIZE = 32;
-    private final static int MINIMUM_WINDOW_WIDTH = 600;
-    private final static int MINIMUM_WINDOW_HEIGHT = 400;
+    final static int SELECTED_COLOR_BUTTON_HEIGHT = 64;
+    private final static int MINIMUM_WINDOW_WIDTH = 480;
+    private final static int MINIMUM_WINDOW_HEIGHT = 470;
 
     private Tool[] tools;
     private JPanel topPanel;
@@ -18,15 +21,19 @@ class WindowSetup {
     private MouseStaticController mouseStaticController;
     private MouseMotionController mouseMotionController;
 
-    WindowSetup(int width, int height) {
+    ApplicationWindow() { }
+
+    void WindowSetup(int width, int height) {
         //initial setup
-        JFrame.setDefaultLookAndFeelDecorated(true);
+        try {
+            UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName());
+        } catch (Exception e) { e.printStackTrace(); }
+        ////JFrame.setDefaultLookAndFeelDecorated(true);
         JFrame frame = new JFrame("JPaint");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         //set minimum dimensions
-        Dimension minimumSize = new Dimension();
-        minimumSize.setSize(MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
+        Dimension minimumSize = new Dimension(MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
         frame.setMinimumSize(minimumSize);
 
         //base panel containing entire layout
@@ -41,11 +48,16 @@ class WindowSetup {
 
         //image panel: a container which is inside a panel with scrollbars
         JPanel imagePanel = new JPanel();
+
+        //image panel is inside a scroll pane
         JScrollPane imageScrollPanel = new JScrollPane(imagePanel);
         centerPanel.add(imageScrollPanel, BorderLayout.CENTER);
 
-        //create a view and add it to the panel
+        //create a view
         ImageView theView = new ImageView();
+        theView.setOpaque(false);
+
+        //add JFrameLabel to the image panel
         imagePanel.add(theView);
 
         //create model with a width, a height, and the view
@@ -55,6 +67,10 @@ class WindowSetup {
 
         //side panel with grid layout
         JPanel sidePanel = new JPanel(new BorderLayout());
+        Dimension maxSidePanelSize = new Dimension(96,512);
+        sidePanel.setMaximumSize(maxSidePanelSize);
+        Dimension minSidePanelSize = new Dimension(96,460);
+        sidePanel.setMinimumSize(minSidePanelSize);
         mainLayout.add(sidePanel, BorderLayout.WEST);
 
         //side panel has a tools panel and a colors panel
@@ -62,7 +78,7 @@ class WindowSetup {
         /*====== TOOLS ======*/
 
         //tools panel
-        JPanel toolsPanel = new JPanel(new GridLayout(4, 2));
+        JPanel toolsPanel = new JPanel(new GridLayout(4, 2,0,0));
 
         //create tools
         //add them to arraylist one by one, then copy to regular array to avoid magic numbers
@@ -114,14 +130,20 @@ class WindowSetup {
         //add toolbar to side panel
         sidePanel.add(toolsPanel, BorderLayout.NORTH);
 
-        //colors panel
-        JPanel colorsPanel = new JPanel(new GridLayout(5, 2));
-        sidePanel.add(colorsPanel, BorderLayout.CENTER);
+        //color presets panel
+        JPanel presetPanel = new JPanel(new GridLayout(4, 3,0,0));
+        sidePanel.add(presetPanel, BorderLayout.CENTER);
+
+        //selected colors panel
+        JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
+        sidePanel.add(selectedColorsPanel, BorderLayout.SOUTH);
 
         //default preset colors
         Color[] presetColors = {
                 new Color(255,  0,  0,  0), //black
+                new Color(255,128,128,128), //gray
                 new Color(255,255,255,255), //white
+                new Color(255,255,  0,255), //magenta
                 new Color(255,255,  0,  0), //red
                 new Color(255,255,128,  0), //orange
                 new Color(255,255,255,  0), //yellow
@@ -129,13 +151,16 @@ class WindowSetup {
                 new Color(255,  0,128,  0), //dark green
                 new Color(255,  0,255,255), //cyan
                 new Color(255,  0,  0,255), //blue
-                new Color(255,255,  0,255)  //magenta
-        }; //add colors to colorsPanel
-        for(int i = 0; i < presetColors.length; i++) colorsPanel.add(new ColorPreset(presetColors[i]), i);
+                new Color(255,128,  0,255)  //purple
+        };
 
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
-        ColorManager colorManager = new ColorManager(tools, presetColors[2], presetColors[5], presetColors[8]);
+        ColorManager colorManager = new ColorManager(tools, presetPanel, presetColors, selectedColorsPanel);
+
+        /*====== COLOR SCHEME ======*/
+        imagePanel.setBackground(new Color(255,128,128,128).getAWT());
+
 
         /*====== SHOW WINDOW ======*/
         frame.pack();
@@ -153,7 +178,7 @@ class WindowSetup {
         }
     }
 
-    void setCurrentTool(int i) {
+    private void setCurrentTool(int i) {
         //show the tool's top card in the card panel
         topLayout.show(topPanel, tools[i].getName());
 

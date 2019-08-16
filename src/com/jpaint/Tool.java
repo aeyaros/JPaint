@@ -27,16 +27,15 @@ public abstract class Tool implements ToolInput {
 
         //button for toolbar
         button = new JButton();
-
-        //sidebar button
-        Dimension size = new Dimension();
-        button.setSize(WindowSetup.TOOL_BUTTON_SIZE, WindowSetup.TOOL_BUTTON_SIZE);
+        button.setOpaque(true);
+        button.setContentAreaFilled(false);
         button.setBorderPainted(false);
-
+        button.setBorder(null);
+        button.setSize(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE);
 
         try { //get icon of button
             Image image = ImageIO.read(getClass().getResource(iconSource));
-            image = image.getScaledInstance(WindowSetup.TOOL_BUTTON_SIZE, WindowSetup.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
+            image = image.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(image));
         } catch(Exception e) {
             e.printStackTrace();

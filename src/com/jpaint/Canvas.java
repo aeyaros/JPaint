@@ -18,7 +18,7 @@ class Canvas {
         pixels = new int[width][height];
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                pixels[i][j] = new Color(255,255,255,255).getARGB();
+                pixels[i][j] = new Color(128,0,0,255).getARGB();
             }
         }
     }
@@ -52,14 +52,14 @@ class Canvas {
     }
 
     //export a buffered image for the view
-    ImageIcon getImage() {
+    BufferedImage getImage() {
         BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
                 //set the current pixel in the buffered image to argb int from the pixels array
                 bufferedImage.setRGB(i, j, pixels[i][j]);
             }
-        } return new ImageIcon(bufferedImage);
+        } return bufferedImage;
     }
 
     /*====== MODIFIERS ======*/
@@ -70,5 +70,4 @@ class Canvas {
             //System.out.println(e.getStackTrace());
         }
     }
-
 }

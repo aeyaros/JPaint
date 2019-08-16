@@ -8,6 +8,7 @@ package com.jpaint;
 
 public class Main {
     public static void main(String[] args) {
-        WindowSetup window = new WindowSetup(512,384);
+        ApplicationWindow window = new ApplicationWindow();
+        window.WindowSetup(512,384);
     }
 }

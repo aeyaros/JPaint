@@ -88,4 +88,39 @@ public class Color {
         } System.out.print("\n");
     }
 
+    public static Color alphaBlend(Color src, Color dst) {
+        short out_a_s;
+        short[] out_rgb = new short[3];
+        short[] src_rgb = {src.getChannel(1),src.getChannel(2),src.getChannel(3)};
+        short[] dst_rgb = {dst.getChannel(1),dst.getChannel(2),dst.getChannel(3)};
+        double src_a = (double)src.getChannel(0) / (double)255;
+
+        if(dst.getChannel(0) == 255) { //destination is opaque
+            //https://wikimedia.org/api/rest_v1/media/math/render/svg/c6577b83331abfe6b04b93d1d4c4ccb18b9b8c9a
+            out_a_s = 255; //output is opaque
+
+            //loop through rgb values and blend each one
+            for(int i = 0; i < out_rgb.length; i++) {
+                //out_rgb = (src_rgb * src_a) + (dst_rgb * 1 - src_a)
+                out_rgb[i] =(short) ((src_rgb[i] * src_a) + (dst_rgb[i] * ((double) 1 - src_a)));
+            }
+        } else { //under normal conditions
+            //https://wikimedia.org/api/rest_v1/media/math/render/svg/a92cffa85057fafdd90b31202ce44690958b8cb9
+            double dst_a = (double)src.getChannel(0) / (double)255; //need dst_a
+
+            //out_a = src_a + dst_a * (1 - src_a)
+            double out_a = (src_a + (dst_a * (1 - src_a))); //out alpha
+            out_a_s = (short)(out_a * 255); //out alpha as a short btw 1-255
+            if(out_a_s == 0) return new Color(0,0,0,0); //if totally transparent, return all 0s
+
+            //loop through RGB values and blend each one
+            for(int i = 0; i < out_rgb.length; i++) {
+                //out_rgb = (src_rgb * src_a) + (dst_rgb * dst_a * 1 - src_a) / out_a
+                out_rgb[i] =(short) (((src_rgb[i] * src_a) + (dst_rgb[i] * dst_a * ((double) 1 - src_a))) / out_a);
+            }
+        }
+
+        return new Color(out_a_s,out_rgb[0],out_rgb[1],out_rgb[2]);
+    }
+
 }
