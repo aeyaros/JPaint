@@ -25,7 +25,10 @@ public class ToolPaintBucket extends Tool {
         Node(Node n) { x = n.x; y = n.y; } //deep copy
 
         int c() { return model.getPixel(x,y).getARGB(); } //get color of node
-        void set(Color c) { model.setPixel(x,y,c); } //set color of node
+        void set(int c) {
+            model.setPixel(x,y,c);
+            System.out.print(x + "," + y + "");
+        } //set color of node
 
         //get nodes to north, south, east, west
         Node N() {
@@ -41,6 +44,8 @@ public class ToolPaintBucket extends Tool {
             if(x+1 > highX) return new Node(x+1, y);
             else throw new IndexOutOfBoundsException();
         }
+        //print out a node
+        void print() { System.out.println("node " + x + "," + y + " "); }
     }
 
     @Override
@@ -49,29 +54,27 @@ public class ToolPaintBucket extends Tool {
         int x = e.getX();
         int y = e.getY();
 
-        Color targetColor = model.getPixel(x, y);
-        int target = targetColor.getARGB();
-
-        //////////////
-        Color replacement = new Color(255,0,255,0);
+        //get colors
+        int target = model.getPixel(x, y).getARGB(); //color of spot clicked
+        int replacement = getColorIntByButton(e.getButton()); //color selected by user
 
         //no need to save state unless there's actually something for us to do
-
-        if (target == replacement.getARGB()) return; // 1. If target-color is equal to replacement-color, return.
+        if (target == replacement) return; // 1. If target-color is equal to replacement-color, return.
         // not applicable: 2. If color of node is not equal to target-color, return.
 
         //save current state before performing operation
         model.saveCurrentState();
 
-        model.setPixel(x, y, targetColor); // 3. Set the color of node to replacement-color.
+        model.setPixel(x, y, target); // 3. Set the color of node to replacement-color.
         ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
 
         while(nodes.size() > 0) { // 6. While Q is not empty:
             Node n = new Node(nodes.removeFirst());// 7. Set n equal to the first element of Q. 8. Remove first element from Q.
-
+            n.print();
             try {
                 if(n.W().c() == target) {   // 9. If the color of the node to the west of n is target-color,
+                    n.W().print();
                     n.W().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.W()); // and add that node to the end of Q.
                 }
@@ -79,6 +82,7 @@ public class ToolPaintBucket extends Tool {
 
             try {
                 if(n.E().c() == target) {   //10. If the color of the node to the east of n is target-color,
+                    n.E().print();
                     n.E().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.E()); // and add that node to the end of Q.
                 }
@@ -86,6 +90,7 @@ public class ToolPaintBucket extends Tool {
 
             try {
                 if(n.N().c() == target) {   //11. If the color of the node to the north of n is target-color,
+                    n.N().print();
                     n.N().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.N()); // and add that node to the end of Q.
                 }
@@ -93,12 +98,14 @@ public class ToolPaintBucket extends Tool {
 
             try {
                 if(n.S().c() == target) {   //12. If the color of the node to the south of n is target-color,
+                    n.S().print();
                     n.S().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.S()); // and add that node to the end of Q.
                 }
             } catch (IndexOutOfBoundsException ex) { System.out.println("Fill: South boundary reached"); }
         } //13. Continue looping until Q is exhausted.
         //14. Return.
+        model.refresh();
     }
 
     @Override public void toolDragged(MouseEvent e) { }

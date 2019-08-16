@@ -4,10 +4,10 @@ import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
 public class ImageModel {
-    private ArrayDeque<Canvas> _pastStates; //previous states
-    private ArrayDeque<Canvas> _undoneStates; //"future states" that were undone
-    private Canvas currentState; //current state of the drawing
     private ImageView imageView; //a view for the model to update
+    private Canvas currentState; //current state of the drawing
+    private ArrayDeque<Canvas> pastStates; //previous states
+    private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
 
     //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
@@ -18,6 +18,9 @@ public class ImageModel {
     //create a new image model with a width and a height
     ImageModel(int w, int h, ImageView imageView) {
         currentState = new Canvas(w, h);
+        pastStates = new ArrayDeque<>();
+        undoneStates = new ArrayDeque<>();
+
         this.imageView = imageView;
         refresh(); //dont remove this from here!
     }
@@ -34,7 +37,7 @@ public class ImageModel {
 
     //before a tool is used, save state to past states
     void saveCurrentState() {
-        _pastStates.addFirst(new Canvas(currentState));
+        pastStates.addFirst(new Canvas(currentState));
     }
 
 
@@ -47,30 +50,30 @@ public class ImageModel {
 
     boolean canUndo() {
         //no past states to revert to
-        return _pastStates.size() > 0; //returns true if number of past states > 0
+        return pastStates.size() > 0; //returns true if number of past states > 0
     }
 
     boolean canRedo() {
-        return _undoneStates.size() > 0; //returns true if number of undoed states > 0
+        return undoneStates.size() > 0; //returns true if number of undoed states > 0
     }
 
     //add to past states - this happens if we take any action to change the canvas, or if we redo
     private void addToPastStates(Canvas canvas) {
-        _pastStates.addFirst(new Canvas(canvas)); //push state to deque
-        if(_pastStates.size() > MAX_REDO) _pastStates.removeLast(); //remove excess states to prevent overflow
+        pastStates.addFirst(new Canvas(canvas)); //push state to deque
+        if(pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
     }
 
     //add a state to undone states when undoing
     private void addToUndoneStates(Canvas canvas) {
-        _undoneStates.addFirst(new Canvas(canvas)); //push state to deque
-        if(_undoneStates.size() > MAX_UNDO) _undoneStates.removeLast(); //remove excess states to prevent overflow
+        undoneStates.addFirst(new Canvas(canvas)); //push state to deque
+        if(undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
     }
 
     //undo the most recently made change
     public void undo() {
         if(this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undonestates
-            updateCurrentState(_pastStates.removeFirst()); //pop past state to current state
+            updateCurrentState(pastStates.removeFirst()); //pop past state to current state
         } //else cant undo (nothing can be popped from the previous state
     }
 
@@ -78,7 +81,7 @@ public class ImageModel {
     public void redo() {
         if(this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
-            updateCurrentState(_undoneStates.removeFirst()); //pop undone state to current state
+            updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
         } //else cant redo (nothing was previously undone
     }
 

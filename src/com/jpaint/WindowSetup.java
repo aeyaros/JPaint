@@ -15,8 +15,6 @@ class WindowSetup {
     private Tool[] tools;
     private JPanel topPanel;
     private CardLayout topLayout;
-    private ImageModel theModel;
-    private ImageView theView;
     private MouseStaticController mouseStaticController;
     private MouseMotionController mouseMotionController;
 
@@ -47,11 +45,11 @@ class WindowSetup {
         centerPanel.add(imageScrollPanel, BorderLayout.CENTER);
 
         //create a view and add it to the panel
-        theView = new ImageView();
+        ImageView theView = new ImageView();
         imagePanel.add(theView);
 
         //create model with a width, a height, and the view
-        theModel = new ImageModel(width, height, theView);
+        ImageModel theModel = new ImageModel(width, height, theView);
 
         /*====== SIDE PANEL ======*/
 
@@ -67,7 +65,7 @@ class WindowSetup {
         JPanel toolsPanel = new JPanel(new GridLayout(4, 2));
 
         //create tools
-        //add them to arraylist one by one, then copy to array to avoid magic numbers
+        //add them to arraylist one by one, then copy to regular array to avoid magic numbers
         ArrayList<Tool> newTools = new ArrayList<>();
         newTools.add(new ToolSelect("Select", theModel, "icons/select.png"));
         newTools.add(new ToolColorPicker("Picker", theModel, "icons/colorpicker.png"));
@@ -79,7 +77,7 @@ class WindowSetup {
         newTools.add(new ToolShapes("Shapes", theModel, "icons/shapes.png"));
         //update colors of tools
 
-        tools = new Tool[newTools.size()];
+        tools = new Tool[newTools.size()]; //use regular array for better performance
         for(int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
 
         //create both static and motion mouse controllers and add them to the view
@@ -89,42 +87,25 @@ class WindowSetup {
         mouseMotionController = new MouseMotionController(tools);
         theView.addMouseMotionListener(mouseMotionController);
 
+        //set up top panel for tool-specifc controls
         topPanel = new JPanel();
         topLayout = new CardLayout();
         topPanel.setLayout(topLayout);
 
-        int h = 0;
-        for(Tool t: tools) {
+        //add listeners to tools
+        for(int i = 0; i < tools.length; i++) {// t: tools) {
             //add an event listener to the tool button
             //to define behavior when tool button is pressed
-            t.button.putClientProperty("index", h); //set index of the button
-            t.button.addActionListener(new ToolButtonListener(h));
-                    /* new ActionListener() {
-                @Override
-                public void actionPerformed(ActionEvent e) {
-                    //get index from the button
-                    int j = (int) (((Tool)e.getSource())._button.getClientProperty("index"));
-
-                    //show the tool's top card in the card panel
-                    _topLayout.show(_topPanel, _tools.get(j).getName());
-
-                    //add tool to mouse listeners
-                    _mouseStaticController.setTool(_tools.get(j));
-                    _mouseMotionController.setTool(_tools.get(j));
-
-                    //add listeners to view
-                    theView.addMouseListener(_mouseStaticController);
-                    theView.addMouseMotionListener(_mouseMotionController);
-                }
-            }*/
+            tools[i].button.putClientProperty("index", i); //set index of the button
+            tools[i].button.addActionListener(new ToolButtonListener(i)); //add listener to button
 
             //add the tool's top card to the top panel
-            topPanel.add(t.upperCard, t.getName());
+            topPanel.add(tools[i].upperCard, tools[i].getName());
 
             //add the tool itself to the sidebar
-            toolsPanel.add(t.button); //add button to panel on sidebar
-            System.out.println("Added " + t.getName());
-            h++;
+            toolsPanel.add(tools[i].button); //add button to panel on sidebar
+
+            System.out.println("Added " + tools[i].getName());
         }
 
         //add top panel to the north of the center panel
@@ -132,18 +113,6 @@ class WindowSetup {
 
         //add toolbar to side panel
         sidePanel.add(toolsPanel, BorderLayout.NORTH);
-
-        //top panel with card layout
-        //CardLayout topCards = new CardLayout(); //layout
-        //JPanel topPanel = new JPanel(topCards); //panel with layout
-        //    for(Tool t: tools) {
-        //        toolsPanel.add(t);//add tool as a button to the tools panel on the sidebar
-        //        topCards.addLayoutComponent(t._upperCard, t.getName()); //add the tool's top panel to the top card layout
-        //    } topCards.show(topPanel, "Pencil");
-
-        //add panels to main layout
-        //    sidePanel.add(toolsPanel, BorderLayout.NORTH);
-        //    centerPanel.add(topPanel, BorderLayout.NORTH);
 
         //colors panel
         JPanel colorsPanel = new JPanel(new GridLayout(5, 2));
@@ -162,24 +131,11 @@ class WindowSetup {
                 new Color(255,  0,  0,255), //blue
                 new Color(255,255,  0,255)  //magenta
         }; //add colors to colorsPanel
-
-        for(int i = 0; i < presetColors.length; i++) {
-            colorsPanel.add(new ColorPreset(presetColors[i]), i);
-        }
-
-        ColorManager colorManager = new ColorManager(tools, presetColors[2], presetColors[5], presetColors[8]);
+        for(int i = 0; i < presetColors.length; i++) colorsPanel.add(new ColorPreset(presetColors[i]), i);
 
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
-        //////ColorManager colorManager = new ColorManager(tools, presetColors[0], presetColors[2], presetColors[6]);
-
-        /////tool manager
-        /////need class to set current tool?
-        /////need to be able to update current tool
-
-        /*====== CONTROLLERS ======*/
-
-
+        ColorManager colorManager = new ColorManager(tools, presetColors[2], presetColors[5], presetColors[8]);
 
         /*====== SHOW WINDOW ======*/
         frame.pack();
@@ -197,7 +153,7 @@ class WindowSetup {
         }
     }
 
-    void setCurrentTool(int i) { //Tool t, JPanel top, ImageView v, CardLayout cards, MouseStaticController ms, MouseMotionController mm) {
+    void setCurrentTool(int i) {
         //show the tool's top card in the card panel
         topLayout.show(topPanel, tools[i].getName());
 

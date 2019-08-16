@@ -44,7 +44,7 @@ public abstract class Tool implements ToolInput {
         }
     }
 
-    public void updateColors(Color left, Color middle, Color right) {
+    void updateColors(Color left, Color middle, Color right) {
         leftInt = left.getARGB();
         middleInt = middle.getARGB();
         rightInt = right.getARGB();
@@ -68,7 +68,7 @@ public abstract class Tool implements ToolInput {
         }
     }
 
-    public String getName() {
+    String getName() {
         return name;
     }
 

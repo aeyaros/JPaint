@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 //ColorPreset: a button for choosing a preset color in the UI
-public class ColorPreset extends JButton {
+class ColorPreset extends JButton {
     private Color color;
 
     ColorPreset(Color color) {
@@ -14,7 +14,7 @@ public class ColorPreset extends JButton {
         changeColor(color);
     }
 
-    public ImageIcon generateColorIcon() {
+    private ImageIcon generateColorIcon() {
         int pixelCount = WindowSetup.COLOR_BUTTON_SIZE * WindowSetup.COLOR_BUTTON_SIZE;
         int[] iconArray = new int[pixelCount];
         for(int i = 0; i < pixelCount; i++) {
@@ -25,7 +25,7 @@ public class ColorPreset extends JButton {
         return new ImageIcon(bufferedImage);
     }
 
-    public void changeColor(Color newColor) {
+    void changeColor(Color newColor) {
         color = newColor;
         this.setIcon(generateColorIcon());
     }
