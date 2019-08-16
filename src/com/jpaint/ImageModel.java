@@ -10,7 +10,7 @@ public class ImageModel {
     private Canvas currentState; //current state of the drawing
     private ArrayDeque<Canvas> pastStates; //previous states
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
-    private int[][] tileBG;
+    private int[][] tileBG; //tiled background
 
     //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
@@ -27,13 +27,14 @@ public class ImageModel {
         this.imageView = imageView;
 
         updateTileBG();
-
         refresh(); //dont remove this from here!
     }
 
+    /*====== VIEWING TOOLS ======*/
+
     //blend the image with the tile background and then send that to the view
     void refresh() {
-        imageView.refresh(getImage(blendScreens(currentState.getPixels(), tileBG)));
+        imageView.refresh(getImage( overlayMatrices(currentState.getPixels(), tileBG)));
     }
 
     //export a buffered image for the view
@@ -47,14 +48,9 @@ public class ImageModel {
         } return new ImageIcon(bufferedImage);
     }
 
-    //update the tile BG if image is resized
-    private void updateTileBG() {
-        tileBG = tileBackground(currentState.getWidth(), currentState.getHeight());
-    }
-
     //overlay one image matrix on top of another
     //assuming they are the same size
-    private int[][] blendScreens(int[][] top, int[][] bottom) {
+    private int[][] overlayMatrices(int[][] top, int[][] bottom) {
         int w = top.length; int h = top[0].length;
         try {
             int[][] output = new int[w][h];
@@ -70,8 +66,13 @@ public class ImageModel {
         }
     }
 
+    //update the tile BG if image is resized
+    private void updateTileBG() {
+        tileBG = generateTileBG(currentState.getWidth(), currentState.getHeight());
+    }
+
     //draw a checkerboard at a given size
-    private int[][] tileBackground(int w, int h) {
+    private int[][] generateTileBG(int w, int h) {
         int[][] matrix = new int[w][h];
         int[] squareColors = {
                 new Color(255,255,255,255).getARGB(),
@@ -90,6 +91,7 @@ public class ImageModel {
         } return matrix;
     }
 
+    /*====== STATES, UNDOING AND REDOING ======*/
 
     //get the current state of the drawing
     private Canvas getCurrentState() {
@@ -101,20 +103,16 @@ public class ImageModel {
         pastStates.addFirst(new Canvas(currentState));
     }
 
-
-    /*====== UNDOING AND REDOING ======*/
-
     //update the current state (note: is used for undo/redo)
     private void updateCurrentState(Canvas canvas) {
         currentState = new Canvas(canvas);
     }
 
-    boolean canUndo() {
-        //no past states to revert to
+    private boolean canUndo() {
         return pastStates.size() > 0; //returns true if number of past states > 0
     }
 
-    boolean canRedo() {
+    private boolean canRedo() {
         return undoneStates.size() > 0; //returns true if number of undone states > 0
     }
 
