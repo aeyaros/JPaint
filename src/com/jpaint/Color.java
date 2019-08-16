@@ -1,7 +1,5 @@
 package com.jpaint;
 
-import java.awt.*;
-
 //Color: used for storing color information (aside from the image array itself, which is argb-ints)
 public class Color {
     private short[] channels;

@@ -1,7 +1,6 @@
 package com.jpaint;
 
 import javax.swing.*;
-import java.awt.*;
 
 //manager selected colors
 //add this to anything that needs to access a color

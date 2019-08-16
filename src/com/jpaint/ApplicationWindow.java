@@ -4,9 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
-import java.awt.Graphics;
 
 class ApplicationWindow {
     final static int TOOL_BUTTON_SIZE = 48;

@@ -1,8 +1,5 @@
 package com.jpaint;
 
-import javax.swing.*;
-import java.awt.image.BufferedImage;
-
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
     private int[][] pixels; //the image
