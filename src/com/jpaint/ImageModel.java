@@ -54,7 +54,7 @@ public class ImageModel {
     }
 
     boolean canRedo() {
-        return undoneStates.size() > 0; //returns true if number of undoed states > 0
+        return undoneStates.size() > 0; //returns true if number of undone states > 0
     }
 
     //add to past states - this happens if we take any action to change the canvas, or if we redo
@@ -72,7 +72,7 @@ public class ImageModel {
     //undo the most recently made change
     public void undo() {
         if(this.canUndo()) { //if we can undo
-            addToUndoneStates(currentState); //push current state to beginning of undonestates
+            addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
         } //else cant undo (nothing can be popped from the previous state
     }

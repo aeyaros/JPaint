@@ -87,7 +87,7 @@ class WindowSetup {
         mouseMotionController = new MouseMotionController(tools);
         theView.addMouseMotionListener(mouseMotionController);
 
-        //set up top panel for tool-specifc controls
+        //set up top panel for tool-specific controls
         topPanel = new JPanel();
         topLayout = new CardLayout();
         topPanel.setLayout(topLayout);

@@ -25,7 +25,7 @@ public class Color {
 
     /* These functions that use .SIZE will work as long as integers
     are 32 bits i.e. 4 bytes, each byte containing 8 bits
-    This should never change unless Oracle devs decide
+    This should never change unless Oracle developers decide
     to redefine this in a future version of Java, which
     would probably break way more than this one program
     so I'll assume it's not an issue */

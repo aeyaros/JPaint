@@ -5,7 +5,7 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayDeque;
 
 public class ToolPaintBucket extends Tool {
-    //boundaries of cannvas
+    //boundaries of canvas
     private int lowX = 0;
     private int lowY = 0;
     private int highX = model.getWidth();
