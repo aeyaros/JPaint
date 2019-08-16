@@ -7,7 +7,7 @@ public class ToolSelect extends Tool {
     ToolSelect(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("select button"));
+        upperCard.add(new JButton("select button"));
     }
 
     @Override

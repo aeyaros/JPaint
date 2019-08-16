@@ -5,68 +5,67 @@ import java.awt.image.BufferedImage;
 
 //Canvas: part of the model: contains an argb-integer image
 public class Canvas {
-    private int[][] _pixels; //the image
-    private int _width;
-    private int _height;
+    private int[][] pixels; //the image
+    private int width;
+    private int height;
 
     /*====== CONSTRUCTORS ======*/
 
     //create a new canvas
     Canvas(int w, int h) {
-        _width = w;
-        _height = h;
-        _pixels = new int[_width][_height];
-        for(int i = 0; i < _width; i++) {
-            for(int j = 0; j < _height; j++) {
-                _pixels[i][j] = new Color(255,255,255,255).getARGB();
+        width = w;
+        height = h;
+        pixels = new int[width][height];
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                pixels[i][j] = new Color(255,255,255,255).getARGB();
             }
         }
     }
 
     //deep copy constructor
     Canvas(Canvas oldCanvas) {
-        _width = oldCanvas.getWidth();
-        _height = oldCanvas.getHeight();
-        _pixels = new int[_width][_height];
-        for(int i = 0; i < _width; i++) {
-            for(int j = 0; j < _height; j++) {
-                _pixels[i][j] = oldCanvas.getPixel(i,j);
+        width = oldCanvas.getWidth();
+        height = oldCanvas.getHeight();
+        pixels = new int[width][height];
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                pixels[i][j] = oldCanvas.getPixel(i,j);
             }
         }
     }
 
     /*====== ACCESSORS ======*/
     int getPixel(int w, int h) {
-        return _pixels[w][h];
+        return pixels[w][h];
     }
 
     Color getColor(int w, int h) {
-        return new Color(_pixels[w][h]);
+        return new Color(pixels[w][h]);
     }
 
     int getWidth() {
-        return _width;
+        return width;
     }
-
     int getHeight() {
-        return _height;
+        return height;
     }
 
     //export a buffered image for the view
     ImageIcon getImage() {
-        BufferedImage bufferedImage = new BufferedImage(_width, _height, BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < _width; i++) {
-            for(int j = 0; j < _height; j++) {
+        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
                 //set the current pixel in the buffered image to argb int from the pixels array
-                bufferedImage.setRGB(i, j, _pixels[i][j]);
+                bufferedImage.setRGB(i, j, pixels[i][j]);
             }
         } return new ImageIcon(bufferedImage);
     }
 
     /*====== MODIFIERS ======*/
-    public void setPixel(int x, int y, int color) {
+    void setPixel(int x, int y, int color) {
         try {
-            _pixels[x][y] = color;
+            pixels[x][y] = color;
         } catch (Exception e) {
             //System.out.println(e.getStackTrace());
         }

@@ -8,13 +8,13 @@ public class ToolPaintBucket extends Tool {
     //boundaries of cannvas
     private int lowX = 0;
     private int lowY = 0;
-    private int highX = _model.getWidth();
-    private int highY = _model.getHeight();
+    private int highX = model.getWidth();
+    private int highY = model.getHeight();
 
     ToolPaintBucket(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("bucket button"));
+        upperCard.add(new JButton("bucket button"));
     }
 
 
@@ -24,8 +24,8 @@ public class ToolPaintBucket extends Tool {
         Node(int X, int Y) { x = X; y = Y; } //new node
         Node(Node n) { x = n.x; y = n.y; } //deep copy
 
-        int c() { return _model.getPixel(x,y).getARGB(); } //get color of node
-        void set(Color c) { _model.setPixel(x,y,c); } //set color of node
+        int c() { return model.getPixel(x,y).getARGB(); } //get color of node
+        void set(Color c) { model.setPixel(x,y,c); } //set color of node
 
         //get nodes to north, south, east, west
         Node N() {
@@ -49,7 +49,7 @@ public class ToolPaintBucket extends Tool {
         int x = e.getX();
         int y = e.getY();
 
-        Color targetColor = _model.getPixel(x, y);
+        Color targetColor = model.getPixel(x, y);
         int target = targetColor.getARGB();
 
         //////////////
@@ -61,9 +61,9 @@ public class ToolPaintBucket extends Tool {
         // not applicable: 2. If color of node is not equal to target-color, return.
 
         //save current state before performing operation
-        _model.saveCurrentState();
+        model.saveCurrentState();
 
-        _model.setPixel(x, y, targetColor); // 3. Set the color of node to replacement-color.
+        model.setPixel(x, y, targetColor); // 3. Set the color of node to replacement-color.
         ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
 

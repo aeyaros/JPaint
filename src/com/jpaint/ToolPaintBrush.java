@@ -8,7 +8,7 @@ public class ToolPaintBrush extends Tool {
     ToolPaintBrush(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("paint button"));
+        upperCard.add(new JButton("paint button"));
     }
 
     @Override

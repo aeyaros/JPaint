@@ -1,55 +1,53 @@
 package com.jpaint;
 
-import java.util.ArrayList;
-
 //manager selected colors
 //add this to anything that needs to access a color
 //will be used to show current colors
 public class ColorManager {
-    private Color _left;
-    private Color _middle;
-    private Color _right;
-    private ArrayList<Tool> _observers;
+    private Color left;
+    private Color middle;
+    private Color right;
+    private Tool[] observers;
 
-    ColorManager(ArrayList<Tool> tools, Color leftClickColor, Color middleClickColor, Color rightClickColor) {
-        _left = leftClickColor;
-        _middle = middleClickColor;
-        _right = rightClickColor;
-        _observers = tools;
+    ColorManager(Tool[] tools, Color leftClickColor, Color middleClickColor, Color rightClickColor) {
+        left = leftClickColor;
+        middle = middleClickColor;
+        right = rightClickColor;
+        observers = tools;
         notifyTools();
     }
 
     //when a color is changed, send new colors to observers
     void notifyTools() {
-        for (Tool observer : _observers) {
-            observer.updateColors(_left, _middle, _right);
+        for (Tool observer : observers) {
+            observer.updateColors(left, middle, right);
         }
     }
 
     //getters
     public Color getLeft() {
-        return _left;
+        return left;
     }
     public Color getMiddle() {
-        return _middle;
+        return middle;
     }
     public Color getRight() {
-        return _right;
+        return right;
     }
 
     //setters
     public void setLeft(Color leftClickColor) {
-        _left = leftClickColor;
+        left = leftClickColor;
         notifyTools();
     }
 
     public void setMiddle(Color middleClickColor) {
-        _middle = middleClickColor;
+        middle = middleClickColor;
         notifyTools();
     }
 
     public void setRight(Color rightClickColor) {
-        _right = rightClickColor;
+        right = rightClickColor;
         notifyTools();
     }
 }

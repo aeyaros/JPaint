@@ -2,25 +2,25 @@ package com.jpaint;
 
 //Color: used for storing color information (aside from the image array itself, which is argb-ints)
 public class Color {
-    private short[] _channels;
+    private short[] channels;
 
     /*====== CONSTRUCTORS ======*/
 
     Color(int a, int r, int g, int b) {
-       _channels = new short[4];
-       _channels[0] = (short) (a % 256);
-       _channels[1] = (short) (r % 256);
-       _channels[2] = (short) (g % 256);
-       _channels[3] = (short) (b % 256);
+       channels = new short[4];
+       channels[0] = (short) (a % 256);
+       channels[1] = (short) (r % 256);
+       channels[2] = (short) (g % 256);
+       channels[3] = (short) (b % 256);
     }
 
     //deep copy constructor
     Color(Color oldColor) {
-        _channels = new short[4];
-        _channels[0] = oldColor.getChannel(0);
-        _channels[1] = oldColor.getChannel(1);
-        _channels[2] = oldColor.getChannel(2);
-        _channels[3] = oldColor.getChannel(3);
+        channels = new short[4];
+        channels[0] = oldColor.getChannel(0);
+        channels[1] = oldColor.getChannel(1);
+        channels[2] = oldColor.getChannel(2);
+        channels[3] = oldColor.getChannel(3);
     }
 
     /* These functions that use .SIZE will work as long as integers
@@ -42,7 +42,7 @@ public class Color {
         }
 
         //4 shorts <-> 4 channels <-> 4 bytes in int
-        _channels = new short[Integer.BYTES];
+        channels = new short[Integer.BYTES];
 
         //need to access channels in reverse order
         // for example, "a" channel appears last in binArray but should be first in _channels
@@ -50,11 +50,11 @@ public class Color {
         //for each channel of 8 bits
         for(int i = 0; i < Integer.BYTES; i++) {
             //construct a number from the bits
-            _channels[maxIndex - i] = 0;
+            channels[maxIndex - i] = 0;
 
             //for each bit in current channel
             for(int j = 0; j < Byte.SIZE; j++) {
-                _channels[maxIndex - i] += (binArray[i * Byte.SIZE + j] << j);
+                channels[maxIndex - i] += (binArray[i * Byte.SIZE + j] << j);
             }
         }
     }
@@ -62,28 +62,28 @@ public class Color {
     /*====== ACCESSORS ======*/
 
     //get the ARGB 32-bit integer for the current color
-    public int getARGB() {
+    int getARGB() {
         int argb = 0; //4 bytes
         for(int i = 0; i < Integer.BYTES; i++) {
             //ith item is shifted left 32 - (8 * 1|2|3|4)
-            argb += _channels[i] << (Integer.SIZE - (Byte.SIZE * (i+1)));
+            argb += channels[i] << (Integer.SIZE - (Byte.SIZE * (i+1)));
         } return argb;
         /*return (_channels[0] << 24) + (_channels[1] << 16) + (_channels[2] << 8) + (_channels[3]);*/
     }
 
     //get java color class object
     public java.awt.Color getAWT() { //argb -> rgba
-        return new java.awt.Color(_channels[1], _channels[2], _channels[3], _channels[0]);
+        return new java.awt.Color(channels[1], channels[2], channels[3], channels[0]);
     }
 
     //get the alpha, red, green, or blue
-    public short getChannel(int i) {
-        return _channels[i % 4];
+    short getChannel(int i) {
+        return channels[i % 4];
     }
 
     //print out the values of the color to console
-    public void print() {
-        for (short channel : _channels) {
+    void print() {
+        for (short channel : channels) {
             System.out.print(channel + " ");
         } System.out.print("\n");
     }

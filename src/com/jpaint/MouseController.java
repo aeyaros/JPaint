@@ -1,4 +1,5 @@
 package com.jpaint;
+
 /*
 Send mouse events to tools
 Defined as abstract class because there are two types of mouse listeners
@@ -9,11 +10,14 @@ derived classes actually implement the mouselistener
 interfaces and send the events to the tools
 */
 public abstract class MouseController {
-    protected Tool _currentTool;
-    MouseController(Tool initialTool) {
-        _currentTool = initialTool;
+    Tool[] tools;
+    int index;
+
+    MouseController(Tool[] tools) {
+        this.tools = tools;
+        index = 0;
     }
-    public void setTool(Tool tool) {
-        _currentTool = tool;
+    public void setTool(int newIndex) {
+        index = newIndex % tools.length;
     }
 }

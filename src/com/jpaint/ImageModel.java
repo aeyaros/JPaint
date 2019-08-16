@@ -6,8 +6,8 @@ import java.util.ArrayDeque;
 public class ImageModel {
     private ArrayDeque<Canvas> _pastStates; //previous states
     private ArrayDeque<Canvas> _undoneStates; //"future states" that were undone
-    private Canvas _currentState; //current state of the drawing
-    private ImageView _imageView; //a view for the model to update
+    private Canvas currentState; //current state of the drawing
+    private ImageView imageView; //a view for the model to update
 
     //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
@@ -17,24 +17,24 @@ public class ImageModel {
 
     //create a new image model with a width and a height
     ImageModel(int w, int h, ImageView imageView) {
-        _currentState = new Canvas(w, h);
-        _imageView = imageView;
-        refresh(); //dont remove
+        currentState = new Canvas(w, h);
+        this.imageView = imageView;
+        refresh(); //dont remove this from here!
     }
 
-    //refresh the view
+    //refresh the view with the current state
     void refresh() {
-        _imageView.refresh(_currentState.getImage());
+        imageView.refresh(currentState.getImage());
     }
 
     //get the current state of the drawing
     private Canvas getCurrentState() {
-        return _currentState;
+        return currentState;
     }
 
     //before a tool is used, save state to past states
     void saveCurrentState() {
-        _pastStates.addFirst(new Canvas(_currentState));
+        _pastStates.addFirst(new Canvas(currentState));
     }
 
 
@@ -42,7 +42,7 @@ public class ImageModel {
 
     //update the current state (note: is used for undo/redo)
     private void updateCurrentState(Canvas canvas) {
-        _currentState = new Canvas(canvas);
+        currentState = new Canvas(canvas);
     }
 
     boolean canUndo() {
@@ -69,7 +69,7 @@ public class ImageModel {
     //undo the most recently made change
     public void undo() {
         if(this.canUndo()) { //if we can undo
-            addToUndoneStates(_currentState); //push current state to beginning of undonestates
+            addToUndoneStates(currentState); //push current state to beginning of undonestates
             updateCurrentState(_pastStates.removeFirst()); //pop past state to current state
         } //else cant undo (nothing can be popped from the previous state
     }
@@ -77,18 +77,18 @@ public class ImageModel {
     //redo most recently undone state
     public void redo() {
         if(this.canRedo()) { //if we can redo
-            addToPastStates(_currentState); //push current state to past states
+            addToPastStates(currentState); //push current state to past states
             updateCurrentState(_undoneStates.removeFirst()); //pop undone state to current state
         } //else cant redo (nothing was previously undone
     }
 
     /*====== ACCESSING CANVAS ======*/
     int getWidth() {
-        return _currentState.getWidth();
+        return currentState.getWidth();
     }
 
     int getHeight() {
-        return _currentState.getHeight();
+        return currentState.getHeight();
     }
 
     Color getPixel(int x, int y) {
@@ -96,13 +96,10 @@ public class ImageModel {
     }
 
     void setPixel(int x, int y, int argb) {
-        _currentState.setPixel(x,y,argb);
+        currentState.setPixel(x,y,argb);
     }
 
     void setPixel(int x, int y, Color color) {
-        _currentState.setPixel(x,y,color.getARGB());
+        currentState.setPixel(x,y,color.getARGB());
     }
-
-
-
 }

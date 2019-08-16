@@ -7,7 +7,7 @@ public class ToolShapes extends Tool {
     ToolShapes(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("shapes button"));
+        upperCard.add(new JButton("shapes button"));
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.jpaint;
 
 import javax.swing.*;
-import java.awt.image.BufferedImage;
 
 //ImageView: THIS IS THE MAIN VIEW CLASS
 public class ImageView extends JLabel {

@@ -7,37 +7,33 @@ public class ToolPencil extends Tool {
     ToolPencil(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("pencil button"));
+        upperCard.add(new JButton("pencil button"));
     }
 
-    int pastX;
-    int pastY;
+    //store previous coordinates between drag events
+    private int pastX;
+    private int pastY;
 
     @Override
     public void toolDragged(MouseEvent e) {
+        //copy to local variables for safety
+        int oldX = pastX;
+        int oldY = pastY;
+        //get current variables
         int curX = e.getX();
         int curY = e.getY();
-        int pstX = pastX;
-        int pstY = pastY;
+        //immediately save current variables for the next function call
         pastX = curX;
         pastY = curY;
-
-        int color = getColorIntByButton(e.getButton());
-        _model.setPixel(curX, curY, getColorByButton(e.getButton()));
-        bresenham(pstX, pstY, curX, curY, color);
-        _model.refresh();
+        //get color to draw with
+        int colorInt = getColorIntByButton(e.getButton());
+        model.setPixel(curX, curY, colorInt); //draw at the point
+        bresenham(oldX, oldY, curX, curY, colorInt); //draw line from past point to current point
+        model.refresh(); //tell model to refresh view
     }
 
-    @Override
-    public void toolMoved(MouseEvent e) {
-        
-    }
-
-    @Override
-    public void toolClicked(MouseEvent e) {
-
-    }
-
+    //at start of curve, set past coordinates to current coordinates
+    // to avoid drawing a line from the end of the previous stroke
     @Override
     public void toolPressed(MouseEvent e) {
         pastX = e.getX();
@@ -46,18 +42,19 @@ public class ToolPencil extends Tool {
 
     }
 
-    @Override
-    public void toolReleased(MouseEvent e) {
+    @Override public void toolReleased(MouseEvent e) {
         System.out.println("End drag");
     }
-
-    @Override
-    public void toolEntered(MouseEvent e) {
+    @Override public void toolMoved(MouseEvent e) {
 
     }
+    @Override public void toolClicked(MouseEvent e) {
 
-    @Override
-    public void toolExited(MouseEvent e) {
+    }
+    @Override public void toolEntered(MouseEvent e) {
+
+    }
+    @Override public void toolExited(MouseEvent e) {
 
     }
 
@@ -90,7 +87,7 @@ public class ToolPencil extends Tool {
                 err += dx;
                 y0 += sy;
             } //then draw at that point
-            _model.setPixel(x0, y0, color);
+            model.setPixel(x0, y0, color);
         }
 
     }

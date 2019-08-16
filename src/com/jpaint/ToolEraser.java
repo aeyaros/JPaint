@@ -7,7 +7,7 @@ public class ToolEraser extends Tool {
     ToolEraser(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
         //set up upper card
-        _upperCard.add(new JButton("eraser button"));
+        upperCard.add(new JButton("eraser button"));
     }
 
     @Override

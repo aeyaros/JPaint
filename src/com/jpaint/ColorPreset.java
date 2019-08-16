@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 //ColorPreset: a button for choosing a preset color in the UI
 public class ColorPreset extends JButton {
-    private Color _color;
+    private Color color;
 
     ColorPreset(Color color) {
         super();
@@ -18,7 +18,7 @@ public class ColorPreset extends JButton {
         int pixelCount = WindowSetup.COLOR_BUTTON_SIZE * WindowSetup.COLOR_BUTTON_SIZE;
         int[] iconArray = new int[pixelCount];
         for(int i = 0; i < pixelCount; i++) {
-            iconArray[i] = _color.getARGB();
+            iconArray[i] = color.getARGB();
         }
         BufferedImage bufferedImage = new BufferedImage(WindowSetup.COLOR_BUTTON_SIZE, WindowSetup.COLOR_BUTTON_SIZE, BufferedImage.TYPE_INT_ARGB);
         bufferedImage.setRGB(0,0,WindowSetup.COLOR_BUTTON_SIZE, WindowSetup.COLOR_BUTTON_SIZE,iconArray,0,1);
@@ -26,7 +26,7 @@ public class ColorPreset extends JButton {
     }
 
     public void changeColor(Color newColor) {
-        _color = newColor;
+        color = newColor;
         this.setIcon(generateColorIcon());
     }
 }
