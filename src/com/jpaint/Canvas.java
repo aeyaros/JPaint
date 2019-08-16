@@ -18,7 +18,7 @@ class Canvas {
         pixels = new int[width][height];
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-                pixels[i][j] = new Color(128,0,0,255).getARGB();
+                pixels[i][j] = new Color(128,0,255,0).getARGB();
             }
         }
     }
@@ -40,6 +40,10 @@ class Canvas {
         return pixels[w][h];
     }
 
+    int[][] getPixels() {
+        return pixels;
+    }
+
     Color getColor(int w, int h) {
         return new Color(pixels[w][h]);
     }
@@ -49,17 +53,6 @@ class Canvas {
     }
     int getHeight() {
         return height;
-    }
-
-    //export a buffered image for the view
-    BufferedImage getImage() {
-        BufferedImage bufferedImage = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
-                //set the current pixel in the buffered image to argb int from the pixels array
-                bufferedImage.setRGB(i, j, pixels[i][j]);
-            }
-        } return bufferedImage;
     }
 
     /*====== MODIFIERS ======*/

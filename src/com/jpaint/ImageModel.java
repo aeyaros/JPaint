@@ -1,5 +1,7 @@
 package com.jpaint;
 
+import javax.swing.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
@@ -8,6 +10,7 @@ public class ImageModel {
     private Canvas currentState; //current state of the drawing
     private ArrayDeque<Canvas> pastStates; //previous states
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
+    private int[][] tileBG;
 
     //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
@@ -22,13 +25,71 @@ public class ImageModel {
         undoneStates = new ArrayDeque<>();
 
         this.imageView = imageView;
+
+        updateTileBG();
+
         refresh(); //dont remove this from here!
     }
 
-    //refresh the view with the current state
+    //blend the image with the tile background and then send that to the view
     void refresh() {
-        imageView.refresh(currentState.getImage());
+        imageView.refresh(getImage(blendScreens(currentState.getPixels(), tileBG)));
     }
+
+    //export a buffered image for the view
+    private ImageIcon getImage(int[][] matrix) {
+        BufferedImage bufferedImage = new BufferedImage(matrix.length, matrix[0].length, BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < matrix.length; i++) {
+            for(int j = 0; j < matrix[0].length; j++) {
+                //set the current pixel in the buffered image to argb int from the pixels array
+                bufferedImage.setRGB(i, j, matrix[i][j]);
+            }
+        } return new ImageIcon(bufferedImage);
+    }
+
+    //update the tile BG if image is resized
+    private void updateTileBG() {
+        tileBG = tileBackground(currentState.getWidth(), currentState.getHeight());
+    }
+
+    //overlay one image matrix on top of another
+    //assuming they are the same size
+    private int[][] blendScreens(int[][] top, int[][] bottom) {
+        int w = top.length; int h = top[0].length;
+        try {
+            int[][] output = new int[w][h];
+            for(int i = 0; i < w; i++) { for(int j = 0; j < h; j++) {
+                output[i][j] = Color.alphaBlend(top[i][j], bottom[i][j]); }
+                        //new Color(top[i][j]), new Color(bottom[i][j])).getARGB(); }
+            } return output;
+        } catch(Exception e) {
+            e.printStackTrace();System.out.print("\n");
+            throw new IllegalArgumentException("To blend, screens must be same size: first screen is "
+                    + top.length + ", " + top[0].length + " and second screen is "
+                    + bottom.length + ", " + bottom[0].length);
+        }
+    }
+
+    //draw a checkerboard at a given size
+    private int[][] tileBackground(int w, int h) {
+        int[][] matrix = new int[w][h];
+        int[] squareColors = {
+                new Color(255,255,255,255).getARGB(),
+                new Color(255,200,200,200).getARGB()
+        }; int squareSize = 8; //px
+        boolean use1 = false;
+        for(int i = 0; i < w; i++) {
+            //every 8 pixels along the row, new color
+            if (i % squareSize == 0) use1 = !use1;
+            for (int j = 0; j < h; j++) {
+                //every 8 pixels in the column, new color
+                if (j % squareSize == 0) use1 = !use1;
+                if (use1) matrix[i][j] = squareColors[1];
+                else matrix[i][j] = squareColors[0];
+            }
+        } return matrix;
+    }
+
 
     //get the current state of the drawing
     private Canvas getCurrentState() {
