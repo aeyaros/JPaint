@@ -6,6 +6,7 @@ public class Color {
 
     /*====== CONSTRUCTORS ======*/
 
+    //create a new color
     Color(int a, int r, int g, int b) {
        channels = new short[4];
        channels[0] = (short) (a % 256);
@@ -14,7 +15,7 @@ public class Color {
        channels[3] = (short) (b % 256);
     }
 
-    //deep copy constructor
+    //deep copy from another color
     Color(Color oldColor) {
         channels = new short[4];
         channels[0] = oldColor.getChannel(0);
