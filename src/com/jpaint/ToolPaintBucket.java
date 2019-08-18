@@ -17,7 +17,6 @@ public class ToolPaintBucket extends Tool {
         upperCard.add(new JButton("bucket button"));
     }
 
-
     //Node object for flood algorithm
     private class Node {
         int x; int y;
@@ -27,32 +26,28 @@ public class ToolPaintBucket extends Tool {
         int c() { return model.getPixel(x,y).getARGB(); } //get color of node
         void set(int c) {
             model.setPixel(x,y,c);
-            System.out.print(x + "," + y + "");
         } //set color of node
 
         //get nodes to north, south, east, west
         Node N() {
-            if(y+1 > highY) return new Node(x, y+1);
+            if(y+1 < highY) return new Node(x, y+1);
             else throw new IndexOutOfBoundsException();
         } Node S() {
-            if(y-1 < lowY) return new Node(x, y-1);
+            if(y-1 >= lowY) return new Node(x, y-1);
             else throw new IndexOutOfBoundsException();
         } Node E() {
-            if(x-1 < lowX) return new Node(x-1, y);
+            if(x-1 >= lowX) return new Node(x-1, y);
             else throw new IndexOutOfBoundsException();
         } Node W() {
-            if(x+1 > highX) return new Node(x+1, y);
+            if(x+1 < highX) return new Node(x+1, y);
             else throw new IndexOutOfBoundsException();
         }
         //print out a node
         void print() { System.out.println("node " + x + "," + y + " "); }
     }
 
-    @Override
-    public void toolClicked(MouseEvent e) {
+    private void fill(int x, int y, int buttonCode) {
         //Flood-fill algorithm from Wikipedia
-        int x = e.getX();
-        int y = e.getY();
 
         //cancel if out of bounds
         if(!model.isInBounds(x,y)) return;
@@ -67,7 +62,7 @@ public class ToolPaintBucket extends Tool {
             exc.printStackTrace(); return;
         }
 
-        int replacement = getColorIntByButton(e.getButton()); //color selected by user
+        int replacement = getColorIntByButton(buttonCode); //color selected by user
 
         //no need to save state unless there's actually something for us to do
         if (target == replacement) return; // 1. If target-color is equal to replacement-color, return.
@@ -82,47 +77,55 @@ public class ToolPaintBucket extends Tool {
 
         while(nodes.size() > 0) { // 6. While Q is not empty:
             Node n = new Node(nodes.removeFirst());// 7. Set n equal to the first element of Q. 8. Remove first element from Q.
-            n.print();
             try {
                 if(n.W().c() == target) {   // 9. If the color of the node to the west of n is target-color,
-                    n.W().print();
                     n.W().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.W()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { System.out.println("Fill: West boundary reached"); }
+            } catch (IndexOutOfBoundsException ex) { }
 
             try {
                 if(n.E().c() == target) {   //10. If the color of the node to the east of n is target-color,
-                    n.E().print();
                     n.E().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.E()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { System.out.println("Fill: East boundary reached"); }
+            } catch (IndexOutOfBoundsException ex) { }
 
             try {
                 if(n.N().c() == target) {   //11. If the color of the node to the north of n is target-color,
-                    n.N().print();
                     n.N().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.N()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { System.out.println("Fill: North boundary reached"); }
+            } catch (IndexOutOfBoundsException ex) { }
 
             try {
                 if(n.S().c() == target) {   //12. If the color of the node to the south of n is target-color,
-                    n.S().print();
                     n.S().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.S()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { System.out.println("Fill: South boundary reached"); }
+            } catch (IndexOutOfBoundsException ex) { }
         } //13. Continue looping until Q is exhausted.
         //14. Return.
         model.refresh();
     }
 
+    @Override
+    public void toolClicked(MouseEvent e) {
+        System.out.println("clicked");
+        fill(e.getX(), e.getY(), e.getButton());
+
+    }
+
+    @Override
+    public void toolReleased(MouseEvent e) {
+        System.out.println("released");
+        fill(e.getX(), e.getY(), e.getButton());
+
+    }
+
     @Override public void toolDragged(MouseEvent e) { }
     @Override public void toolMoved(MouseEvent e) { }
     @Override public void toolPressed(MouseEvent e) { }
-    @Override public void toolReleased(MouseEvent e) { }
     @Override public void toolEntered(MouseEvent e) { }
     @Override public void toolExited(MouseEvent e) { }
 }

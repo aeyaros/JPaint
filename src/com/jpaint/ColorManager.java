@@ -89,7 +89,11 @@ class ColorManager {
                 System.out.println("singleclick");
             }
         }
-        @Override public void mousePressed(MouseEvent e) { }
+        @Override public void mousePressed(MouseEvent e) {
+            //set the current button color based on which button is clicked
+            //setButtonColor(presetColors[index].getColor(), e.getButton());
+        }
+
         @Override public void mouseReleased(MouseEvent e) { }
         @Override public void mouseEntered(MouseEvent e) { }
         @Override public void mouseExited(MouseEvent e) { }
