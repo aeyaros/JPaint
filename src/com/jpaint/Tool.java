@@ -9,12 +9,12 @@ import java.awt.event.MouseEvent;
 public abstract class Tool implements ToolInput {
     protected ImageModel model; //the model class this tool acts on
     protected JPanel upperCard; //the upper panel shown when this tool is selected
-    JButton button; //the tool button
+    JRadioButton button; //the tool button
     private String name;
     private int[] colorsInts;
 
     //set button name and add the model
-    Tool(String name, ImageModel model, String iconSource) {
+    Tool(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super();
         this.name = name;
         this.model = model;
@@ -25,17 +25,23 @@ public abstract class Tool implements ToolInput {
         upperCard = new JPanel();
 
         //button for toolbar
-        button = new JButton();
-        button.setOpaque(true);
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setBorder(null);
+        button = new JRadioButton();
+        //button.setOpaque(true);
+        //button.setContentAreaFilled(false);
+        button.setBorderPainted(true);
+        button.setBorder(BorderFactory.createEtchedBorder());
         button.setSize(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE);
+
 
         try { //get icon of button
             Image image = ImageIO.read(getClass().getResource(iconSource));
             image = image.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(image));
+
+            Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
+            selectedImage = selectedImage.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
+            button.setSelectedIcon(new ImageIcon(selectedImage));
+
         } catch(Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't load icon for " + name + " button from location " + iconSource);

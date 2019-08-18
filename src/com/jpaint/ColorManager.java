@@ -3,6 +3,7 @@ package com.jpaint;
 import javax.swing.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 //manage selected colors
 class ColorManager {
@@ -12,21 +13,37 @@ class ColorManager {
     //the preset colors shown in the panels
     private ColorButton[] presetColors;
 
+    //default preset colors
+    private Color[] colors = {
+            new Color(255,  0,  0,  0), //black
+            new Color(255,128,128,128), //gray
+            new Color(255,255,255,255), //white
+            new Color(255,255,  0,255), //magenta
+            new Color(255,255,  0,  0), //red
+            new Color(255,255,128,  0), //orange
+            new Color(255,255,255,  0), //yellow
+            new Color(255,  0,255,  0), //green
+            new Color(255,  0,128,  0), //dark green
+            new Color(255,  0,255,255), //cyan
+            new Color(255,  0,  0,255), //blue
+            new Color(255,128,  0,255)  //purple
+    };
+
     //tools that use the colors
     private Tool[] tools;
 
-    ColorManager(Tool[] tools, JPanel presetPanel, Color[] colors, JPanel selectedColorsPanel) {
+    ColorManager(Tool[] tools, JPanel presetPanel, JPanel selectedColorsPanel) {
         if(colors.length < 1) throw new IllegalArgumentException("Must have at least one color.");
         selectedColors = new ColorButton[3];
 
         //set current colors and add to the panel showing currently selected colors
         int halfMiddleWidth = 8; //half of the width of the middle button color selector
         selectedColors[0] = new ColorButton(colors[0 % colors.length],
-                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.TOOL_BUTTON_SIZE);
+                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
         selectedColors[1] = new ColorButton(colors[1 % colors.length],
-                halfMiddleWidth + halfMiddleWidth, ApplicationWindow.TOOL_BUTTON_SIZE);
+                halfMiddleWidth + halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
         selectedColors[2] = new ColorButton(colors[2 % colors.length],
-                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.TOOL_BUTTON_SIZE);
+                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
         selectedColorsPanel.add(selectedColors[0],0);
         selectedColorsPanel.add(selectedColors[1],1);
         selectedColorsPanel.add(selectedColors[2],2);
@@ -44,6 +61,9 @@ class ColorManager {
             //add event listener to the button
             //when it is clicked, the current color should be set
             presetColors[i].addMouseListener(new PresetColorsListener(i));
+
+            //also add a mouse motion listener for drag events
+            presetColors[i].addMouseMotionListener(new PresetColorsListener(i));
 
             //add the button to the panel
             presetPanel.add(presetColors[i]);
@@ -67,7 +87,7 @@ class ColorManager {
     //allows me to pass an index value through the action listener
     // so I can use it to set the mouse controllers
     //used for clicking the preset color buttons
-    private class PresetColorsListener implements MouseListener {
+    private class PresetColorsListener implements MouseListener, MouseMotionListener {
         private int index;
         PresetColorsListener(int index) {
             this.index = index;
@@ -86,17 +106,20 @@ class ColorManager {
             } else { //if single click
                 //set the current button color based on which button is clicked
                 setButtonColor(presetColors[index].getColor(), e.getButton());
-                System.out.println("singleclick");
+                //System.out.println("singleclick");
             }
         }
-        @Override public void mousePressed(MouseEvent e) {
-            //set the current button color based on which button is clicked
-            //setButtonColor(presetColors[index].getColor(), e.getButton());
+        //user may move mouse slightly when clicking, so we need a mousedragged event too
+        @Override
+        public void mouseDragged(MouseEvent e) {
+            setButtonColor(presetColors[index].getColor(), e.getButton());
         }
 
+        @Override public void mousePressed(MouseEvent e) { }
         @Override public void mouseReleased(MouseEvent e) { }
         @Override public void mouseEntered(MouseEvent e) { }
         @Override public void mouseExited(MouseEvent e) { }
+        @Override public void mouseMoved(MouseEvent e) { }
     }
 
     //given a mouse event, return the color button indicated by the mouse event

@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.image.BufferedImage;
 
 //ColorPreset: a button for choosing a preset color in the UI
-class ColorButton extends JButton {
+class ColorButton extends JLabel {
     private Color color;
     private int width;
     private int height;
@@ -16,14 +16,12 @@ class ColorButton extends JButton {
         this.width = width;
         this.height = height;
         this.setOpaque(true);
-        this.setContentAreaFilled(false);
-        this.setBorderPainted(false);
-        this.setBorder(null);
+        this.setBorder(BorderFactory.createLoweredBevelBorder());
         this.color = color; //required so previous color can be initialized in setColor()
         setColor(color);
     }
 
-    static ImageIcon generateColorIcon(int w, int h, int c) {
+     private ImageIcon generateColorIcon(int w, int h, int c) {
         int pixelCount = w * h; //number of pixels in icon
         int[] iconArray = new int[pixelCount]; //create array of pixels
         for(int i = 0; i < pixelCount; i++) iconArray[i] = c; //set colors of pixels

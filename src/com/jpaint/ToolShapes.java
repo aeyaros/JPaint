@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 public class ToolShapes extends Tool {
-    ToolShapes(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
+    ToolShapes(String name, ImageModel model, String iconSource, String selectedIconSource) {
+        super(name, model, iconSource, selectedIconSource);
         //set up upper card
         upperCard.add(new JButton("shapes button"));
     }

@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.util.ArrayDeque;
 
@@ -11,10 +12,15 @@ public class ToolPaintBucket extends Tool {
     private int highX = model.getWidth();
     private int highY = model.getHeight();
 
-    ToolPaintBucket(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
+    ToolPaintBucket(String name, ImageModel model, String iconSource, String selectedIconSource) {
+        super(name, model, iconSource,selectedIconSource);
         //set up upper card
-        upperCard.add(new JButton("bucket button"));
+        upperCard.setLayout(new CardLayout());
+        //set up upper card
+        JLabel infoText = new JLabel("Click to fill part of the image with a selected color.");
+        infoText.setHorizontalAlignment(SwingConstants.CENTER);
+        infoText.setVerticalAlignment(SwingConstants.CENTER);
+        upperCard.add(infoText,0);
     }
 
     //Node object for flood algorithm
@@ -68,9 +74,6 @@ public class ToolPaintBucket extends Tool {
         if (target == replacement) return; // 1. If target-color is equal to replacement-color, return.
         // not applicable: 2. If color of node is not equal to target-color, return.
 
-        //save current state before performing operation
-        model.saveCurrentState();
-
         model.setPixel(x, y, target); // 3. Set the color of node to replacement-color.
         ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
@@ -106,6 +109,8 @@ public class ToolPaintBucket extends Tool {
             } catch (IndexOutOfBoundsException ex) { }
         } //13. Continue looping until Q is exhausted.
         //14. Return.
+        //save current state when we are finished
+        model.saveCurrentState();
         model.refresh();
     }
 
@@ -116,16 +121,14 @@ public class ToolPaintBucket extends Tool {
 
     }
 
-    @Override
-    public void toolReleased(MouseEvent e) {
-        System.out.println("released");
+    @Override public void toolPressed(MouseEvent e) {
+        System.out.println("pressed");
         fill(e.getX(), e.getY(), e.getButton());
-
     }
 
+    @Override public void toolReleased(MouseEvent e) { }
     @Override public void toolDragged(MouseEvent e) { }
     @Override public void toolMoved(MouseEvent e) { }
-    @Override public void toolPressed(MouseEvent e) { }
     @Override public void toolEntered(MouseEvent e) { }
     @Override public void toolExited(MouseEvent e) { }
 }

@@ -1,6 +1,9 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
@@ -12,7 +15,6 @@ public class ImageModel {
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
     private int[][] tileBG; //tiled background
 
-    //TO-DO - MAKE THESE BIGGER WHEN I KNOW THEY ARE WORKING!!!
     private final int MAX_UNDO = 10;
     private final int MAX_REDO = 10;
 
@@ -23,18 +25,40 @@ public class ImageModel {
         currentState = new Canvas(w, h);
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-
         this.imageView = imageView;
 
-        updateTileBG();
+        saveCurrentState();
         refresh(); //dont remove this from here!
+
+        //show mouse coordinates in a view
+        imageView.addMouseMotionListener(new MouseMotionListener() {
+            @Override public void mouseMoved(MouseEvent e) {
+                refreshCoordinates(e.getX(), e.getY()); }
+            @Override public void mouseDragged(MouseEvent e) {
+                refreshCoordinates(e.getX(), e.getY()); } });
+        imageView.addMouseListener(new MouseListener() {
+            //when pointer leaves canvas, display nothing
+            @Override public void mouseExited(MouseEvent e) { clearCoordinates(); }
+            @Override public void mouseClicked(MouseEvent e) {}
+            @Override public void mousePressed(MouseEvent e) {}
+            @Override public void mouseReleased(MouseEvent e) {}
+            @Override public void mouseEntered(MouseEvent e) {} });
+    }
+
+    private void refreshCoordinates(int x, int y) {
+        if(isInBounds(x,y)) imageView.refreshCoordinates(x,y);
+        else clearCoordinates();
+    }
+
+    private void clearCoordinates() {
+        imageView.clearCoordinates();
     }
 
     /*====== VIEWING TOOLS ======*/
 
     //blend the image with the tile background and then send that to the view
     void refresh() {
-        imageView.refresh(getImage( overlayMatrices(currentState.getPixels(), tileBG)));
+        imageView.refresh(getImage(currentState.getPixels()));// overlayMatrices(currentState.getPixels(), tileBG)));
     }
 
     //export a buffered image for the view
@@ -66,31 +90,6 @@ public class ImageModel {
         }
     }
 
-    //update the tile BG if image is resized
-    private void updateTileBG() {
-        tileBG = generateTileBG(currentState.getWidth(), currentState.getHeight());
-    }
-
-    //draw a checkerboard at a given size
-    private int[][] generateTileBG(int w, int h) {
-        int[][] matrix = new int[w][h];
-        int[] squareColors = {
-                new Color(255,255,255,255).getARGB(),
-                new Color(255,200,200,200).getARGB()
-        }; int squareSize = 8; //px
-        boolean use1 = false;
-        for(int i = 0; i < w; i++) {
-            //every 8 pixels along the row, new color
-            if (i % squareSize == 0) use1 = !use1;
-            for (int j = 0; j < h; j++) {
-                //every 8 pixels in the column, new color
-                if (j % squareSize == 0) use1 = !use1;
-                if (use1) matrix[i][j] = squareColors[1];
-                else matrix[i][j] = squareColors[0];
-            }
-        } return matrix;
-    }
-
     /*====== STATES, UNDOING AND REDOING ======*/
 
     //get the current state of the drawing
@@ -100,7 +99,16 @@ public class ImageModel {
 
     //before a tool is used, save state to past states
     void saveCurrentState() {
+        //save current state
         pastStates.addFirst(new Canvas(currentState));
+
+        //if too many undo'ed states then remove an action from the undo list
+        if(pastStates.size() > MAX_UNDO) pastStates.removeLast();
+
+        //we just did a new action; we cant keep the old undone actions as we are starting a new branch
+        undoneStates.clear();
+        System.out.println("Save current state");
+        printStates();
     }
 
     //update the current state (note: is used for undo/redo)
@@ -109,7 +117,7 @@ public class ImageModel {
     }
 
     private boolean canUndo() {
-        return pastStates.size() > 0; //returns true if number of past states > 0
+        return pastStates.size() > 1; //returns true if number of past states > 0
     }
 
     private boolean canRedo() {
@@ -133,7 +141,11 @@ public class ImageModel {
         if(this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
+            refresh();
+            System.out.println("Undone");
+            printStates();
         } //else cant undo (nothing can be popped from the previous state
+
     }
 
     //redo most recently undone state
@@ -141,7 +153,11 @@ public class ImageModel {
         if(this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
             updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
+            refresh();
+            System.out.println("Redone");
+            printStates();
         } //else cant redo (nothing was previously undone
+
     }
 
     /*====== ACCESSING CANVAS ======*/
@@ -174,5 +190,12 @@ public class ImageModel {
     }
     void setPixel(int x, int y, Color color) {
         if(isInBounds(x,y)) currentState.setPixel(x,y,color.getARGB());
+    }
+
+    void printStates() {
+        if(pastStates.size() > 0) for(int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
+        System.out.print("[c]"); //for current state
+        if(undoneStates.size() > 0) for(int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
+        System.out.print('\n');
     }
 }

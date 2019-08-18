@@ -12,8 +12,8 @@ public class ToolColorPicker extends Tool {
     private String[] labelPrefixes = {"Opacity: ", "Red: ", "Green: ", "Blue: "};
     private final int DARK_THRESHOLD = 80;
 
-    ToolColorPicker(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
+    ToolColorPicker(String name, ImageModel model, String iconSource, String selectedIconSource) {
+        super(name, model, iconSource, selectedIconSource);
         //set up upper card
         cards = new CardLayout();
         upperCard = new JPanel(cards);
@@ -24,7 +24,7 @@ public class ToolColorPicker extends Tool {
         upperCard.add(coordinates,0);
 
         //add panel to be shown when not hovering over the image
-        JLabel infoText = new JLabel("Hover over the image to pick a color.");
+        JLabel infoText = new JLabel("Hover over the image, then click to pick a color.");
         infoText.setHorizontalAlignment(SwingConstants.CENTER);
         infoText.setVerticalAlignment(SwingConstants.CENTER);
         upperCard.add(infoText);
@@ -74,9 +74,12 @@ public class ToolColorPicker extends Tool {
         }
     }
 
+    //WC3 Brightness formula: ((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
     private boolean isDarkColor(Color c) {
-        return ((c.getChannel(1) + c.getChannel(2) + c.getChannel(3))/ 3 < DARK_THRESHOLD);
-        //return (c.getChannel(1) < DARK_THRESHOLD || c.getChannel(2) < DARK_THRESHOLD || c.getChannel(3) < DARK_THRESHOLD );
+        double r = c.getChannel(1)/255.0d;
+        double g = c.getChannel(2)/255.0d;
+        double b = c.getChannel(3)/255.0d;
+        return ((((r * 299d) + (g * 587d) + (b * 114d)) / 1000.0d) < 0.4);
     }
 
     private void setColor(int x, int y, int buttonCode) {
@@ -90,7 +93,7 @@ public class ToolColorPicker extends Tool {
         coordinates.setBackground(new Color(255,128,128,128).getAWT());
         for(JLabel l: ARGB) l.setText("");
         cards.last(upperCard);
-        System.out.print("Cleared!");
+        //System.out.print("Cleared!");
     }
 
     @Override
@@ -129,6 +132,4 @@ public class ToolColorPicker extends Tool {
     public void toolExited(MouseEvent e) {
         clearStatus();
     }
-
-
 }

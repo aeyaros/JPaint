@@ -5,8 +5,8 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class ToolPencil extends Tool {
-    ToolPencil(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
+    ToolPencil(String name, ImageModel model, String iconSource, String selectedIconSource) {
+        super(name, model, iconSource, selectedIconSource);
         upperCard.setLayout(new CardLayout());
         //set up upper card
         JLabel infoText = new JLabel("Click and drag to draw.");
@@ -35,10 +35,9 @@ public class ToolPencil extends Tool {
     // to avoid drawing a line from the end of the previous stroke
     @Override
     public void toolPressed(MouseEvent e) {
-        model.saveCurrentState();
         pastX = e.getX();
         pastY = e.getY();
-        System.out.println("Start drag");
+        //System.out.println("Start drag");
     }
 
     //during drag, draw points and lines
@@ -70,13 +69,15 @@ public class ToolPencil extends Tool {
     //at end of drag, prevent drawing again
     @Override public void toolReleased(MouseEvent e) {
         preventDrawing();
-        System.out.println("End drag");
+        model.saveCurrentState();
+        model.refresh();
+        //System.out.println("End drag");
     }
 
     //if you click once it will draw a point
     @Override public void toolClicked(MouseEvent e) {
-        model.saveCurrentState();
         model.setPixel(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+        model.saveCurrentState();
         model.refresh();
     }
     

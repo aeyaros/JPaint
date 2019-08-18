@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 public class ToolEraser extends Tool {
-    ToolEraser(String name, ImageModel model, String iconSource) {
-        super(name, model, iconSource);
+    ToolEraser(String name, ImageModel model, String iconSource, String selectedIconSource) {
+        super(name, model, iconSource, selectedIconSource);
         //set up upper card
         upperCard.add(new JButton("eraser button"));
     }
