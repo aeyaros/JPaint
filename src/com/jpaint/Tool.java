@@ -32,7 +32,6 @@ public abstract class Tool implements ToolInput {
         button.setBorder(BorderFactory.createEtchedBorder());
         button.setSize(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE);
 
-
         try { //get icon of button
             Image image = ImageIO.read(getClass().getResource(iconSource));
             image = image.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);

@@ -4,26 +4,24 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.security.Key;
 import java.util.ArrayList;
 
 class ApplicationWindow {
     //paramaters for certain UI sizes
     final static int TOOL_BUTTON_SIZE = 48;
-    private final int NUMBER_TOOL_COLUMNS = 2;
     final static int COLOR_BUTTON_SIZE = 32;
+    private final int TOOL_BUTTON_GAP = 4;
+    private final int NUMBER_TOOL_COLUMNS = 2;
     private final int NUMBER_COLOR_COLUMNS = 3;
-    private final int MINIMUM_WINDOW_WIDTH = 500;
-    private final int MINIMUM_WINDOW_HEIGHT = 500;
+    private final int MINIMUM_WINDOW_WIDTH = 560;
+    private final int MINIMUM_WINDOW_HEIGHT = 560;
     private final int THIN_EMPTY_BORDER_SIZE = 6;
     private final int WINDOW_CHROME_SIZE = 8;
     private final Color PAGE_BACKGROUND_COLOR = new Color(255,180,180,200);
 
-    //privately accessible resources
-    private Tool[] tools;
-    private JPanel topPanel;
-    private CardLayout topLayout;
-    private MouseStaticController mouseStaticController;
-    private MouseMotionController mouseMotionController;
+
+
     private JLabel coordinatesLabel;
     private ImageModel theModel;
 
@@ -108,7 +106,7 @@ class ApplicationWindow {
         //add glue to stick this to the right
         bottomBar.add(Box.createHorizontalGlue());
 
-        /*====== SIDE PANEL ======*/
+        /*====== CREATE SIDE PANEL ======*/
 
         //side panel with grid layout
         JPanel sidePanel = new JPanel(new GridBagLayout());
@@ -117,117 +115,62 @@ class ApplicationWindow {
         sidePanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,0,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
         mainLayout.add(sidePanel, BorderLayout.WEST);
 
-        //side panel has a tools panel and a colors panel
 
-        /*====== TOOLS ======*/
+        /*====== ADD CONTROLS TO SIDE PANEL ======*/
 
-        //create tools
-        //add them to arraylist one by one, then copy to regular array to avoid magic numbers
-        ArrayList<Tool> newTools = new ArrayList<>();
-        newTools.add(new ToolSelect("Select", theModel,
-                "icons/select.png", "icons/selected select.png"));
-
-        ToolColorPicker toolColorPicker = new ToolColorPicker("Picker", theModel,
-                "icons/colorpicker.png", "icons/selected colorpicker.png");
-        newTools.add(toolColorPicker); //later, add the color manager once it is declared
-
-        newTools.add(new ToolPencil("Pencil", theModel,
-                "icons/pencil.png", "icons/selected pencil.png"));
-        newTools.add(new ToolPaintBrush("Brush", theModel,
-                "icons/paintbrush.png", "icons/selected paintbrush.png"));
-        newTools.add(new ToolEraser("Eraser", theModel,
-                "icons/eraser.png", "icons/selected eraser.png"));
-        newTools.add(new ToolPaintBucket("Bucket", theModel,
-                "icons/paintbucket.png", "icons/selected paintbucket.png"));
-        newTools.add(new ToolLine("Line", theModel,
-                "icons/line.png", "icons/selected line.png"));
-        newTools.add(new ToolShapes("Shapes", theModel,
-                "icons/shapes.png", "icons/selected shapes.png"));
-        //update colors of tools
-
-        tools = new Tool[newTools.size()]; //use regular array for better performance
-        for(int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
+        //using gridbag layout, so I have to set all constraints initially
+        // and then change y value each time I add something
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.gridx = 0; //x - will remain 0
+        EmptyBorder sidePanelBorder = new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE);
 
         //tools panel
-
-        JPanel toolsPanel = new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS,4,4));
-        toolsPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
-
-        //create both static and motion mouse controllers and add them to the view
-        mouseStaticController = new MouseStaticController(tools);
-        theView.addMouseListener(mouseStaticController);
-
-        mouseMotionController = new MouseMotionController(tools);
-        theView.addMouseMotionListener(mouseMotionController);
-
-        //set up top panel for tool-specific controls
-        topPanel = new JPanel();
-        topLayout = new CardLayout();
-        topPanel.setLayout(topLayout);
-
-        //button group, only one tool can be selected at a time
-        //buttons are radio buttons
-        ButtonGroup buttonGroup = new ButtonGroup();
-
-        //add listeners to tools
-        for(int i = 0; i < tools.length; i++) {// t: tools) {
-            //add an event listener to the tool button
-            //to define behavior when tool button is pressed
-            tools[i].button.putClientProperty("index", i); //set index of the button
-            tools[i].button.addActionListener(new ToolButtonListener(i)); //add listener to button
-
-            //add the tool's top card to the top panel
-            topPanel.add(tools[i].upperCard, tools[i].getName());
-
-            //add the tool's button to the button group
-            buttonGroup.add(tools[i].button);
-
-            //add the tool's button to the sidebar
-            toolsPanel.add(tools[i].button); //add button to panel on sidebar
-
-            //System.out.println("Added " + tools[i].getName());
-        }
-
-        /*====== START WITH PENCIL TOOL SELECTED ======*/
-        setCurrentTool(2); //start with pencil
-        //still need to make it initially selected
-        tools[2].button.setSelected(true);
-
-        //add top panel to the north of the center panel
-        centerPanel.add(topPanel, BorderLayout.NORTH);
-
-        //add toolbar to side panel
-        gridBagConstraints.anchor = GridBagConstraints.NORTH;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 0;
+        JPanel toolsPanel = new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS,TOOL_BUTTON_GAP,TOOL_BUTTON_GAP));
+        toolsPanel.setBorder(sidePanelBorder);
+        gridBagConstraints.gridy = 0; //y - will be changed as I add components
         sidePanel.add(toolsPanel, gridBagConstraints);
 
         //color presets panel
         JPanel presetPanel = new JPanel(new GridLayout(0, NUMBER_COLOR_COLUMNS,0,0));
-        presetPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
-        gridBagConstraints.anchor = GridBagConstraints.PAGE_START;
-        gridBagConstraints.gridx = 0;
+        presetPanel.setBorder(sidePanelBorder);
         gridBagConstraints.gridy = 1;
         sidePanel.add(presetPanel, gridBagConstraints);
 
+        //opacity slider panel
+        JPanel opacityPanel = new JPanel();
+        BoxLayout opacityLayout = new BoxLayout(opacityPanel, BoxLayout.Y_AXIS);
+        opacityPanel.setLayout(opacityLayout);
+        opacityPanel.setBorder(sidePanelBorder);
+        gridBagConstraints.gridy = 2;
+        sidePanel.add(opacityPanel, gridBagConstraints);
+
         //selected colors panel
         JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
-        selectedColorsPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
-        gridBagConstraints.anchor = GridBagConstraints.PAGE_START;
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 2;
+        selectedColorsPanel.setBorder(sidePanelBorder);
+        gridBagConstraints.gridy = 3;
         sidePanel.add(selectedColorsPanel, gridBagConstraints);
 
-        //add padding on bottom of sidebar
+        //add empty padding at bottom of sidebar
         gridBagConstraints.weighty = 1.0;
         sidePanel.add(Box.createVerticalGlue(),gridBagConstraints);
 
+        /*====== SET UP TOOLS ======*/
+
+        //class for managing tools
+        ToolsManager toolsManager = new ToolsManager(toolsPanel, theModel, theView);
+
+        //add top panel to the north of the center panel
+        centerPanel.add(toolsManager.getTopPanel(), BorderLayout.NORTH);
+
+        /*====== SET UP COLORS ======*/
+
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
-        ColorManager colorManager = new ColorManager(tools, presetPanel, selectedColorsPanel);
-        toolColorPicker.addColorManager(colorManager);
+        ColorManager colorManager = new ColorManager(toolsManager.getTools(), presetPanel, selectedColorsPanel, opacityPanel);
+        toolsManager.addColorManager(colorManager);
 
         /*====== MENU BAR ======*/
+
         JMenuBar menuBar = new JMenuBar();
 
         JMenu fileMenu = new JMenu("File");
@@ -240,54 +183,42 @@ class ApplicationWindow {
         frame.setJMenuBar(menuBar);
 
         /*====== MENU ITEMS ======*/
+
+        ArrayList<MenuItem> menuItems = new ArrayList<>();
+
+        int cmdCtrlModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+        int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
+
         //file menu
-        JMenuItem newItem = new JMenuItem("New");
-        KeyStroke newStroke = KeyStroke.getKeyStroke(KeyEvent.VK_N, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        newItem.setAccelerator(newStroke);
-        newItem.setMnemonic(KeyEvent.VK_N);
-        fileMenu.add(newItem);
-
-        JMenuItem openItem = new JMenuItem("Open");
-        KeyStroke openStroke = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        openItem.setAccelerator(openStroke);
-        openItem.setMnemonic(KeyEvent.VK_O);
-        fileMenu.add(openItem);
-
+        menuItems.add(new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> dummy()));
+        menuItems.add(new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> dummy()));
+        menuItems.add(new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> dummy()));
+        menuItems.add(new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> dummy()));
         fileMenu.addSeparator();
-
-        JMenuItem saveItem = new JMenuItem("Save");
-        KeyStroke saveStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        saveItem.setAccelerator(saveStroke);
-        saveItem.setMnemonic(KeyEvent.VK_S);
-        fileMenu.add(saveItem);
-
-        JMenuItem saveAsItem = new JMenuItem("Save As");
-        KeyStroke saveAsStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK);
-        saveAsItem.setAccelerator(saveAsStroke);
-        saveAsItem.setMnemonic(KeyEvent.VK_A);
-        fileMenu.add(saveAsItem);
-
+        menuItems.add(new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> dummy()));
         fileMenu.addSeparator();
+        if(Main.IS_MAC) menuItems.add(new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,e -> dummy()));
+        else menuItems.add(new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,e -> dummy()));
 
-        JMenuItem printItem = new JMenuItem("Print");
-        KeyStroke printStroke = KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        printItem.setAccelerator(printStroke);
-        printItem.setMnemonic(KeyEvent.VK_P);
-        fileMenu.add(printItem);
+        //edit menu
+        menuItems.add (new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
 
-        fileMenu.addSeparator();
+        MenuItem redoItem;
+        if(Main.IS_MAC) redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_Z,e -> redo());
+        else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y,e -> redo());
+        menuItems.add(redoItem);
 
-        JMenuItem closeItem = new JMenuItem("Close");
-        KeyStroke closeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        closeItem.setAccelerator(closeStroke);
-        if(Main.IS_MAC) fileMenu.add(closeItem);
+        editMenu.addSeparator();
 
-        JMenuItem exitItem = new JMenuItem("Quit");
-        KeyStroke exitStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        exitItem.setAccelerator(exitStroke);
-        exitItem.setMnemonic(KeyEvent.VK_E);
-        if(!Main.IS_MAC) fileMenu.add(exitItem);
+        editMenu.add(new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A, e -> dummy()));
 
+        editMenu.addSeparator();
+
+        editMenu.add(new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X, e -> dummy()));
+        editMenu.add(new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C, e -> dummy()));
+        editMenu.add(new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V, e -> dummy()));
+
+        /*
         //edit menu
         JMenuItem undoItem = new JMenuItem("Undo");
         KeyStroke undoStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
@@ -335,7 +266,51 @@ class ApplicationWindow {
         JMenuItem pasteItem = new JMenuItem("Paste");
         KeyStroke pasteStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
         pasteItem.setAccelerator(pasteStroke);
-        editMenu.add(pasteItem);
+        editMenu.add(pasteItem);*/
+
+
+        /*JMenuItem openItem = new JMenuItem("Open");
+        KeyStroke openStroke = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
+        openItem.setAccelerator(openStroke);
+        openItem.setMnemonic(KeyEvent.VK_O);
+        fileMenu.add(openItem);
+
+        fileMenu.addSeparator();
+
+        JMenuItem saveItem = new JMenuItem("Save");
+        KeyStroke saveStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
+        saveItem.setAccelerator(saveStroke);
+        saveItem.setMnemonic(KeyEvent.VK_S);
+        fileMenu.add(saveItem);
+
+        JMenuItem saveAsItem = new JMenuItem("Save As");
+        KeyStroke saveAsStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK);
+        saveAsItem.setAccelerator(saveAsStroke);
+        saveAsItem.setMnemonic(KeyEvent.VK_A);
+        fileMenu.add(saveAsItem);
+
+        fileMenu.addSeparator();
+
+        JMenuItem printItem = new JMenuItem("Print");
+        KeyStroke printStroke = KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
+        printItem.setAccelerator(printStroke);
+        printItem.setMnemonic(KeyEvent.VK_P);
+        fileMenu.add(printItem);
+
+        fileMenu.addSeparator();
+
+        JMenuItem closeItem = new JMenuItem("Close");
+        KeyStroke closeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
+        closeItem.setAccelerator(closeStroke);
+        if(Main.IS_MAC) fileMenu.add(closeItem);
+
+        JMenuItem exitItem = new JMenuItem("Quit");
+        KeyStroke exitStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
+        exitItem.setAccelerator(exitStroke);
+        exitItem.setMnemonic(KeyEvent.VK_E);
+        if(!Main.IS_MAC) fileMenu.add(exitItem);
+*/
+
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
@@ -345,32 +320,12 @@ class ApplicationWindow {
         frame.setVisible(true);
     }
 
-    //allows me to pass an index value through the action listener so I can use it to set the mouse controllers
-    private class ToolButtonListener implements ActionListener {
-        private int _index;
-        ToolButtonListener(int index) {
-            _index = index;
-        }
-
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            setCurrentTool(_index);
-        }
-    }
-
-    private void setCurrentTool(int i) {
-        //show the tool's top card in the card panel
-        topLayout.show(topPanel, tools[i].getName());
-
-        //set the current tool for mouse listeners to use
-        mouseStaticController.setTool(i);
-        mouseMotionController.setTool(i);
-    }
-
     private void updateSizeLabel(JLabel label, int w, int h) {
         label.setText("Width: " + w + ", Height: " + h);
     }
 
     void undo() { theModel.undo(); }
     void redo() { theModel.redo(); }
+
+    void dummy() {} //temporary for menu listeners
 }

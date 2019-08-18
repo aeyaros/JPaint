@@ -79,7 +79,12 @@ public class Color {
 
     //get the alpha, red, green, or blue
     short getChannel(int i) {
-        return channels[i % 4];
+        return channels[i % channels.length];
+    }
+
+    //set the channel
+    void setChannel(int channelIndex, int newValue) {
+        channels[channelIndex % channels.length] = (short) (newValue % 256);
     }
 
     //print out the values of the color to console

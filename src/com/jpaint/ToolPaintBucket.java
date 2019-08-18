@@ -31,7 +31,7 @@ public class ToolPaintBucket extends Tool {
 
         int c() { return model.getPixel(x,y).getARGB(); } //get color of node
         void set(int c) {
-            model.setPixel(x,y,c);
+            model.setPixel(x,y,c, false);
         } //set color of node
 
         //get nodes to north, south, east, west
@@ -53,7 +53,8 @@ public class ToolPaintBucket extends Tool {
     }
 
     private void fill(int x, int y, int buttonCode) {
-        //Flood-fill algorithm from Wikipedia
+        //Implementing a Flood-fill algorithm from Wikipedia
+        //https://en.wikipedia.org/wiki/Flood_fill
 
         //cancel if out of bounds
         if(!model.isInBounds(x,y)) return;
@@ -74,7 +75,10 @@ public class ToolPaintBucket extends Tool {
         if (target == replacement) return; // 1. If target-color is equal to replacement-color, return.
         // not applicable: 2. If color of node is not equal to target-color, return.
 
-        model.setPixel(x, y, target); // 3. Set the color of node to replacement-color.
+        //if we made it here, then we can do the fill; save state
+        model.saveCurrentState();
+
+        model.setPixel(x, y, target, false); // 3. Set the color of node to replacement-color.
         ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
 
@@ -107,10 +111,7 @@ public class ToolPaintBucket extends Tool {
                     nodes.addLast(n.S()); // and add that node to the end of Q.
                 }
             } catch (IndexOutOfBoundsException ex) { }
-        } //13. Continue looping until Q is exhausted.
-        //14. Return.
-        //save current state when we are finished
-        model.saveCurrentState();
+        } //13. Continue looping until Q is exhausted. //14. Return.
         model.refresh();
     }
 

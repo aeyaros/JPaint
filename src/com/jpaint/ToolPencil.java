@@ -37,6 +37,7 @@ public class ToolPencil extends Tool {
     public void toolPressed(MouseEvent e) {
         pastX = e.getX();
         pastY = e.getY();
+        model.saveCurrentState();
         //System.out.println("Start drag");
     }
 
@@ -59,7 +60,7 @@ public class ToolPencil extends Tool {
             pastY = curY;
             //get color to draw with
             int colorInt = getColorIntByButton(e.getButton());
-            model.setPixel(curX, curY, colorInt); //draw at the point
+            model.setPixel(curX, curY, colorInt, true); //draw at the point
             bresenham(oldX, oldY, curX, curY, colorInt); //draw line from past point to current point
 
             model.refresh(); //tell model to refresh view
@@ -69,15 +70,14 @@ public class ToolPencil extends Tool {
     //at end of drag, prevent drawing again
     @Override public void toolReleased(MouseEvent e) {
         preventDrawing();
-        model.saveCurrentState();
         model.refresh();
         //System.out.println("End drag");
     }
 
     //if you click once it will draw a point
     @Override public void toolClicked(MouseEvent e) {
-        model.setPixel(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
         model.saveCurrentState();
+        model.setPixel(e.getX(), e.getY(), getColorIntByButton(e.getButton()),true);
         model.refresh();
     }
     
@@ -113,7 +113,7 @@ public class ToolPencil extends Tool {
             }
 
             //then draw at that point
-            model.setPixel(x0, y0, color);
+            model.setPixel(x0, y0, color, true);
         }
     }
 

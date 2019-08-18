@@ -15,8 +15,8 @@ public class ImageModel {
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
     private int[][] tileBG; //tiled background
 
-    private final int MAX_UNDO = 10;
-    private final int MAX_REDO = 10;
+    private final int MAX_UNDO = 25;
+    private final int MAX_REDO = 25;
 
     /*====== GENERAL ======*/
 
@@ -44,6 +44,8 @@ public class ImageModel {
             @Override public void mouseReleased(MouseEvent e) {}
             @Override public void mouseEntered(MouseEvent e) {} });
     }
+
+    /* DISPLAYING COORDINATES */
 
     private void refreshCoordinates(int x, int y) {
         if(isInBounds(x,y)) imageView.refreshCoordinates(x,y);
@@ -141,10 +143,11 @@ public class ImageModel {
         if(this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
-            refresh();
+            this.refresh();
             System.out.println("Undone");
             printStates();
         } //else cant undo (nothing can be popped from the previous state
+        else System.out.println("Can't undo");
 
     }
 
@@ -153,11 +156,18 @@ public class ImageModel {
         if(this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
             updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
-            refresh();
+            this.refresh();
             System.out.println("Redone");
             printStates();
         } //else cant redo (nothing was previously undone
+        else System.out.println("Can't redo");
+    }
 
+    void printStates() {
+        if(pastStates.size() > 0) for(int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
+        System.out.print("[c]"); //for current state
+        if(undoneStates.size() > 0) for(int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
+        System.out.print('\n');
     }
 
     /*====== ACCESSING CANVAS ======*/
@@ -185,17 +195,7 @@ public class ImageModel {
         else throw new IndexOutOfBoundsException();
     }
 
-    void setPixel(int x, int y, int argb) {
-        if(isInBounds(x,y)) currentState.setPixel(x,y,argb);
-    }
-    void setPixel(int x, int y, Color color) {
-        if(isInBounds(x,y)) currentState.setPixel(x,y,color.getARGB());
-    }
-
-    void printStates() {
-        if(pastStates.size() > 0) for(int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
-        System.out.print("[c]"); //for current state
-        if(undoneStates.size() > 0) for(int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
-        System.out.print('\n');
+    void setPixel(int x, int y, int argb, boolean blend) {
+        if(isInBounds(x,y)) currentState.setPixel(x,y,argb,blend);
     }
 }

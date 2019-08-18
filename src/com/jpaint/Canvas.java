@@ -53,11 +53,12 @@ class Canvas {
     }
 
     /*====== MODIFIERS ======*/
-    void setPixel(int x, int y, int color) {
+    void setPixel(int x, int y, int color, boolean blend) {
         try {
-            pixels[x][y] = color;
+            if(blend) pixels[x][y] = Color.alphaBlend(color, pixels[x][y]);
+            else pixels[x][y] = color;
         } catch (Exception e) {
-            //System.out.println(e.getStackTrace());
+            System.out.println(e.getStackTrace());
         }
     }
 }
