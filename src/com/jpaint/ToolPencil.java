@@ -1,13 +1,19 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class ToolPencil extends Tool {
     ToolPencil(String name, ImageModel model, String iconSource) {
         super(name, model, iconSource);
+        upperCard.setLayout(new CardLayout());
         //set up upper card
-        upperCard.add(new JButton("pencil button"));
+        JLabel infoText = new JLabel("Click and drag to draw.");
+        infoText.setHorizontalAlignment(SwingConstants.CENTER);
+        infoText.setVerticalAlignment(SwingConstants.CENTER);
+        upperCard.add(infoText,0);
+
         pastY = -1;
         pastX = -1;
     }

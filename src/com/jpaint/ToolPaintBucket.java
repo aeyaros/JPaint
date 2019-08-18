@@ -54,8 +54,19 @@ public class ToolPaintBucket extends Tool {
         int x = e.getX();
         int y = e.getY();
 
+        //cancel if out of bounds
+        if(!model.isInBounds(x,y)) return;
+
         //get colors
-        int target = model.getPixel(x, y).getARGB(); //color of spot clicked
+        int target = 0; //try to get color below
+
+        try {
+            target = model.getPixel(x, y).getARGB(); //color of spot clicked
+        } catch(IndexOutOfBoundsException exc) {
+            System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
+            exc.printStackTrace(); return;
+        }
+
         int replacement = getColorIntByButton(e.getButton()); //color selected by user
 
         //no need to save state unless there's actually something for us to do

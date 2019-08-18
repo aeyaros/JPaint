@@ -145,6 +145,7 @@ public class ImageModel {
     }
 
     /*====== ACCESSING CANVAS ======*/
+
     int getWidth() {
         return currentState.getWidth();
     }
@@ -153,15 +154,25 @@ public class ImageModel {
         return currentState.getHeight();
     }
 
+    //return true if coordinate is inside the bounds of the canvas
+    boolean isInBounds(int x, int y) {
+        return (
+                x >= 0 &&
+                        y >= 0 &&
+                        x < currentState.getWidth() &&
+                        y < currentState.getHeight()
+        );
+    }
+
     Color getPixel(int x, int y) {
-        return getCurrentState().getColor(x,y);
+        if(isInBounds(x,y)) return getCurrentState().getColor(x,y);
+        else throw new IndexOutOfBoundsException();
     }
 
     void setPixel(int x, int y, int argb) {
-        currentState.setPixel(x,y,argb);
+        if(isInBounds(x,y)) currentState.setPixel(x,y,argb);
     }
-
     void setPixel(int x, int y, Color color) {
-        currentState.setPixel(x,y,color.getARGB());
+        if(isInBounds(x,y)) currentState.setPixel(x,y,color.getARGB());
     }
 }

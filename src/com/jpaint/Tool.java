@@ -8,21 +8,20 @@ import java.awt.event.MouseEvent;
 //Tool: This is a tool button - subclasses contain specific tool functionality
 public abstract class Tool implements ToolInput {
     protected ImageModel model; //the model class this tool acts on
-    JPanel upperCard; //the upper panel shown when this tool is selected
+    protected JPanel upperCard; //the upper panel shown when this tool is selected
     JButton button; //the tool button
     private String name;
-
-    private int leftInt;
-    private int middleInt;
-    private int rightInt;
+    private int[] colorsInts;
 
     //set button name and add the model
     Tool(String name, ImageModel model, String iconSource) {
         super();
         this.name = name;
         this.model = model;
+        colorsInts = new int[3];
 
-        //panel with top controls
+        //panel with top controls - initialize
+        //you can do whatever you want with this in the derived tool classes
         upperCard = new JPanel();
 
         //button for toolbar
@@ -44,31 +43,25 @@ public abstract class Tool implements ToolInput {
     }
 
     void updateColors(Color left, Color middle, Color right) {
-        leftInt = left.getARGB();
-        middleInt = middle.getARGB();
-        rightInt = right.getARGB();
-    }
-
-    protected Color getColorByButton(int buttonNumber) {
-        switch (buttonNumber) {
-            case MouseEvent.BUTTON1: return new Color(leftInt);
-            case MouseEvent.BUTTON2: return new Color(middleInt);
-            case MouseEvent.BUTTON3: return new Color(rightInt);
-            default: return new Color(255,0,0,0);
-        }
-    }
-
-    protected int getColorIntByButton(int buttonNumber) {
-        switch (buttonNumber) {
-            case MouseEvent.BUTTON1: return leftInt;
-            case MouseEvent.BUTTON2: return middleInt;
-            case MouseEvent.BUTTON3: return rightInt;
-            default: return new Color(255,0,0,0).getARGB();
-        }
+        colorsInts[0] = left.getARGB();
+        colorsInts[1] = middle.getARGB();
+        colorsInts[2] = right.getARGB();
     }
 
     String getName() {
         return name;
+    }
+
+    protected int getColorIntByButton(int mouseEventButtonCode) {
+        switch (mouseEventButtonCode) {
+            case MouseEvent.BUTTON2: return colorsInts[1];
+            case MouseEvent.BUTTON3: return colorsInts[2];
+            default: return colorsInts[0]; //MouseEvent.BUTTON1
+        }
+    }
+
+    protected Color getColorByButton(int buttonNumber) {
+        return new Color(getColorIntByButton(buttonNumber));
     }
 
     @Override public abstract void toolDragged(MouseEvent e);

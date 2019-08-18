@@ -82,7 +82,10 @@ class ApplicationWindow {
         //add them to arraylist one by one, then copy to regular array to avoid magic numbers
         ArrayList<Tool> newTools = new ArrayList<>();
         newTools.add(new ToolSelect("Select", theModel, "icons/select.png"));
-        newTools.add(new ToolColorPicker("Picker", theModel, "icons/colorpicker.png"));
+
+        ToolColorPicker toolColorPicker = new ToolColorPicker("Picker", theModel, "icons/colorpicker.png");
+        newTools.add(toolColorPicker);
+
         newTools.add(new ToolPencil("Pencil", theModel, "icons/pencil.png"));
         newTools.add(new ToolPaintBrush("Brush", theModel, "icons/paintbrush.png"));
         newTools.add(new ToolEraser("Eraser", theModel, "icons/eraser.png"));
@@ -155,6 +158,8 @@ class ApplicationWindow {
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
         ColorManager colorManager = new ColorManager(tools, presetPanel, presetColors, selectedColorsPanel);
+        toolColorPicker.addColorManager(colorManager);
+
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(new Color(255,128,128,128).getAWT());
@@ -163,6 +168,8 @@ class ApplicationWindow {
         /*====== SHOW WINDOW ======*/
         frame.pack();
         frame.setVisible(true);
+
+        setCurrentTool(2); //start with pencil
     }
 
     //allows me to pass an index value through the action listener so I can use it to set the mouse controllers
