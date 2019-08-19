@@ -19,8 +19,6 @@ class ApplicationWindow {
     private final int WINDOW_CHROME_SIZE = 8;
     private final Color PAGE_BACKGROUND_COLOR = new Color(255,180,180,200);
 
-
-
     private JLabel coordinatesLabel;
     private ImageModel theModel;
 

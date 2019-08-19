@@ -60,7 +60,7 @@ public class ToolPaintBucket extends Tool {
         if(!model.isInBounds(x,y)) return;
 
         //get colors
-        int target = 0; //try to get color below
+        int target; //try to get color below
 
         try {
             target = model.getPixel(x, y).getARGB(); //color of spot clicked

@@ -16,7 +16,7 @@ class ImageView extends JLabel {
 
     //update the view
     void refresh(ImageIcon icon) {
-        //overlay the canvas on top of the checkerboard
+        //this is where I should overlay the canvas on the checkerboard
         this.setIcon(icon);
     }
 

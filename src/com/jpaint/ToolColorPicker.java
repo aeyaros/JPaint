@@ -36,9 +36,7 @@ public class ToolColorPicker extends Tool {
             ARGB[i].setHorizontalAlignment(SwingConstants.CENTER);
             ARGB[i].setVerticalAlignment(SwingConstants.CENTER);
             coordinates.add(ARGB[i]);
-        }
-
-        clearStatus();
+        } clearStatus();
     }
 
     void addColorManager(ColorManager colorManager) {
@@ -50,27 +48,22 @@ public class ToolColorPicker extends Tool {
     }
 
     private void updateStatus(int x, int y) {
-
         if(model.isInBounds(x,y)) {
             //set background to selected color
             try {
                 Color c = getColorAtPixel(x, y);
                 coordinates.setBackground(c.getAWT());
-
                 for(int i = 0; i < ARGB.length; i++) {
                     //invert color of text if color is too dark
                     if(isDarkColor(c)) ARGB[i].setForeground(java.awt.Color.white);
                     else ARGB[i].setForeground(java.awt.Color.black);
-
                     ARGB[i].setText(labelPrefixes[i] + c.getChannel(i));
-                }
-                cards.first(upperCard);
+                } cards.first(upperCard);
                 //System.out.println(x + ", " + y + " r: " + c.getChannel(1) + " g: " + c.getChannel(2) + " b: " + c.getChannel(3) + " a: " + c.getChannel(0));
             } catch (Exception e) {
                 System.err.println("Tried to access out of bounds pixel");
                 e.printStackTrace();
             }
-
         }
     }
 

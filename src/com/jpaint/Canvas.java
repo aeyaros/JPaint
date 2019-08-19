@@ -4,8 +4,7 @@ import java.awt.image.BufferedImage;
 
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
-    private BufferedImage bufPixels;
-    //int[][] pixels; //the image
+    private BufferedImage pixels;
     private int width;
     private int height;
 
@@ -16,64 +15,36 @@ class Canvas {
     Canvas(int w, int h) {
         width = w;
         height = h;
-       //pixels = new int[width][height];
-
-        bufPixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-
+        pixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-            //    pixels[i][j] = defaultColor;
-
-                bufPixels.setRGB(i,j,defaultColor);
-
+                pixels.setRGB(i,j,defaultColor);
             }
         }
-
-
-
     }
 
     //deep copy constructor
     Canvas(Canvas oldCanvas) {
         width = oldCanvas.getWidth();
         height = oldCanvas.getHeight();
-     //   pixels = new int[width][height];
-
-        bufPixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-
-
+        pixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < width; i++) {
             for(int j = 0; j < height; j++) {
-            //    pixels[i][j] = oldCanvas.getPixel(i,j);
-
-                bufPixels.setRGB(i,j,oldCanvas.bufPixels.getRGB(i,j));
+                pixels.setRGB(i,j,oldCanvas.pixels.getRGB(i,j));
             }
         }
+    }
 
-        //bufPixels.setRGB(0,0,width,height,
-          //      oldCanvas.getBufPixels().getRGB(0,0,width,height,null,0,1),
-            //    0,1);
+    /*====== MODIFIERS ======*/
+    void setPixel(int x, int y, int color) {
+        try { pixels.setRGB(x,y,Color.alphaBlend(color, pixels.getRGB(x,y))); }
+        catch (Exception e) {}
     }
 
     /*====== ACCESSORS ======*/
-    int getPixel(int w, int h) {
-        //return pixels[w][h];
-        return bufPixels.getRGB(w,h);
-    }
-
-    /*int[][] getPixels() {
+    BufferedImage getPixels() {
         return pixels;
-    }*/
-
-    BufferedImage getBufPixels() {
-        return bufPixels;
     }
-
-    Color getColor(int w, int h) {
-        //return new Color(pixels[w][h]);
-        return new Color(bufPixels.getRGB(w,h));
-    }
-
     int getWidth() {
         return width;
     }
@@ -81,15 +52,11 @@ class Canvas {
         return height;
     }
 
-    /*====== MODIFIERS ======*/
-    /*void setPixel(int x, int y, int color)  {//}, boolean blend) {
-        try {
-             pixels[x][y] = Color.alphaBlend(color, pixels[x][y]);
-            //else pixels[x][y] = color;
-        } catch (Exception e) {
-            System.out.println(e.getStackTrace());
-        }
-    }*/
+    int getPixel(int w, int h) {
+        return pixels.getRGB(w,h);
+    }
 
-
+    Color getColor(int w, int h) {
+        return new Color(pixels.getRGB(w,h));
+    }
 }

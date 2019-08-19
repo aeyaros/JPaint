@@ -15,8 +15,8 @@ public class ImageModel {
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
     private int[][] tileBG; //tiled background
 
-    private final int MAX_UNDO = 25;
-    private final int MAX_REDO = 25;
+    private final int MAX_UNDO = 50;
+    private final int MAX_REDO = 50;
 
     /*====== GENERAL ======*/
 
@@ -60,8 +60,7 @@ public class ImageModel {
 
     //blend the image with the tile background and then send that to the view
     void refresh() {
-        imageView.refresh(new ImageIcon(currentState.getBufPixels()));
-                //getImage(currentState.getPixels()));// overlayMatrices(currentState.getPixels(), tileBG)));
+        imageView.refresh(new ImageIcon(currentState.getPixels()));
     }
 
     //export a buffered image for the view
@@ -83,7 +82,6 @@ public class ImageModel {
             int[][] output = new int[w][h];
             for(int i = 0; i < w; i++) { for(int j = 0; j < h; j++) {
                 output[i][j] = Color.alphaBlend(top[i][j], bottom[i][j]); }
-                        //new Color(top[i][j]), new Color(bottom[i][j])).getARGB(); }
             } return output;
         } catch(Exception e) {
             e.printStackTrace();System.out.print("\n");
@@ -185,24 +183,19 @@ public class ImageModel {
     boolean isInBounds(int x, int y) {
         return (
                 x >= 0 &&
-                        y >= 0 &&
-                        x < currentState.getWidth() &&
-                        y < currentState.getHeight()
+                y >= 0 &&
+                x < currentState.getWidth() &&
+                y < currentState.getHeight()
         );
     }
 
     Color getPixel(int x, int y) {
-        if(isInBounds(x,y)) return new Color(currentState.getBufPixels().getRGB(x,y));
+        if(isInBounds(x,y)) return new Color(currentState.getPixels().getRGB(x,y));
             //return getCurrentState().getColor(x,y);
         else throw new IndexOutOfBoundsException();
     }
 
     void setPixel(int x, int y, int argb) {
-        try {
-            currentState.getBufPixels().setRGB(x,y,argb);
-
-            //currentState.pixels[x][y] = Color.alphaBlend(argb,currentState.pixels[x][y]);
-        } catch (Exception e) { }
-        //if(isInBounds(x,y)) { }
+        currentState.setPixel(x,y,argb);
     }
 }
