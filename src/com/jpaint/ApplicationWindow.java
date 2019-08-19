@@ -26,8 +26,8 @@ class ApplicationWindow {
 
     void WindowSetup(int width, int height) {
         //initial setup
-        JFrame frame = new JFrame("JPaint");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        JFrame mainFrame = new JFrame("JPaint");
+        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
         if(Main.IS_MAC) { //mac specific stuff
             System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
@@ -45,18 +45,18 @@ class ApplicationWindow {
 
         //set minimum dimensions
         Dimension minimumSize = new Dimension(MINIMUM_WINDOW_WIDTH, MINIMUM_WINDOW_HEIGHT);
-        frame.setMinimumSize(minimumSize);
+        mainFrame.setMinimumSize(minimumSize);
 
         //base panel containing entire layout
-        JPanel mainLayout = new JPanel(new BorderLayout());
-        frame.getContentPane().add(mainLayout);
+        JPanel mainPanel = new JPanel(new BorderLayout());
+        mainFrame.getContentPane().add(mainPanel);
 
         /*====== CENTER ======*/
 
         //center panel has the top card and the main image panel
         JPanel centerPanel = new JPanel(new BorderLayout());
-        mainLayout.add(centerPanel, BorderLayout.CENTER);
-        mainLayout.setBorder(new EmptyBorder(0,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE));
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.setBorder(new EmptyBorder(0,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE));
 
         //image panel: a container which is inside a panel with scrollbars
         JPanel imagePanel = new JPanel();
@@ -110,7 +110,7 @@ class ApplicationWindow {
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.weighty = 0.0;
         sidePanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,0,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
-        mainLayout.add(sidePanel, BorderLayout.WEST);
+        mainPanel.add(sidePanel, BorderLayout.WEST);
 
 
         /*====== ADD CONTROLS TO SIDE PANEL ======*/
@@ -177,7 +177,7 @@ class ApplicationWindow {
         menuBar.add(editMenu);
 
         //add the menubar
-        frame.setJMenuBar(menuBar);
+        mainFrame.setJMenuBar(menuBar);
 
         /*====== MENU ITEMS ======*/
 
@@ -219,8 +219,8 @@ class ApplicationWindow {
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
 
         /*====== SHOW WINDOW ======*/
-        frame.pack();
-        frame.setVisible(true);
+        mainFrame.pack();
+        mainFrame.setVisible(true);
     }
 
     private void updateSizeLabel(JLabel label, int w, int h) {

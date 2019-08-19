@@ -21,7 +21,7 @@ class ColorButton extends JLabel {
         setColor(color);
     }
 
-     private ImageIcon generateColorIcon(int w, int h, int c) {
+    static ImageIcon generateColorIcon(int w, int h, int c) {
         int pixelCount = w * h; //number of pixels in icon
         int[] iconArray = new int[pixelCount]; //create array of pixels
         for(int i = 0; i < pixelCount; i++) iconArray[i] = c; //set colors of pixels

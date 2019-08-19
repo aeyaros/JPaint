@@ -53,10 +53,9 @@ public class BackgroundPanel extends JLabel {
     private int[][] generateTileBG(int w, int h) {
         int[][] matrix = new int[w][h];
         int[] squareColors = {
-                new Color(255,255,255,255).getARGB(),
-                new Color(255,200,200,200).getARGB()
-        }; int squareSize = 8; //px
-        boolean use1 = false;
+                this.squareColors[0].getARGB(),
+                this.squareColors[1].getARGB()
+        }; boolean use1 = false;
         for(int i = 0; i < w; i++) {
             //every 8 pixels along the row, new color
             if (i % squareSize == 0) use1 = !use1;

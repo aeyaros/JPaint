@@ -9,7 +9,7 @@ class Canvas {
     private int height;
 
     /*====== CONSTRUCTORS ======*/
-    final int defaultColor = (new Color(255,255,255,255)).getARGB();
+    final int defaultColor = (new Color(Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE)).getARGB();
 
     //create a new canvas
     Canvas(int w, int h) {

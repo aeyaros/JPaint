@@ -69,9 +69,9 @@ public class ToolColorPicker extends Tool {
 
     //WC3 Brightness formula: ((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
     private boolean isDarkColor(Color c) {
-        double r = c.getChannel(1)/255.0d;
-        double g = c.getChannel(2)/255.0d;
-        double b = c.getChannel(3)/255.0d;
+        double r = c.getChannel(1)/Color.MAX_VALUE_FLOAT;
+        double g = c.getChannel(2)/Color.MAX_VALUE_FLOAT;
+        double b = c.getChannel(3)/Color.MAX_VALUE_FLOAT;
         return ((((r * 299d) + (g * 587d) + (b * 114d)) / 1000.0d) < 0.4);
     }
 
@@ -83,7 +83,7 @@ public class ToolColorPicker extends Tool {
     }
 
     private void clearStatus() {
-        coordinates.setBackground(new Color(255,128,128,128).getAWT());
+        coordinates.setBackground(new Color(Color.MAX_VALUE,Color.MAX_VALUE/2,Color.MAX_VALUE/2,Color.MAX_VALUE/2).getAWT());
         for(JLabel l: ARGB) l.setText("");
         cards.last(upperCard);
         //System.out.print("Cleared!");

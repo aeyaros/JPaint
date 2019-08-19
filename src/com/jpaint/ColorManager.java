@@ -36,6 +36,8 @@ class ColorManager {
     private JSlider opacitySlider;
     private JLabel opacityLabel;
 
+    private ColorPickerWindow currentlyOpenedColor;
+
     ColorManager(Tool[] tools, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel) {
         selectedColors = new ColorButton[3];
 
@@ -52,7 +54,7 @@ class ColorManager {
         selectedColorsPanel.add(selectedColors[2],2);
 
         //set up panel for opacity slider
-        opacitySlider = new JSlider(SwingConstants.HORIZONTAL,0,255,255);
+        opacitySlider = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE,Color.MAX_VALUE);
         opacityLabel = new JLabel("", SwingConstants.LEFT);
         setOpacityLabel();
 
@@ -99,6 +101,9 @@ class ColorManager {
             presetPanel.add(presetColors[i]);
         }
 
+        //instantiate color picker
+        currentlyOpenedColor = new ColorPickerWindow();
+
         //notify tools of color changes
         notifyTools();
     }
@@ -129,8 +134,7 @@ class ColorManager {
                 //double click; restore previous color to the corresponding button
                 setButtonColor(accessButton(e.getButton()).getPreviousColor(), e.getButton());
                 //open the window to edit the color
-                    //INSERT CODE TO OPEN WINDOW HERE
-                    //MAYBE HAVE FLAG FOR IS WINDOW OPEN OR NOT IDK WHATEV LOL ROFL LMAO
+                setUpColorPicker(presetColors[index]);
 
                 System.out.println("doubleclick");
             } else { //if single click
@@ -180,5 +184,11 @@ class ColorManager {
             cb.setColor(c);
         }
         notifyTools(); //notify tools of the change
+    }
+
+    void setUpColorPicker(ColorButton colorToChange) {
+        currentlyOpenedColor.close(); //either window is open, closed already
+        //in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
+        currentlyOpenedColor = new ColorPickerWindow(colorToChange);
     }
 }

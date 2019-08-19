@@ -20,7 +20,7 @@ public class ToolPaintBrush extends ToolPencil {
         pastY = -1;
         pastX = -1;
 
-        setRadius(3);
+        setRadius(7);
     }
 
     void setRadius(int r) {

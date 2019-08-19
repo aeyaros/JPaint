@@ -17,7 +17,7 @@ public class ToolEraser extends ToolPaintBrush {
         infoText.setVerticalAlignment(SwingConstants.CENTER);
         upperCard.add(infoText,0);
 
-        setColorToEraseTo(new Color(255,255,255,255));
+        setColorToEraseTo(new Color(Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE));
     }
 
     void setColorToEraseTo(Color color) {

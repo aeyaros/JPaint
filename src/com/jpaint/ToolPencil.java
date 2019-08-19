@@ -38,21 +38,21 @@ public class ToolPencil extends Tool {
 
     //at start of drag, set past coordinates to current coordinates
     // to avoid drawing a line from the end of the previous stroke
-    @Override
-    public void toolPressed(MouseEvent e) {
+    @Override public void toolPressed(MouseEvent e) {
         pastX = e.getX();
         pastY = e.getY();
         model.saveCurrentState();
         //System.out.println("Start drag");
     }
 
+    @Override public void toolEntered(MouseEvent e) { }
+
     //during drag, draw points and lines
     //*************************************************
     //Initially, we dont allow drawing until the toolPressed event (start of the drag)
     //this is to ensure we save the current state before making any changes to the canvas
     //*************************************************
-    @Override
-    public void toolDragged(MouseEvent e) {
+    @Override public void toolDragged(MouseEvent e) {
         if(canDraw()) {
             //copy to local variables for safety
             int oldX = pastX;
@@ -79,6 +79,8 @@ public class ToolPencil extends Tool {
         model.refresh();
         //System.out.println("End drag");
     }
+
+    @Override public void toolExited(MouseEvent e) { }
 
     //if you click once it will draw a point
     @Override public void toolClicked(MouseEvent e) {
@@ -120,17 +122,11 @@ public class ToolPencil extends Tool {
 
             //then draw at that point
             draw(x0,y0,color);
-            //model.setPixel(x0, y0, color, true);
         }
     }
 
     @Override public void toolMoved(MouseEvent e) {
 
     }
-    @Override public void toolEntered(MouseEvent e) {
 
-    }
-    @Override public void toolExited(MouseEvent e) {
-
-    }
 }
