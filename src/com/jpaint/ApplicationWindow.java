@@ -4,7 +4,6 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
-import java.security.Key;
 import java.util.ArrayList;
 
 class ApplicationWindow {
@@ -204,7 +203,7 @@ class ApplicationWindow {
         menuItems.add (new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
 
         MenuItem redoItem;
-        if(Main.IS_MAC) redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_Z,e -> redo());
+        if(Main.IS_MAC) redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z,e -> redo());
         else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y,e -> redo());
         menuItems.add(redoItem);
 
@@ -217,100 +216,6 @@ class ApplicationWindow {
         editMenu.add(new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X, e -> dummy()));
         editMenu.add(new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C, e -> dummy()));
         editMenu.add(new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V, e -> dummy()));
-
-        /*
-        //edit menu
-        JMenuItem undoItem = new JMenuItem("Undo");
-        KeyStroke undoStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        undoItem.setAccelerator(undoStroke);
-        undoItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                undo();
-            }
-        }); editMenu.add(undoItem);
-
-
-        JMenuItem redoItem = new JMenuItem("Redo");
-        KeyStroke redoStroke; //mac is command shift z; windows is control y
-        if(Main.IS_MAC) redoStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Z, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK);
-        else redoStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Y, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        redoItem.setAccelerator(redoStroke);
-        redoItem.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                redo();
-            }
-        }); editMenu.add(redoItem);
-
-
-        editMenu.addSeparator();
-
-        JMenuItem selectAllItem = new JMenuItem("Select All");
-        KeyStroke selectAllStroke = KeyStroke.getKeyStroke(KeyEvent.VK_A, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        selectAllItem.setAccelerator(selectAllStroke);
-        editMenu.add(selectAllItem);
-
-        editMenu.addSeparator();
-
-        JMenuItem cutItem = new JMenuItem("Cut");
-        KeyStroke cutStroke = KeyStroke.getKeyStroke(KeyEvent.VK_X, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        cutItem.setAccelerator(cutStroke);
-        editMenu.add(cutItem);
-
-        JMenuItem copyItem = new JMenuItem("Copy");
-        KeyStroke copyStroke = KeyStroke.getKeyStroke(KeyEvent.VK_C, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        copyItem.setAccelerator(copyStroke);
-        editMenu.add(copyItem);
-
-        JMenuItem pasteItem = new JMenuItem("Paste");
-        KeyStroke pasteStroke = KeyStroke.getKeyStroke(KeyEvent.VK_V, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        pasteItem.setAccelerator(pasteStroke);
-        editMenu.add(pasteItem);*/
-
-
-        /*JMenuItem openItem = new JMenuItem("Open");
-        KeyStroke openStroke = KeyStroke.getKeyStroke(KeyEvent.VK_O, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        openItem.setAccelerator(openStroke);
-        openItem.setMnemonic(KeyEvent.VK_O);
-        fileMenu.add(openItem);
-
-        fileMenu.addSeparator();
-
-        JMenuItem saveItem = new JMenuItem("Save");
-        KeyStroke saveStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        saveItem.setAccelerator(saveStroke);
-        saveItem.setMnemonic(KeyEvent.VK_S);
-        fileMenu.add(saveItem);
-
-        JMenuItem saveAsItem = new JMenuItem("Save As");
-        KeyStroke saveAsStroke = KeyStroke.getKeyStroke(KeyEvent.VK_S, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK);
-        saveAsItem.setAccelerator(saveAsStroke);
-        saveAsItem.setMnemonic(KeyEvent.VK_A);
-        fileMenu.add(saveAsItem);
-
-        fileMenu.addSeparator();
-
-        JMenuItem printItem = new JMenuItem("Print");
-        KeyStroke printStroke = KeyStroke.getKeyStroke(KeyEvent.VK_P, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        printItem.setAccelerator(printStroke);
-        printItem.setMnemonic(KeyEvent.VK_P);
-        fileMenu.add(printItem);
-
-        fileMenu.addSeparator();
-
-        JMenuItem closeItem = new JMenuItem("Close");
-        KeyStroke closeStroke = KeyStroke.getKeyStroke(KeyEvent.VK_W, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        closeItem.setAccelerator(closeStroke);
-        if(Main.IS_MAC) fileMenu.add(closeItem);
-
-        JMenuItem exitItem = new JMenuItem("Quit");
-        KeyStroke exitStroke = KeyStroke.getKeyStroke(KeyEvent.VK_Q, Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx());
-        exitItem.setAccelerator(exitStroke);
-        exitItem.setMnemonic(KeyEvent.VK_E);
-        if(!Main.IS_MAC) fileMenu.add(exitItem);
-*/
-
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());

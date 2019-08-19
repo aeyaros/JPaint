@@ -60,7 +60,8 @@ public class ImageModel {
 
     //blend the image with the tile background and then send that to the view
     void refresh() {
-        imageView.refresh(getImage(currentState.getPixels()));// overlayMatrices(currentState.getPixels(), tileBG)));
+        imageView.refresh(new ImageIcon(currentState.getBufPixels()));
+                //getImage(currentState.getPixels()));// overlayMatrices(currentState.getPixels(), tileBG)));
     }
 
     //export a buffered image for the view
@@ -191,11 +192,17 @@ public class ImageModel {
     }
 
     Color getPixel(int x, int y) {
-        if(isInBounds(x,y)) return getCurrentState().getColor(x,y);
+        if(isInBounds(x,y)) return new Color(currentState.getBufPixels().getRGB(x,y));
+            //return getCurrentState().getColor(x,y);
         else throw new IndexOutOfBoundsException();
     }
 
-    void setPixel(int x, int y, int argb, boolean blend) {
-        if(isInBounds(x,y)) currentState.setPixel(x,y,argb,blend);
+    void setPixel(int x, int y, int argb) {
+        try {
+            currentState.getBufPixels().setRGB(x,y,argb);
+
+            //currentState.pixels[x][y] = Color.alphaBlend(argb,currentState.pixels[x][y]);
+        } catch (Exception e) { }
+        //if(isInBounds(x,y)) { }
     }
 }

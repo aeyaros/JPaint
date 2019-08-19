@@ -1,47 +1,31 @@
 package com.jpaint;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
+import java.awt.*;
 
-public class ToolEraser extends Tool {
+public class ToolEraser extends ToolPaintBrush {
+    private int colorToEraseTo;
+
+
     ToolEraser(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
         //set up upper card
-        upperCard.add(new JButton("eraser button"));
+        upperCard.removeAll();
+        upperCard.setLayout(new CardLayout());
+        JLabel infoText = new JLabel("Click and drag to erase.");
+        infoText.setHorizontalAlignment(SwingConstants.CENTER);
+        infoText.setVerticalAlignment(SwingConstants.CENTER);
+        upperCard.add(infoText,0);
+
+        setColorToEraseTo(new Color(255,255,255,255));
+    }
+
+    void setColorToEraseTo(Color color) {
+        colorToEraseTo = color.getARGB();
     }
 
     @Override
-    public void toolDragged(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolMoved(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolPressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolExited(MouseEvent e) {
-
+    protected void draw(int x, int y, int color) {
+        makeCircle(x,y,colorToEraseTo);
     }
 }

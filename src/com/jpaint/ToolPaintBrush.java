@@ -1,49 +1,44 @@
 package com.jpaint;
 
-
 import javax.swing.*;
-import java.awt.event.MouseEvent;
+import java.awt.*;
 
-public class ToolPaintBrush extends Tool {
+public class ToolPaintBrush extends ToolPencil {
+    private int radius;
+    private int negrad;
+
     ToolPaintBrush(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
         //set up upper card
-        upperCard.add(new JButton("paint button"));
+        upperCard.removeAll();
+        upperCard.setLayout(new CardLayout());
+        JLabel infoText = new JLabel("Click and drag to paint.");
+        infoText.setHorizontalAlignment(SwingConstants.CENTER);
+        infoText.setVerticalAlignment(SwingConstants.CENTER);
+        upperCard.add(infoText,0);
+
+        pastY = -1;
+        pastX = -1;
+
+        setRadius(3);
+    }
+
+    void setRadius(int r) {
+        radius = r;
+        negrad = -r;
     }
 
     @Override
-    public void toolDragged(MouseEvent e) {
-
+    protected void draw(int x, int y, int color) {
+        makeCircle(x,y,color);
     }
 
-    @Override
-    public void toolMoved(MouseEvent e) {
-
+    protected void makeCircle(int origX, int origY, int color) {
+        for(int y = negrad; y <= radius; y++) {
+            for(int x = negrad; x <= radius; x++) {
+                if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
+                    model.setPixel(origX + x, origY + y, color);
+            }
+        } model.refresh();
     }
-
-    @Override
-    public void toolClicked(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolPressed(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolReleased(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolEntered(MouseEvent e) {
-
-    }
-
-    @Override
-    public void toolExited(MouseEvent e) {
-
-    }
-
 }

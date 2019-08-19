@@ -19,14 +19,19 @@ public class ToolPencil extends Tool {
     }
 
     //store previous coordinates between drag events
-    private int pastX;
-    private int pastY;
+    protected int pastX;
+    protected int pastY;
 
-    private boolean canDraw() {
+    protected boolean canDraw() {
         return (pastY != -1 && pastX != -1);
     }
 
-    private void preventDrawing() {
+
+    protected void draw(int x, int y, int color) {
+        model.setPixel(x, y, color); //draw at the point
+    }
+
+    protected void preventDrawing() {
         pastX = -1;
         pastY = -1;
     }
@@ -60,7 +65,8 @@ public class ToolPencil extends Tool {
             pastY = curY;
             //get color to draw with
             int colorInt = getColorIntByButton(e.getButton());
-            model.setPixel(curX, curY, colorInt, true); //draw at the point
+
+            draw(curX, curY, colorInt);
             bresenham(oldX, oldY, curX, curY, colorInt); //draw line from past point to current point
 
             model.refresh(); //tell model to refresh view
@@ -77,7 +83,7 @@ public class ToolPencil extends Tool {
     //if you click once it will draw a point
     @Override public void toolClicked(MouseEvent e) {
         model.saveCurrentState();
-        model.setPixel(e.getX(), e.getY(), getColorIntByButton(e.getButton()),true);
+        draw(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
         model.refresh();
     }
     
@@ -113,7 +119,8 @@ public class ToolPencil extends Tool {
             }
 
             //then draw at that point
-            model.setPixel(x0, y0, color, true);
+            draw(x0,y0,color);
+            //model.setPixel(x0, y0, color, true);
         }
     }
 
