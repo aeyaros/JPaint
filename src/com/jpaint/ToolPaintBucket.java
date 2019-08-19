@@ -29,7 +29,7 @@ public class ToolPaintBucket extends Tool {
         Node(int X, int Y) { x = X; y = Y; } //new node
         Node(Node n) { x = n.x; y = n.y; } //deep copy
 
-        int c() { return model.getPixel(x,y).getARGB(); } //get color of node
+        int c() { return model.getColorAtPixel(x,y).getARGB(); } //get color of node
         void set(int c) {
             model.setPixel(x,y,c);
         } //set color of node
@@ -63,7 +63,7 @@ public class ToolPaintBucket extends Tool {
         int target; //try to get color below
 
         try {
-            target = model.getPixel(x, y).getARGB(); //color of spot clicked
+            target = model.getColorAtPixel(x, y).getARGB(); //color of spot clicked
         } catch(IndexOutOfBoundsException exc) {
             System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
             exc.printStackTrace(); return;

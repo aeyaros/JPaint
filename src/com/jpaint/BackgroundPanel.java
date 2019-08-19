@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class BackgroundPanel extends JLabel {
@@ -20,7 +21,7 @@ public class BackgroundPanel extends JLabel {
         this.setSize(w,h);
     }
 
-    @Override
+    /*@Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
         //draw a checkerboard at a given size
@@ -40,7 +41,7 @@ public class BackgroundPanel extends JLabel {
                 }
             }
         }
-    }
+    }*/
 
     //taken from imagemodel and put here temporarily:
 

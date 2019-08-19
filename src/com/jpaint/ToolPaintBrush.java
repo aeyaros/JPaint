@@ -4,8 +4,8 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ToolPaintBrush extends ToolPencil {
-    private int radius;
-    private int negrad;
+    int radius;
+    int negrad;
 
     ToolPaintBrush(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);

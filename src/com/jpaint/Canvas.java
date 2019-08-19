@@ -38,7 +38,12 @@ class Canvas {
     /*====== MODIFIERS ======*/
     void setPixel(int x, int y, int color) {
         try { pixels.setRGB(x,y,Color.alphaBlend(color, pixels.getRGB(x,y))); }
-        catch (Exception e) {}
+        catch (Exception ignored) {}
+    }
+
+    void setPixelWithoutBlending(int x, int y, int exactColor) {
+        try { pixels.setRGB(x,y,exactColor); }
+        catch (Exception ignored) {}
     }
 
     /*====== ACCESSORS ======*/
@@ -59,4 +64,20 @@ class Canvas {
     Color getColor(int w, int h) {
         return new Color(pixels.getRGB(w,h));
     }
+
+    //overlay one image matrix on top of another
+    //assuming they are the same size
+    static BufferedImage overlayImages(BufferedImage top, BufferedImage bottom) {
+        int w = top.getWidth(); int h = top.getHeight();
+        if(w != bottom.getWidth() || h != bottom.getHeight()) {
+            throw new IllegalArgumentException("Cannot overlay canvases of different sizes");
+        }
+
+        BufferedImage output = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < w; i++)
+            for(int j = 0; j < h; j++)
+                output.setRGB(i,j, Color.alphaBlend(top.getRGB(i,j), bottom.getRGB(i,j)));
+        return output;
+    }
 }
+

@@ -13,7 +13,7 @@ public class ImageModel {
     private Canvas currentState; //current state of the drawing
     private ArrayDeque<Canvas> pastStates; //previous states
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
-    private int[][] tileBG; //tiled background
+    private BufferedImage tileBG; //tiled background
 
     private final int MAX_UNDO = 50;
     private final int MAX_REDO = 50;
@@ -26,6 +26,7 @@ public class ImageModel {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
         this.imageView = imageView;
+        this.tileBG = getBG(w,h,8);
 
         saveCurrentState();
         refresh(); //dont remove this from here!
@@ -74,29 +75,29 @@ public class ImageModel {
         } return new ImageIcon(bufferedImage);
     }
 
-    //overlay one image matrix on top of another
-    //assuming they are the same size
-    private int[][] overlayMatrices(int[][] top, int[][] bottom) {
-        int w = top.length; int h = top[0].length;
-        try {
-            int[][] output = new int[w][h];
-            for(int i = 0; i < w; i++) { for(int j = 0; j < h; j++) {
-                output[i][j] = Color.alphaBlend(top[i][j], bottom[i][j]); }
-            } return output;
-        } catch(Exception e) {
-            e.printStackTrace();System.out.print("\n");
-            throw new IllegalArgumentException("To blend, screens must be same size: first screen is "
-                    + top.length + ", " + top[0].length + " and second screen is "
-                    + bottom.length + ", " + bottom[0].length);
-        }
+    //draw a checkerboard at a given size
+    static BufferedImage getBG(int w, int h, int squareSize) {
+        BufferedImage matrix = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+        int[] squareColors = {
+                new Color(255,255,255,255).getARGB(),
+                new Color(255,200,200,200).getARGB()
+        }; boolean use1 = false;
+        for(int i = 0; i < w; i++) {
+            //every few pixels along the row, new color
+            if (i % squareSize == 0) use1 = !use1;
+            for (int j = 0; j < h; j++) {
+                //every few pixels in the column, new color
+                if (j % squareSize == 0) use1 = !use1;
+                if (use1) matrix.setRGB(i,j,squareColors[1]);
+                else matrix.setRGB(i,j,squareColors[0]);
+            }
+        } return matrix;
     }
 
     /*====== STATES, UNDOING AND REDOING ======*/
 
     //get the current state of the drawing
-    private Canvas getCurrentState() {
-        return currentState;
-    }
+    //private Canvas getCurrentState() { return currentState; }
 
     //before a tool is used, save state to past states
     void saveCurrentState() {
@@ -108,22 +109,19 @@ public class ImageModel {
 
         //we just did a new action; we cant keep the old undone actions as we are starting a new branch
         undoneStates.clear();
-        System.out.println("Save current state");
-        printStates();
+        System.out.println("Save current state"); printStates();
     }
 
-    //update the current state (note: is used for undo/redo)
+    //update the current state (note: this is used for undo/redo)
     private void updateCurrentState(Canvas canvas) {
         currentState = new Canvas(canvas);
     }
 
-    private boolean canUndo() {
-        return pastStates.size() > 1; //returns true if number of past states > 0
-    }
+    //returns true if number of past states > 0
+    private boolean canUndo() { return pastStates.size() > 1; }
 
-    private boolean canRedo() {
-        return undoneStates.size() > 0; //returns true if number of undone states > 0
-    }
+    //returns true if number of undone states > 0
+    private boolean canRedo() { return undoneStates.size() > 0; }
 
     //add to past states - this happens if we take any action to change the canvas, or if we redo
     private void addToPastStates(Canvas canvas) {
@@ -138,7 +136,7 @@ public class ImageModel {
     }
 
     //undo the most recently made change
-    public void undo() {
+    void undo() {
         if(this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
@@ -151,7 +149,7 @@ public class ImageModel {
     }
 
     //redo most recently undone state
-    public void redo() {
+    void redo() {
         if(this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
             updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
@@ -162,40 +160,39 @@ public class ImageModel {
         else System.out.println("Can't redo");
     }
 
-    void printStates() {
+    private void printStates() {
         if(pastStates.size() > 0) for(int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
         System.out.print("[c]"); //for current state
         if(undoneStates.size() > 0) for(int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
         System.out.print('\n');
     }
 
-    /*====== ACCESSING CANVAS ======*/
-
-    int getWidth() {
-        return currentState.getWidth();
-    }
-
-    int getHeight() {
-        return currentState.getHeight();
-    }
-
-    //return true if coordinate is inside the bounds of the canvas
-    boolean isInBounds(int x, int y) {
-        return (
-                x >= 0 &&
-                y >= 0 &&
-                x < currentState.getWidth() &&
-                y < currentState.getHeight()
-        );
-    }
-
-    Color getPixel(int x, int y) {
-        if(isInBounds(x,y)) return new Color(currentState.getPixels().getRGB(x,y));
-            //return getCurrentState().getColor(x,y);
-        else throw new IndexOutOfBoundsException();
-    }
+    /*====== EDITING CANVAS ======*/
 
     void setPixel(int x, int y, int argb) {
         currentState.setPixel(x,y,argb);
+    }
+
+    void setPixelWithoutBlending(int x, int y, int argb) {
+        currentState.setPixelWithoutBlending(x,y,argb);
+    }
+
+    /*====== ACCESSING CANVAS ======*/
+
+    int getWidth() { return currentState.getWidth(); }
+    int getHeight() { return currentState.getHeight(); }
+
+    //return true if coordinate is inside the bounds of the canvas
+    boolean isInBounds(int x, int y) {
+        return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
+    }
+
+    int getPixel(int x, int y) {
+        return currentState.getPixel(x,y);
+    }
+
+    Color getColorAtPixel(int x, int y) {
+        if(isInBounds(x,y)) return new Color(currentState.getPixels().getRGB(x,y));
+        else throw new IndexOutOfBoundsException();
     }
 }

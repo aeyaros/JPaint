@@ -44,7 +44,7 @@ public class ToolColorPicker extends Tool {
     }
 
     private Color getColorAtPixel(int x, int y) {
-        return new Color(model.getPixel(x,y).getARGB());
+        return new Color(model.getColorAtPixel(x,y).getARGB());
     }
 
     private void updateStatus(int x, int y) {
