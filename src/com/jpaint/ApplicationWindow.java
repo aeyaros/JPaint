@@ -4,9 +4,12 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.print.PrinterJob;
 import java.util.ArrayList;
 
 class ApplicationWindow {
+    private JFrame mainFrame;
+
     //paramaters for certain UI sizes
     final static int TOOL_BUTTON_SIZE = 48;
     final static int COLOR_BUTTON_SIZE = 32;
@@ -26,8 +29,9 @@ class ApplicationWindow {
 
     void WindowSetup(int width, int height) {
         //initial setup
-        JFrame mainFrame = new JFrame("JPaint");
+        mainFrame = new JFrame("JPaint");
         mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
 
         if(Main.IS_MAC) { //mac specific stuff
             System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
@@ -163,7 +167,7 @@ class ApplicationWindow {
 
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
-        ColorManager colorManager = new ColorManager(toolsManager.getTools(), presetPanel, selectedColorsPanel, opacityPanel);
+        ColorManager colorManager = new ColorManager(toolsManager.getTools(), mainFrame, presetPanel, selectedColorsPanel, opacityPanel);
         toolsManager.addColorManager(colorManager);
 
         /*====== MENU BAR ======*/
@@ -220,6 +224,7 @@ class ApplicationWindow {
 
         /*====== SHOW WINDOW ======*/
         mainFrame.pack();
+        mainFrame.setLocationRelativeTo(null);
         mainFrame.setVisible(true);
     }
 
@@ -229,6 +234,10 @@ class ApplicationWindow {
 
     void undo() { theModel.undo(); }
     void redo() { theModel.redo(); }
+    void print() {
+        PrinterJob newPrintJob = PrinterJob.getPrinterJob();
+    }
+
 
     void dummy() {} //temporary for menu listeners
 }

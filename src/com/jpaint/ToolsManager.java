@@ -77,14 +77,20 @@ class ToolsManager {
             //System.out.println("Added " + tools[i].getName());
         }
 
-        /*====== START WITH PENCIL TOOL SELECTED ======*/
-        setCurrentTool(2); //start with pencil
+        /*====== START WITH AN INITIAL TOOL SELECTED ======*/
+        int startingToolIndex = getIndexByToolName("Brush");
+        setCurrentTool(startingToolIndex); //start with pencil
         //still need to make it initially selected
-        tools[2].button.setSelected(true);
+        tools[startingToolIndex].button.setSelected(true);
     }
 
     Tool[] getTools() {
         return tools;
+    }
+
+    int getIndexByToolName(String toolName) {
+        for(int i = 0; i < tools.length; i++) if(tools[i].getName().compareTo(toolName) == 0) return i;
+        return 0; //if no matching name return 0
     }
 
     JPanel getTopPanel(){

@@ -21,6 +21,7 @@ public class ColorPickerWindow {
     void close() {
         try {
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
+
         } catch (Exception e) {
             System.out.println("Color picker window close event sent even though window already closed. This is not an issue.");
         }
@@ -31,12 +32,10 @@ public class ColorPickerWindow {
         close();
     }
 
-    //initialize without doing anything
-    ColorPickerWindow() {
-        close();
-    }
+    //IMPORTANT: this is to initialize the variable without actually doing anything
+    ColorPickerWindow() { close(); }
 
-    ColorPickerWindow(ColorButton colorButton) {
+    ColorPickerWindow(ColorButton colorButton, JFrame mainFrame) {
         this.colorButton = colorButton; //dont use until saving
 
         colorToChange = new Color(colorButton.getColor()); //for internal temporary use
@@ -88,18 +87,19 @@ public class ColorPickerWindow {
         //add OK and cancell button
         JPanel buttons = new JPanel(new GridLayout(1,2));
 
+        JButton applyButton = new JButton("Apply");
         JButton cancelButton = new JButton("Cancel");
-        JButton okButton = new JButton("OK");
         buttons.setBorder(new EmptyBorder(17,12,12,12));
 
+        applyButton.addActionListener(e -> save());
         cancelButton.addActionListener(e -> { close(); });
-        okButton.addActionListener(e -> save());
 
-        buttons.add(okButton);
+        buttons.add(applyButton);
         buttons.add(cancelButton);
         colorPanel.add(buttons);
 
         frame.pack();
+        frame.setLocationRelativeTo(mainFrame);
         frame.setVisible(true);
     }
 
@@ -113,8 +113,6 @@ public class ColorPickerWindow {
     }
 
     void updateChannel(int i) {
-        colorToChange.print();
-        System.out.println(i);
         colorToChange.setChannel(i, sliders[i].getValue());
         labels[i].setText(Color.getChannelString(i) + ":" + colorToChange.getChannel(i));
         setColorPane();
