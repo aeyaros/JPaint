@@ -11,16 +11,20 @@ class Canvas {
     /*====== CONSTRUCTORS ======*/
     final int defaultColor = (new Color(Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE)).getARGB();
 
+    private BufferedImage newBlankImage(int w, int h) {
+        BufferedImage newImage = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < w; i++) {
+            for(int j = 0; j < h; j++) {
+                newImage.setRGB(i,j,defaultColor);
+            }
+        } return newImage;
+    }
+
     //create a new canvas
     Canvas(int w, int h) {
         width = w;
         height = h;
-        pixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < width; i++) {
-            for(int j = 0; j < height; j++) {
-                pixels.setRGB(i,j,defaultColor);
-            }
-        }
+        pixels = newBlankImage(w,h);
     }
 
     //deep copy constructor
@@ -46,6 +50,30 @@ class Canvas {
         catch (Exception ignored) {}
     }
 
+    //currently resizes by adding or removing from origin
+    //no fancy centered-resizing yet
+    void resize(int newX, int newY) {
+        if(newX <= 0 || newY <= 0) throw new IllegalArgumentException("Canvas must be greater than 0 in both dimensions.");
+
+        //draw a canvas that is newX by newY
+        BufferedImage newPixels = newBlankImage(newX, newY);
+
+        //and then copy the current canvas on top of the new one
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                //try to write to the pixel on the new canvas at that coordinate
+                //ignore exceptions when we are out of bounds
+                try { newPixels.setRGB(i, j, pixels.getRGB(i, j)); }
+                catch (Exception ignored) {}
+            }
+        }
+
+        //change values to the new data
+        pixels = newPixels;
+        width = newX;
+        height = newY;
+    }
+
     /*====== ACCESSORS ======*/
     BufferedImage getPixels() {
         return pixels;
@@ -59,10 +87,6 @@ class Canvas {
 
     int getPixel(int w, int h) {
         return pixels.getRGB(w,h);
-    }
-
-    Color getColor(int w, int h) {
-        return new Color(pixels.getRGB(w,h));
     }
 
     //overlay one image matrix on top of another

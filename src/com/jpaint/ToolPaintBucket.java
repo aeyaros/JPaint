@@ -9,8 +9,8 @@ public class ToolPaintBucket extends Tool {
     //boundaries of canvas
     private int lowX = 0;
     private int lowY = 0;
-    private int highX = model.getWidth();
-    private int highY = model.getHeight();
+    private int highX;
+    private int highY;
 
     ToolPaintBucket(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource,selectedIconSource);
@@ -56,6 +56,10 @@ public class ToolPaintBucket extends Tool {
         //Implementing a Flood-fill algorithm from Wikipedia
         //https://en.wikipedia.org/wiki/Flood_fill
 
+        //get current width and height
+        highX = model.getWidth();
+        highY = model.getHeight();
+
         //cancel if out of bounds
         if(!model.isInBounds(x,y)) return;
 
@@ -89,28 +93,28 @@ public class ToolPaintBucket extends Tool {
                     n.W().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.W()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { }
+            } catch (IndexOutOfBoundsException ignored) { }
 
             try {
                 if(n.E().c() == target) {   //10. If the color of the node to the east of n is target-color,
                     n.E().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.E()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { }
+            } catch (IndexOutOfBoundsException ignored) { }
 
             try {
                 if(n.N().c() == target) {   //11. If the color of the node to the north of n is target-color,
                     n.N().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.N()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { }
+            } catch (IndexOutOfBoundsException ignored) { }
 
             try {
                 if(n.S().c() == target) {   //12. If the color of the node to the south of n is target-color,
                     n.S().set(replacement);// set the color of that node to replacement-color
                     nodes.addLast(n.S()); // and add that node to the end of Q.
                 }
-            } catch (IndexOutOfBoundsException ex) { }
+            } catch (IndexOutOfBoundsException ignored) { }
         } //13. Continue looping until Q is exhausted. //14. Return.
         model.refresh();
     }

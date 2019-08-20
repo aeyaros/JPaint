@@ -1,7 +1,5 @@
 package com.jpaint;
 
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import javax.swing.*;
 
 public class BackgroundPanel extends JLabel {

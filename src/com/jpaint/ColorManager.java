@@ -2,14 +2,12 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
+import java.awt.event.*;
 
 //manage selected colors
 class ColorManager {
     //default preset colors
-    private Color[] colors = {
+    private final Color[] colors = {
             new Color(255,  0,  0,  0), //black
             new Color(255,128,128,128), //gray
             new Color(255,255,255,255), //white
@@ -42,7 +40,7 @@ class ColorManager {
     private JFrame mainFrame;
 
     //the color picker window
-    private ColorPickerWindow currentlyOpenedColor;
+    private ColorPickerWindow colorPickerWindow;
 
     ColorManager(Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel) {
         selectedColors = new ColorButton[3];
@@ -91,6 +89,7 @@ class ColorManager {
 
         //build the list of color presets from input
         presetColors = new ColorButton[colors.length];
+
         for(int i = 0; i < presetColors.length; i++) {
             //create the button
             presetColors[i] = new ColorButton(colors[i],
@@ -98,30 +97,35 @@ class ColorManager {
 
             //add event listener to the button
             //when it is clicked, the current color should be set
-            presetColors[i].addMouseListener(new PresetColorsListener(i));
+            presetColors[i].addMouseListener(new ColorButtonListener(presetColors[i]));
 
             //also add a mouse motion listener for drag events
-            presetColors[i].addMouseMotionListener(new PresetColorsListener(i));
+            presetColors[i].addMouseMotionListener(new ColorButtonListener(presetColors[i]));
 
             //add the button to the panel
             presetPanel.add(presetColors[i]);
+        }
+
+        //add listeners to selected colors too
+        for (ColorButton selectedColor : selectedColors) {
+            selectedColor.addMouseListener(new ColorButtonListener(selectedColor));
+            selectedColor.addMouseMotionListener(new ColorButtonListener(selectedColor));
         }
 
         //we need this for the color picker window
         this.mainFrame = mainFrame;
 
         //instantiate color picker
-        currentlyOpenedColor = new ColorPickerWindow();
-
+        this.colorPickerWindow = new ColorPickerWindow();
 
         //notify tools of color changes
         notifyTools();
     }
 
     //when a color is changed, send new colors to observers
-    private void notifyTools() {
-        for (Tool observer : tools) {
-            observer.updateColors(
+    void notifyTools() {
+        for (Tool t : tools) {
+            t.updateColors(
                 selectedColors[0].getColor(),
                 selectedColors[1].getColor(),
                 selectedColors[2].getColor()
@@ -132,10 +136,10 @@ class ColorManager {
     //allows me to pass an index value through the action listener
     // so I can use it to set the mouse controllers
     //used for clicking the preset color buttons
-    private class PresetColorsListener implements MouseListener, MouseMotionListener {
-        private int index;
-        PresetColorsListener(int index) {
-            this.index = index;
+    private class ColorButtonListener implements MouseListener, MouseMotionListener {
+        private ColorButton colorButton;
+        ColorButtonListener(ColorButton colorButton) {
+            this.colorButton = colorButton;
         }
 
         @Override
@@ -144,19 +148,21 @@ class ColorManager {
                 //double click; restore previous color to the corresponding button
                 setButtonColor(accessButton(e.getButton()).getPreviousColor(), e.getButton());
                 //open the window to edit the color
-                setUpColorPicker(presetColors[index]);
+                setUpColorPicker(colorButton);
 
                 System.out.println("doubleclick");
             } else { //if single click
                 //set the current button color based on which button is clicked
-                setButtonColor(presetColors[index].getColor(), e.getButton());
+                setButtonColor(colorButton.getColor(), e.getButton());
+
                 //System.out.println("singleclick");
-            }
+            } notifyTools();
         }
         //user may move mouse slightly when clicking, so we need a mousedragged event too
         @Override
         public void mouseDragged(MouseEvent e) {
-            setButtonColor(presetColors[index].getColor(), e.getButton());
+            setButtonColor(colorButton.getColor(), e.getButton());
+            notifyTools();
         }
 
         @Override public void mousePressed(MouseEvent e) { }
@@ -192,13 +198,12 @@ class ColorManager {
             Color c = new Color(cb.getColor());
             c.setChannel(0, opacity);
             cb.setColor(c);
-        }
-        notifyTools(); //notify tools of the change
+        } notifyTools(); //notify tools of the change
     }
 
     void setUpColorPicker(ColorButton colorToChange) {
-        currentlyOpenedColor.close(); //either window is open, closed already
+        colorPickerWindow.close(); //either window is open, closed already
         //in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
-        currentlyOpenedColor = new ColorPickerWindow(colorToChange, mainFrame);
+        colorPickerWindow.setColorPickerWindow(colorToChange, mainFrame, this);
     }
 }

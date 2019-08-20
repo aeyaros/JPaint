@@ -6,23 +6,18 @@ import java.awt.event.ActionListener;
 public class MenuItem extends JMenuItem {
     MenuItem(String label, int keyEvent, int modifiers, JMenu menu, int mnemonic, ActionListener listener) {
         super(label);
+        this.addActionListener(listener);
         KeyStroke keyStroke = KeyStroke.getKeyStroke(keyEvent, modifiers);
         this.setAccelerator(keyStroke);
-
         this.setMnemonic(mnemonic);
-
-        this.addActionListener(listener);
-
         menu.add(this);
     }
 
-    MenuItem(String label, int keyEvent, int modifiers, JMenu menu, ActionListener listener) {
+    //no key shortcut
+    MenuItem(String label, JMenu menu, int mnemonic, ActionListener listener) {
         super(label);
-        KeyStroke keyStroke = KeyStroke.getKeyStroke(keyEvent, modifiers);
-        this.setAccelerator(keyStroke);
         this.addActionListener(listener);
-
+        this.setMnemonic(mnemonic);
         menu.add(this);
     }
-
 }

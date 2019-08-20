@@ -4,6 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ToolPaintBrush extends ToolPencil {
+    private final int MIN_RADIUS = 2;
+    private final int DEFAULT_RADIUS = 7;
+    private final int MAX_RADIUS = 50;
+    private JLabel radiusLabel;
+    private JSlider radiusSlider;
+
     int radius;
     int negrad;
 
@@ -11,21 +17,22 @@ public class ToolPaintBrush extends ToolPencil {
         super(name, model, iconSource, selectedIconSource);
         //set up upper card
         upperCard.removeAll();
-        upperCard.setLayout(new CardLayout());
-        JLabel infoText = new JLabel("Click and drag to paint.");
-        infoText.setHorizontalAlignment(SwingConstants.CENTER);
-        infoText.setVerticalAlignment(SwingConstants.CENTER);
-        upperCard.add(infoText,0);
+        upperCard.setLayout(new GridLayout(1,0));
 
-        pastY = -1;
-        pastX = -1;
+        radiusLabel = new JLabel("", SwingConstants.RIGHT);
+        radiusSlider = new JSlider(SwingConstants.HORIZONTAL,MIN_RADIUS,MAX_RADIUS,DEFAULT_RADIUS);
+        radiusSlider.addChangeListener(e -> setRadius(radiusSlider.getValue()));
 
-        setRadius(7);
+        upperCard.add(radiusLabel);
+        upperCard.add(radiusSlider);
+
+        setRadius(DEFAULT_RADIUS);
     }
 
     void setRadius(int r) {
         radius = r;
         negrad = -r;
+        radiusLabel.setText("Radius: " + radius);
     }
 
     @Override

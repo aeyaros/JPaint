@@ -1,20 +1,28 @@
 package com.jpaint;
 
+
 import javax.swing.*;
-import java.awt.*;
 
 public class ToolEraser extends ToolPaintBrush {
     private boolean eraseToTransparent;
 
     ToolEraser(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
-        //set up upper card
-        upperCard.removeAll();
-        upperCard.setLayout(new CardLayout());
-        JLabel infoText = new JLabel("Click and drag to erase.");
-        infoText.setHorizontalAlignment(SwingConstants.CENTER);
-        infoText.setVerticalAlignment(SwingConstants.CENTER);
-        upperCard.add(infoText,0);
+
+        JRadioButton eraseWhite = new JRadioButton("White Eraser");
+        eraseWhite.setSelected(true);
+        JRadioButton eraseTrans = new JRadioButton("Transparent");
+        eraseTrans.setSelected(false);
+
+        eraseWhite.addActionListener(e -> setEraseToTransparent(false));
+        eraseTrans.addActionListener(e -> setEraseToTransparent(true));
+
+        ButtonGroup eraserButtons = new ButtonGroup();
+        eraserButtons.add(eraseWhite);
+        eraserButtons.add(eraseTrans);
+
+        upperCard.add(eraseWhite);
+        upperCard.add(eraseTrans);
 
         //set up as a normal eraser
         setEraseToTransparent(false);

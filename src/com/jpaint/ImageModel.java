@@ -27,6 +27,7 @@ public class ImageModel {
         undoneStates = new ArrayDeque<>();
         this.imageView = imageView;
         this.tileBG = getBG(w,h,8);
+        this.imageView.updateSizeLabel(w, h);
 
         saveCurrentState();
         refresh(); //dont remove this from here!
@@ -109,7 +110,7 @@ public class ImageModel {
 
         //we just did a new action; we cant keep the old undone actions as we are starting a new branch
         undoneStates.clear();
-        System.out.println("Save current state"); printStates();
+        System.out.println("Saved current state"); printStates();
     }
 
     //update the current state (note: this is used for undo/redo)
@@ -172,9 +173,16 @@ public class ImageModel {
     void setPixel(int x, int y, int argb) {
         currentState.setPixel(x,y,argb);
     }
-
     void setPixelWithoutBlending(int x, int y, int argb) {
         currentState.setPixelWithoutBlending(x,y,argb);
+    }
+
+    //this can be used directly by a menu
+    void resize(int newX, int newY) {
+        saveCurrentState(); //save current state
+        currentState.resize(newX, newY);
+        imageView.updateSizeLabel(newX, newY);
+        refresh();
     }
 
     /*====== ACCESSING CANVAS ======*/
