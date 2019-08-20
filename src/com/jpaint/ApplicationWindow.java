@@ -1,10 +1,14 @@
 package com.jpaint;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.print.PrinterJob;
+import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 
@@ -29,6 +33,7 @@ class ApplicationWindow {
     private JLabel coordinatesLabel;
     private JLabel sizeLabel;
     private ImageModel theModel;
+    private ImageView theView;
 
     ApplicationWindow() { }
 
@@ -84,7 +89,7 @@ class ApplicationWindow {
         sizeLabel = new JLabel(" ");
 
         //then create view
-        ImageView theView = new ImageView(coordinatesLabel, sizeLabel);
+        theView = new ImageView(coordinatesLabel, sizeLabel);
         theView.setOpaque(false);
         theView.setBorder(null);
         imagePanel.add(theView);
@@ -190,15 +195,14 @@ class ApplicationWindow {
 
         /*====== MENU ITEMS ======*/
 
-
         Hashtable<String, MenuItem> menuItems = new Hashtable<>();
 
         int cmdCtrlModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
         int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 
         //file menu
-        menuItems.put("new",new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> dummy()));
-        menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> dummy()));
+        menuItems.put("new",new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT)));
+        menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> openFile()));
         fileMenu.addSeparator();
 
         menuItems.put("save",new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> dummy()));
@@ -238,25 +242,53 @@ class ApplicationWindow {
         menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> dummy()));
 
 
-
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
 
         /*====== SHOW WINDOW ======*/
         mainFrame.pack();
-        mainFrame.setLocationRelativeTo(null);
+        mainFrame.setLocationRelativeTo(null); //center image
         mainFrame.setVisible(true);
     }
 
     void exit() {
         System.exit(0);
     }
+    //undo/redo
     void undo() { theModel.undo(); }
     void redo() { theModel.redo(); }
+
+    void newFile(int x, int y) {
+        theModel.startOverFromScratch();
+    }
+
+    //open a file
+    void openFile() {
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("Image files (PNG, JPEG, BMP)", "png", "jpeg", "jpg", "bmp");
+        fileChooser.setFileFilter(imageFilters);
+
+        int returnVal = fileChooser.showOpenDialog(mainFrame);
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+            //put stuff here
+            try {
+                theModel.startOverFromImage(ImageIO.read(file));
+                System.out.println("Read file from:" + file.getAbsolutePath());
+            } catch (IOException e) {
+                System.out.println("Couldn't read file.");
+            }
+
+            System.out.println("Opening: " + file.getName() + ".");
+        } else {
+            System.out.println("Open command cancelled by user.");
+        }
+    }
+
+    //not done yet
     void print() {
         PrinterJob newPrintJob = PrinterJob.getPrinterJob();
     }
-
 
     private class ResizeDialog extends JDialog {
         JTextField widthField;
@@ -396,7 +428,6 @@ class ApplicationWindow {
 
     void resize() {
         ResizeDialog resizeDialog = new ResizeDialog();
-
     }
 
     void dummy() {} //temporary for menu listeners

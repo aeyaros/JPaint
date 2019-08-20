@@ -39,6 +39,17 @@ class Canvas {
         }
     }
 
+    //canvas from a bufferedImage
+    Canvas(BufferedImage sourceImage) {
+        width = sourceImage.getWidth();
+        height = sourceImage.getHeight();
+        pixels = sourceImage;
+    }
+
+    void clear() {
+        pixels = newBlankImage(width,height);
+    }
+
     /*====== MODIFIERS ======*/
     void setPixel(int x, int y, int color) {
         try { pixels.setRGB(x,y,Color.alphaBlend(color, pixels.getRGB(x,y))); }

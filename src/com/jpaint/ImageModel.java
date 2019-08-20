@@ -23,11 +23,18 @@ public class ImageModel {
     //create a new image model with a width and a height
     ImageModel(int w, int h, ImageView imageView) {
         currentState = new Canvas(w, h);
+        this.imageView = imageView;
+
+        initializeModel(w, h);
+    }
+
+    //functionality shared by both constructors
+    private void initializeModel(int w, int h) {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-        this.imageView = imageView;
-        this.tileBG = getBG(w,h,8);
-        this.imageView.updateSizeLabel(w, h);
+        imageView.updateSizeLabel(w, h);
+
+        tileBG = getBG(w,h,8);
 
         saveCurrentState();
         refresh(); //dont remove this from here!
@@ -45,6 +52,24 @@ public class ImageModel {
             @Override public void mousePressed(MouseEvent e) {}
             @Override public void mouseReleased(MouseEvent e) {}
             @Override public void mouseEntered(MouseEvent e) {} });
+    }
+
+    void startOverFromScratch() {
+        currentState.clear();
+        pastStates.clear();
+        undoneStates.clear();
+        currentState.resize(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
+        saveCurrentState();
+        refresh();
+    }
+
+    void startOverFromImage(BufferedImage image) {
+        currentState.clear();
+        pastStates.clear();
+        undoneStates.clear();
+        currentState = new Canvas(image);
+        saveCurrentState();
+        refresh();
     }
 
     /* DISPLAYING COORDINATES */

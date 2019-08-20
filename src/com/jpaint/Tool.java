@@ -9,7 +9,7 @@ import java.awt.event.MouseEvent;
 public abstract class Tool implements ToolInput {
     protected ImageModel model; //the model class this tool acts on
     protected JPanel upperCard; //the upper panel shown when this tool is selected
-    JRadioButton button; //the tool button
+    JToggleButton button; //the tool button
     private String name;
     private int[] colorsInts;
 
@@ -25,8 +25,8 @@ public abstract class Tool implements ToolInput {
         upperCard = new JPanel();
 
         //button for toolbar
-        button = new JRadioButton();
-        //button.setOpaque(true);
+        button = new JToggleButton();
+        button.setOpaque(true);
         //button.setContentAreaFilled(false);
         button.setBorderPainted(true);
         button.setBorder(BorderFactory.createEtchedBorder());
@@ -40,7 +40,6 @@ public abstract class Tool implements ToolInput {
             Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
             selectedImage = selectedImage.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setSelectedIcon(new ImageIcon(selectedImage));
-
         } catch(Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't load icon for " + name + " button from location " + iconSource);
