@@ -208,8 +208,8 @@ class ApplicationWindow {
         menuItems.put("print",new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> dummy()));
         fileMenu.addSeparator();
 
-        if(Main.IS_MAC) menuItems.put("close",new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,e -> dummy()));
-        else menuItems.put("exit",new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,e -> dummy()));
+        if(Main.IS_MAC) menuItems.put("close",new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,e -> exit()));
+        else menuItems.put("exit",new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,e -> exit()));
 
         //edit menu
         menuItems.put("undo",new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
@@ -248,6 +248,9 @@ class ApplicationWindow {
         mainFrame.setVisible(true);
     }
 
+    void exit() {
+        System.exit(0);
+    }
     void undo() { theModel.undo(); }
     void redo() { theModel.redo(); }
     void print() {
@@ -273,6 +276,7 @@ class ApplicationWindow {
 
             //message
             JLabel message = new JLabel("Enter the new dimensions (in pixels):");
+            message.setBorder(BorderFactory.createEmptyBorder(0,0,17,0));
             main.add(message, BorderLayout.NORTH);
 
             //input fields, labels
