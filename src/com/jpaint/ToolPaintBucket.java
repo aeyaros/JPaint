@@ -23,6 +23,10 @@ public class ToolPaintBucket extends Tool {
         upperCard.add(infoText,0);
     }
 
+    private void draw(int x, int y, int c) {
+        model.setPixelWithoutBlending(x,y,c);
+    }
+
     //Node object for flood algorithm
     private class Node {
         int x; int y;
@@ -31,7 +35,7 @@ public class ToolPaintBucket extends Tool {
 
         int c() { return model.getColorAtPixel(x,y).getARGB(); } //get color of node
         void set(int c) {
-            model.setPixel(x,y,c);
+            draw(x,y,c);
         } //set color of node
 
         //get nodes to north, south, east, west
@@ -82,7 +86,7 @@ public class ToolPaintBucket extends Tool {
         //if we made it here, then we can do the fill; save state
         model.saveCurrentState();
 
-        model.setPixel(x, y, target); // 3. Set the color of node to replacement-color.
+        draw(x,y,target); // 3. Set the color of node to replacement-color.
         ArrayDeque<Node> nodes = new ArrayDeque<>();      // 4. Set Q to the empty queue.
         nodes.addLast(new Node(x,y)); // 5. Add node to the end of Q.
 

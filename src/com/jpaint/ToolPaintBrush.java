@@ -5,8 +5,8 @@ import java.awt.*;
 
 public class ToolPaintBrush extends ToolPencil {
     private final int MIN_RADIUS = 2;
-    private final int DEFAULT_RADIUS = 7;
-    private final int MAX_RADIUS = 50;
+    private final int DEFAULT_RADIUS = 8;
+    private final int MAX_RADIUS = 24;
     private JLabel radiusLabel;
     private JSlider radiusSlider;
 

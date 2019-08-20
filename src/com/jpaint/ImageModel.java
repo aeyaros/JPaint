@@ -67,9 +67,13 @@ public class ImageModel {
         currentState.clear();
         pastStates.clear();
         undoneStates.clear();
+        System.out.print("Starting over...");
+    }
+
+    void startOver2(int w, int h) {
         isUntouched = true;
         isSaved = false;
-        System.out.print("Starting over...");
+        imageView.updateSizeLabel(w, h);
     }
 
     //if creating a new image
@@ -78,7 +82,9 @@ public class ImageModel {
         currentState.resize(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
         saveCurrentState();
         refresh();
+        startOver2(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
         System.out.println("...from scratch");
+
     }
 
     //if opening an image
@@ -92,9 +98,9 @@ public class ImageModel {
 
         startOver();
         currentState = temp;
-
         saveCurrentState();
         refresh();
+        startOver2(currentState.getWidth(), currentState.getHeight());
         System.out.println("...from another file");
     }
 

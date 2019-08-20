@@ -299,12 +299,13 @@ class ApplicationWindow {
 
     //open a file
     private void openFile() {
-        if(!askToSave()) { //if user clicks the cancel button
-            return; // then dont open a file
-        }
+        String extension = "png";
+
+        //if user clicks the cancel button and declines to save
+        if(!askToSave()) return; // then dont open a file
 
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", "png");
+        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", extension);
         fileChooser.setFileFilter(imageFilters);
 
         int returnVal = fileChooser.showOpenDialog(mainFrame);
@@ -333,25 +334,40 @@ class ApplicationWindow {
     }
 
     private void save() {
-        //if model was already saved then just write it
-        if(theModel.isSaved()) {
+        if(!theModel.isSaved()) saveas(); //if not saved, save the file as something
+        //if model was already saved and still exists then just write it
+        else if(theFile.exists()) { //if the file was saved and exists, then just write to it
             writeImageToFile(theFile);
-        } else { //otherwise, save it as a file
+        } else { //otherwise, file was saved but doesn't exist anymore so you have to save as
+            JOptionPane.showMessageDialog(mainFrame,
+            "The file \"" + theFile.getName() + "\" no longer exists and may have been deleted. Please save as a new file.",
+            "File not found",
+            JOptionPane.ERROR_MESSAGE);
             saveas();
         }
     }
 
     private void saveas() {
+        String extension = "png";
+
         //open save dialog box
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", "png");
         fileChooser.setFileFilter(imageFilters);
 
+        if(theFile != null) fileChooser.setSelectedFile(theFile);
+        else {
+            File fileToSave = new File("New image" + "." + extension);
+            fileChooser.setSelectedFile(fileToSave);
+        }
+
         int returnVal = fileChooser.showSaveDialog(mainFrame);
         //then write to image file
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-
+            if(!file.getAbsolutePath().endsWith(extension)) {
+                file = new File(file.getAbsolutePath() + "." + extension);
+            }
             //put stuff here
             writeImageToFile(file);
         } else {
@@ -364,7 +380,7 @@ class ApplicationWindow {
             // retrieve image
             BufferedImage imageToSave = theModel.getImage();
 
-            ImageIO.write(imageToSave, "PNG", outputfile);
+            ImageIO.write(imageToSave, "png",outputfile);
 
             System.out.println("Saved image to file:" + outputfile.getAbsolutePath());
 

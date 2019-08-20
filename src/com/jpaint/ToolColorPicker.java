@@ -10,7 +10,6 @@ public class ToolColorPicker extends Tool {
     private JPanel coordinates;
     private JLabel[] ARGB;
     private String[] labelPrefixes = {"Opacity: ", "Red: ", "Green: ", "Blue: "};
-    private final int DARK_THRESHOLD = 80;
 
     ToolColorPicker(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
@@ -69,6 +68,8 @@ public class ToolColorPicker extends Tool {
 
     //WC3 Brightness formula: ((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
     private boolean isDarkColor(Color c) {
+        //if low opacity, then it's a light color
+        if(c.getChannel(0) < 128) return false;
         double r = c.getChannel(1)/Color.MAX_VALUE_FLOAT;
         double g = c.getChannel(2)/Color.MAX_VALUE_FLOAT;
         double b = c.getChannel(3)/Color.MAX_VALUE_FLOAT;
