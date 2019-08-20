@@ -6,9 +6,8 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.print.PrinterJob;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 
@@ -34,6 +33,9 @@ class ApplicationWindow {
     private JLabel sizeLabel;
     private ImageModel theModel;
     private ImageView theView;
+
+    //path of opened/saved file
+    private File theFile;
 
     ApplicationWindow() { }
 
@@ -201,12 +203,12 @@ class ApplicationWindow {
         int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 
         //file menu
-        menuItems.put("new",new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT)));
+        menuItems.put("new",new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile()));
         menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> openFile()));
         fileMenu.addSeparator();
 
-        menuItems.put("save",new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> dummy()));
-        menuItems.put("saveas",new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> dummy()));
+        menuItems.put("save",new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> save()));
+        menuItems.put("saveas",new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> saveas()));
         fileMenu.addSeparator();
 
         menuItems.put("print",new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> dummy()));
@@ -251,43 +253,141 @@ class ApplicationWindow {
         mainFrame.setVisible(true);
     }
 
-    void exit() {
-        System.exit(0);
+    //either saves or doesnt save
+    //returns false if canceled, otherwise returns true
+    private boolean askToSave() {
+        System.out.println("asking to save");
+        //check to see if file was edited
+        if(theModel.isUntouched()) {
+            return true; //not asking to save since user hasn't done anything
+        } //else, we need to ask if user wants to save
+        Object[] options = {"Save",
+                "Don't Save",
+                "Cancel"};
+        int result = JOptionPane.showOptionDialog(mainFrame,
+                "Do you want to save your changes to this file?",
+                "Unsaved Changes",
+                JOptionPane.YES_NO_CANCEL_OPTION,
+                JOptionPane.WARNING_MESSAGE,
+                null,
+                options,
+                options[0]);
+        if(result == 0) { //if save option chosen
+            save(); //save the file
+            return true; //go to next action
+        } else if (result == 1) { //if dont save was chosen
+            return true; //go to next action without saving
+        } else { //if cancel was chosen
+            return false; //dont go to next action
+        }
     }
-    //undo/redo
-    void undo() { theModel.undo(); }
-    void redo() { theModel.redo(); }
 
-    void newFile(int x, int y) {
-        theModel.startOverFromScratch();
+    private void exit() {
+        if(askToSave()) System.exit(0);
+    }
+
+    //undo/redo
+    private void undo() { theModel.undo(); }
+    private void redo() { theModel.redo(); }
+
+    private void newFile() {
+        if(askToSave()) {
+            theModel.startOverFromScratch();
+            theFile = null;
+        }
     }
 
     //open a file
-    void openFile() {
+    private void openFile() {
+        if(!askToSave()) { //if user clicks the cancel button
+            return; // then dont open a file
+        }
+
         JFileChooser fileChooser = new JFileChooser();
-        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("Image files (PNG, JPEG, BMP)", "png", "jpeg", "jpg", "bmp");
+        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", "png");
         fileChooser.setFileFilter(imageFilters);
 
         int returnVal = fileChooser.showOpenDialog(mainFrame);
+
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
             //put stuff here
             try {
                 theModel.startOverFromImage(ImageIO.read(file));
                 System.out.println("Read file from:" + file.getAbsolutePath());
-            } catch (IOException e) {
-                System.out.println("Couldn't read file.");
-            }
 
-            System.out.println("Opening: " + file.getName() + ".");
+                //file was opened, and thus was previously saved
+                theModel.setSaved();
+                //file was opened, save file object
+                theFile = file;
+            } catch (Exception e) {
+                JOptionPane.showMessageDialog(mainFrame,
+                        "The file \"" + file.getName() + "\" couldn't be opened. Please try again with a different file.",
+                        "Error",
+                        JOptionPane.ERROR_MESSAGE);
+                System.out.println("Couldn't open file.");
+            }
         } else {
             System.out.println("Open command cancelled by user.");
         }
     }
 
+    private void save() {
+        //if model was already saved then just write it
+        if(theModel.isSaved()) {
+            writeImageToFile(theFile);
+        } else { //otherwise, save it as a file
+            saveas();
+        }
+    }
+
+    private void saveas() {
+        //open save dialog box
+        JFileChooser fileChooser = new JFileChooser();
+        FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", "png");
+        fileChooser.setFileFilter(imageFilters);
+
+        int returnVal = fileChooser.showSaveDialog(mainFrame);
+        //then write to image file
+        if (returnVal == JFileChooser.APPROVE_OPTION) {
+            File file = fileChooser.getSelectedFile();
+
+            //put stuff here
+            writeImageToFile(file);
+        } else {
+            System.out.println("Save command cancelled by user.");
+        }
+    }
+
+    private void writeImageToFile(File outputfile) {
+        try {
+            // retrieve image
+            BufferedImage imageToSave = theModel.getImage();
+
+            ImageIO.write(imageToSave, "PNG", outputfile);
+
+            System.out.println("Saved image to file:" + outputfile.getAbsolutePath());
+
+            //file was successfully saved, so we mark as saved
+            theModel.setSaved();
+            //file was saved and as of this state is untouched
+            theModel.setUntouched();
+            //file was saved, keep object here
+            theFile = outputfile;
+
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(mainFrame,
+                    "The file \"" + outputfile.getName() + "\" couldn't be saved. Please try again in a different location or as a different file type.",
+                    "Error Saving File",
+                    JOptionPane.ERROR_MESSAGE);
+            System.out.println("Couldn't open file.");
+        }
+
+    }
+
     //not done yet
-    void print() {
-        PrinterJob newPrintJob = PrinterJob.getPrinterJob();
+    private void print() {
+        //PrinterJob newPrintJob = PrinterJob.getPrinterJob();
     }
 
     private class ResizeDialog extends JDialog {
@@ -426,9 +526,9 @@ class ApplicationWindow {
         }
     }
 
-    void resize() {
+    private void resize() {
         ResizeDialog resizeDialog = new ResizeDialog();
     }
 
-    void dummy() {} //temporary for menu listeners
+    private void dummy() {} //temporary for menu listeners
 }

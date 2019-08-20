@@ -15,6 +15,10 @@ public class ImageModel {
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
     private BufferedImage tileBG; //tiled background
 
+    //image save states
+    private boolean isUntouched; //if brand new
+    private boolean isSaved; //if file was saved to the disk (i.e. if file was opened, or if it was created and saved)
+
     private final int MAX_UNDO = 50;
     private final int MAX_REDO = 50;
 
@@ -39,6 +43,9 @@ public class ImageModel {
         saveCurrentState();
         refresh(); //dont remove this from here!
 
+        isUntouched = true; //initially, file not touched
+        isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
+
         //show mouse coordinates in a view
         imageView.addMouseMotionListener(new MouseMotionListener() {
             @Override public void mouseMoved(MouseEvent e) {
@@ -54,22 +61,60 @@ public class ImageModel {
             @Override public void mouseEntered(MouseEvent e) {} });
     }
 
-    void startOverFromScratch() {
+    /*====== STARTING OVER, AND SAVE STATUS ======*/
+
+    void startOver() {
         currentState.clear();
         pastStates.clear();
         undoneStates.clear();
+        isUntouched = true;
+        isSaved = false;
+        System.out.print("Starting over...");
+    }
+
+    //if creating a new image
+    void startOverFromScratch() {
+        startOver();
         currentState.resize(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
         saveCurrentState();
         refresh();
+        System.out.println("...from scratch");
     }
 
+    //if opening an image
     void startOverFromImage(BufferedImage image) {
-        currentState.clear();
-        pastStates.clear();
-        undoneStates.clear();
-        currentState = new Canvas(image);
+        Canvas temp;
+        try {
+            temp = new Canvas(image);
+        } catch (Exception e) {
+            throw new IllegalArgumentException();
+        }
+
+        startOver();
+        currentState = temp;
+
         saveCurrentState();
         refresh();
+        System.out.println("...from another file");
+    }
+
+    void setSaved() {
+        this.isSaved = true;
+        System.out.println("File set as saved");
+
+    }
+
+    void setUntouched() {
+        this.isUntouched = true;
+        System.out.println("File set as untouched");
+    }
+
+    boolean isSaved() {
+        return isSaved;
+    }
+
+    boolean isUntouched() {
+        return isUntouched;
     }
 
     /* DISPLAYING COORDINATES */
@@ -90,15 +135,9 @@ public class ImageModel {
         imageView.refresh(new ImageIcon(currentState.getPixels()));
     }
 
-    //export a buffered image for the view
-    private ImageIcon getImage(int[][] matrix) {
-        BufferedImage bufferedImage = new BufferedImage(matrix.length, matrix[0].length, BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < matrix.length; i++) {
-            for(int j = 0; j < matrix[0].length; j++) {
-                //set the current pixel in the buffered image to argb int from the pixels array
-                bufferedImage.setRGB(i, j, matrix[i][j]);
-            }
-        } return new ImageIcon(bufferedImage);
+    //used for saving
+    BufferedImage getImage() {
+        return currentState.getPixels();
     }
 
     //draw a checkerboard at a given size
@@ -128,7 +167,7 @@ public class ImageModel {
     //before a tool is used, save state to past states
     void saveCurrentState() {
         //save current state
-        pastStates.addFirst(new Canvas(currentState));
+        addToPastStates(currentState);
 
         //if too many undo'ed states then remove an action from the undo list
         if(pastStates.size() > MAX_UNDO) pastStates.removeLast();
@@ -152,12 +191,15 @@ public class ImageModel {
     //add to past states - this happens if we take any action to change the canvas, or if we redo
     private void addToPastStates(Canvas canvas) {
         pastStates.addFirst(new Canvas(canvas)); //push state to deque
+        isUntouched = false; //the image is no longer untouched, because we have done something
+        System.out.println("Model is not untouched anymore");
         if(pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
     }
 
     //add a state to undone states when undoing
     private void addToUndoneStates(Canvas canvas) {
         undoneStates.addFirst(new Canvas(canvas)); //push state to deque
+        isUntouched = false;
         if(undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
     }
 
@@ -171,7 +213,6 @@ public class ImageModel {
             printStates();
         } //else cant undo (nothing can be popped from the previous state
         else System.out.println("Can't undo");
-
     }
 
     //redo most recently undone state
