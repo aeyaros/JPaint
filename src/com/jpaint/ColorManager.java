@@ -108,8 +108,8 @@ class ColorManager {
 
         //add listeners to selected colors too
         for (ColorButton selectedColor : selectedColors) {
-            selectedColor.addMouseListener(new ColorButtonListener(selectedColor));
-            selectedColor.addMouseMotionListener(new ColorButtonListener(selectedColor));
+            selectedColor.addMouseListener(new SelectButtonListener(selectedColor));
+            selectedColor.addMouseMotionListener(new SelectButtonListener(selectedColor));
         }
 
         //we need this for the color picker window
@@ -137,13 +137,12 @@ class ColorManager {
     // so I can use it to set the mouse controllers
     //used for clicking the preset color buttons
     private class ColorButtonListener implements MouseListener, MouseMotionListener {
-        private ColorButton colorButton;
+        ColorButton colorButton;
         ColorButtonListener(ColorButton colorButton) {
             this.colorButton = colorButton;
         }
 
-        @Override
-        public void mouseClicked(MouseEvent e) { //when a color preset is clicked
+        @Override public void mouseClicked(MouseEvent e) { //when a color preset is clicked
             if(e.getClickCount() > 1) { //if double click or more
                 //double click; restore previous color to the corresponding button
                 setButtonColor(accessButton(e.getButton()).getPreviousColor(), e.getButton());
@@ -159,10 +158,8 @@ class ColorManager {
             } notifyTools();
         }
         //user may move mouse slightly when clicking, so we need a mousedragged event too
-        @Override
-        public void mouseDragged(MouseEvent e) {
-            setButtonColor(colorButton.getColor(), e.getButton());
-            notifyTools();
+        @Override public void mouseDragged(MouseEvent e) {
+            mouseClicked(e);
         }
 
         @Override public void mousePressed(MouseEvent e) { }
@@ -170,6 +167,20 @@ class ColorManager {
         @Override public void mouseEntered(MouseEvent e) { }
         @Override public void mouseExited(MouseEvent e) { }
         @Override public void mouseMoved(MouseEvent e) { }
+    }
+
+    private class SelectButtonListener extends ColorButtonListener {
+        SelectButtonListener(ColorButton colorButton) {
+            super(colorButton);
+        }
+
+        @Override public void mouseClicked(MouseEvent e) {
+            if(e.getClickCount() > 1) setUpColorPicker(colorButton);
+        }
+
+        @Override public void mouseDragged(MouseEvent e) {
+            mouseClicked(e);
+        }
     }
 
     //given a mouse event, return the color button indicated by the mouse event

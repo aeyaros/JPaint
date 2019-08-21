@@ -1,11 +1,14 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 //ColorPreset: a button for choosing a preset color in the UI
-class ColorButton extends JLabel {
+class ColorButton extends JPanel {
     private Color color;
+    private BackgroundPanel bg;
+    private JLabel colorLabel;
     private int width;
     private int height;
 
@@ -16,9 +19,14 @@ class ColorButton extends JLabel {
         this.width = width;
         this.height = height;
         this.setOpaque(true);
-        this.setBorder(BorderFactory.createLoweredBevelBorder());
         this.color = color; //required so previous color can be initialized in setColor()
+        colorLabel = new JLabel();
+        bg = new BackgroundPanel();
+        this.setLayout(new GridBagLayout());
+        this.add(bg);
+        bg.add(colorLabel);
         setColor(color);
+        this.setBorder(BorderFactory.createLoweredBevelBorder());
     }
 
     static ImageIcon generateColorIcon(int w, int h, int c) {
@@ -38,7 +46,7 @@ class ColorButton extends JLabel {
     void setColor(Color newColor) {
         previousColor = new Color(color);
         color = new Color(newColor);
-        this.setIcon(generateColorIcon(width, height, color.getARGB()));
+        colorLabel.setIcon(generateColorIcon(width, height, color.getARGB()));
     }
 
     Color getPreviousColor() {

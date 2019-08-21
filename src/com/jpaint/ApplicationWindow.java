@@ -76,7 +76,7 @@ class ApplicationWindow {
 
         //image panel: a container which is inside a panel with scrollbars
         JPanel imagePanel = new JPanel();
-        imagePanel.setBackground(java.awt.Color.white);
+        imagePanel.setBackground(java.awt.Color.gray);
 
         //image panel is inside a scroll pane
         JScrollPane imageScrollPanel = new JScrollPane(imagePanel);
@@ -94,7 +94,9 @@ class ApplicationWindow {
         theView = new ImageView(coordinatesLabel, sizeLabel);
         theView.setOpaque(false);
         theView.setBorder(null);
-        imagePanel.add(theView);
+        BackgroundPanel viewBackground = new BackgroundPanel();
+        viewBackground.add(theView);
+        imagePanel.add(viewBackground);
 
         //create model with a width, a height, and the view
         theModel = new ImageModel(width, height, theView);
