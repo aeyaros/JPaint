@@ -24,7 +24,7 @@ public class ToolPaintBucket extends Tool {
     }
 
     private void draw(int x, int y, int c) {
-        model.setPixelWithoutBlending(x,y,c);
+        model.setPixel(x,y,c,true,false);
     }
 
     //Node object for flood algorithm
@@ -120,7 +120,7 @@ public class ToolPaintBucket extends Tool {
                 }
             } catch (IndexOutOfBoundsException ignored) { }
         } //13. Continue looping until Q is exhausted. //14. Return.
-        model.refresh();
+        model.refreshView();
     }
 
     @Override

@@ -4,6 +4,8 @@ import javax.swing.*;
 import java.awt.event.MouseEvent;
 
 public class ToolLine extends Tool {
+    private boolean mousedown;
+
     ToolLine(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
         //set up upper card
@@ -12,12 +14,12 @@ public class ToolLine extends Tool {
 
     @Override
     public void toolDragged(MouseEvent e) {
-
+        //none
     }
 
     @Override
     public void toolMoved(MouseEvent e) {
-
+        //none
     }
 
     @Override

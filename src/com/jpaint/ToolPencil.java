@@ -28,7 +28,7 @@ public class ToolPencil extends Tool {
 
 
     protected void draw(int x, int y, int color) {
-        model.setPixel(x, y, color); //draw at the point
+        model.setPixel(x, y, color, false,true); //draw at the point
     }
 
     protected void preventDrawing() {
@@ -69,14 +69,14 @@ public class ToolPencil extends Tool {
             draw(curX, curY, colorInt);
             bresenham(oldX, oldY, curX, curY, colorInt); //draw line from past point to current point
 
-            model.refresh(); //tell model to refresh view
+            model.refreshView(); //tell model to refresh view
         }
     }
 
     //at end of drag, prevent drawing again
     @Override public void toolReleased(MouseEvent e) {
         preventDrawing();
-        model.refresh();
+        model.mergeOverlay();
         //System.out.println("End drag");
     }
 
@@ -86,7 +86,7 @@ public class ToolPencil extends Tool {
     @Override public void toolClicked(MouseEvent e) {
         model.saveCurrentState();
         draw(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
-        model.refresh();
+        model.refreshView();
     }
     
     //source of algorithm:

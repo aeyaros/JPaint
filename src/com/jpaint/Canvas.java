@@ -1,6 +1,9 @@
 package com.jpaint;
 
+import java.awt.geom.AffineTransform;
+import java.awt.image.AffineTransformOp;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
 
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
@@ -9,26 +12,24 @@ class Canvas {
     private int height;
 
     /*====== CONSTRUCTORS ======*/
-    final int defaultColor = (new Color(Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE)).getARGB();
+    private final int whiteInt = (new Color(Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE,Color.MAX_VALUE)).getARGB();
+    private final int transparentInt = (new Color(Color.MIN_VALUE,Color.MIN_VALUE,Color.MIN_VALUE,Color.MIN_VALUE)).getARGB();
 
-    private BufferedImage newBlankImage(int w, int h) {
-        BufferedImage newImage = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < w; i++) {
-            for(int j = 0; j < h; j++) {
-                newImage.setRGB(i,j,defaultColor);
-            }
-        } return newImage;
-    }
+    private int defaultColor; //either white or transparent
 
     //create a new canvas
-    Canvas(int w, int h) {
+    Canvas(int w, int h, boolean transparent) {
+        if(transparent) defaultColor = transparentInt;
+        else defaultColor = whiteInt;
+
         width = w;
         height = h;
-        pixels = newBlankImage(w,h);
+        pixels = newBlankImage(w,h, defaultColor);
     }
 
     //deep copy constructor
     Canvas(Canvas oldCanvas) {
+        defaultColor = transparentInt;
         width = oldCanvas.getWidth();
         height = oldCanvas.getHeight();
         pixels = new BufferedImage(width,height,BufferedImage.TYPE_INT_ARGB);
@@ -41,13 +42,27 @@ class Canvas {
 
     //canvas from a bufferedImage
     Canvas(BufferedImage sourceImage) {
+        defaultColor = transparentInt;
         width = sourceImage.getWidth();
         height = sourceImage.getHeight();
         pixels = sourceImage;
     }
 
+    void testChangeColor() {
+        pixels = newBlankImage(width,height, new Color(128,0,0,255).getARGB());
+    }
+
+    private BufferedImage newBlankImage(int w, int h, int baseColor) {
+        BufferedImage newImage = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+        for(int i = 0; i < w; i++) {
+            for(int j = 0; j < h; j++) {
+                newImage.setRGB(i,j, baseColor);
+            }
+        } return newImage;
+    }
+
     void clear() {
-        pixels = newBlankImage(width,height);
+        pixels = newBlankImage(width, height, defaultColor);
     }
 
     /*====== MODIFIERS ======*/
@@ -67,7 +82,7 @@ class Canvas {
         if(newX <= 0 || newY <= 0) throw new IllegalArgumentException("Canvas must be greater than 0 in both dimensions.");
 
         //draw a canvas that is newX by newY
-        BufferedImage newPixels = newBlankImage(newX, newY);
+        BufferedImage newPixels = newBlankImage(newX, newY, defaultColor);
 
         //and then copy the current canvas on top of the new one
         for(int i = 0; i < width; i++) {
@@ -100,19 +115,51 @@ class Canvas {
         return pixels.getRGB(w,h);
     }
 
-    //overlay one image matrix on top of another
+    //overlay an image ontop of the canvas, with blending
     //assuming they are the same size
-    static BufferedImage overlayImages(BufferedImage top, BufferedImage bottom) {
+    void overlayImage(BufferedImage top) {
         int w = top.getWidth(); int h = top.getHeight();
-        if(w != bottom.getWidth() || h != bottom.getHeight()) {
+        if(w != this.getWidth() || h != this.getHeight()) {
             throw new IllegalArgumentException("Cannot overlay canvases of different sizes");
         }
 
-        BufferedImage output = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+        //BufferedImage output = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < w; i++)
             for(int j = 0; j < h; j++)
-                output.setRGB(i,j, Color.alphaBlend(top.getRGB(i,j), bottom.getRGB(i,j)));
-        return output;
+                this.pixels.setRGB(i,j, Color.alphaBlend(top.getRGB(i,j), this.pixels.getRGB(i,j)));
+    }
+
+    void rotateOrtho(int option) {
+        BufferedImageOp rotateLeft = new AffineTransformOp(AffineTransform.getRotateInstance((Math.PI) / 2, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
+        BufferedImageOp rotate180 = new AffineTransformOp(AffineTransform.getRotateInstance(Math.PI, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
+        BufferedImageOp rotateRight = new AffineTransformOp(AffineTransform.getRotateInstance((3 * Math.PI) / 2, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
+        BufferedImageOp selectedOp;
+
+        switch (option) {
+            case 0 :selectedOp = rotateLeft; break;
+            case 1: selectedOp = rotateRight; break;
+            default: selectedOp = rotate180; break;
+        }
+
+        System.out.println(pixels.getWidth() + " " + pixels.getHeight());
+        BufferedImage newPixels = selectedOp.createCompatibleDestImage(pixels, pixels.getColorModel());
+        newPixels = selectedOp.filter(pixels, newPixels);
+        pixels = newPixels;
+    }
+
+    void flip(int option) {
+        BufferedImageOp flipHorizontal = new AffineTransformOp(AffineTransform.getScaleInstance(-1.0,1.0),AffineTransformOp.TYPE_BICUBIC);
+        BufferedImageOp flipVertical = new AffineTransformOp(AffineTransform.getScaleInstance(1.0,-1.0),AffineTransformOp.TYPE_BICUBIC);
+        BufferedImageOp selectedOp;
+
+        if (option == 0) selectedOp = flipHorizontal;
+        else selectedOp = flipVertical;
+
+        BufferedImage newPixels = newBlankImage(width, height, defaultColor);
+                //selectedOp.createCompatibleDestImage(pixels, pixels.getColorModel());
+        System.out.println(newPixels.getWidth());
+        newPixels = selectedOp.filter(pixels, newPixels);
+        pixels = newPixels;
     }
 }
 

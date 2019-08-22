@@ -1,23 +1,21 @@
 package com.jpaint;
 
 import javax.swing.*;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
-import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
 public class ImageModel {
     private ImageView imageView; //a view for the model to update
+    private Canvas temporaryOverlay; //used by tools as a temporary surface to draw on before it is applied to the model
     private Canvas currentState; //current state of the drawing
     private ArrayDeque<Canvas> pastStates; //previous states
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
-    private BufferedImage tileBG; //tiled background
 
     //image save states
     private boolean isUntouched; //if brand new
     private boolean isSaved; //if file was saved to the disk (i.e. if file was opened, or if it was created and saved)
+
 
     private final int MAX_UNDO = 50;
     private final int MAX_REDO = 50;
@@ -26,9 +24,9 @@ public class ImageModel {
 
     //create a new image model with a width and a height
     ImageModel(int w, int h, ImageView imageView) {
-        currentState = new Canvas(w, h);
+        currentState = new Canvas(w, h, false);
+        temporaryOverlay = new Canvas(w,h,true);
         this.imageView = imageView;
-
         initializeModel(w, h);
     }
 
@@ -36,71 +34,53 @@ public class ImageModel {
     private void initializeModel(int w, int h) {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-        imageView.updateSizeLabel(w, h);
+        startOverFromScratch();
 
-        tileBG = getBG(w,h,8);
+        //isUntouched = true; //initially, file not touched
+        //isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
 
-        saveCurrentState();
-        refresh(); //dont remove this from here!
 
-        isUntouched = true; //initially, file not touched
-        isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
-
-        //show mouse coordinates in a view
-        imageView.addMouseMotionListener(new MouseMotionListener() {
-            @Override public void mouseMoved(MouseEvent e) {
-                refreshCoordinates(e.getX(), e.getY()); }
-            @Override public void mouseDragged(MouseEvent e) {
-                refreshCoordinates(e.getX(), e.getY()); } });
-        imageView.addMouseListener(new MouseListener() {
-            //when pointer leaves canvas, display nothing
-            @Override public void mouseExited(MouseEvent e) { clearCoordinates(); }
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseReleased(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {} });
     }
 
     /*====== STARTING OVER, AND SAVE STATUS ======*/
 
-    void startOver() {
+    //you can start over from scratch or from an image
+    //right now i have two helpers
+    //first do helper 1, then do something to set up the canvas, then do helper 2
+
+    //helper 1 - important
+    private void startOver1() {
         currentState.clear();
         pastStates.clear();
         undoneStates.clear();
         System.out.print("Starting over...");
     }
 
-    void startOver2(int w, int h) {
+    //helper 2 - important
+    private void startOver2(int w, int h) {
+        imageView.updateSize(w,h);
+        saveCurrentState();
+        refreshView();
         isUntouched = true;
         isSaved = false;
-        imageView.updateSizeLabel(w, h);
     }
 
     //if creating a new image
     void startOverFromScratch() {
-        startOver();
-        currentState.resize(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
-        saveCurrentState();
-        refresh();
+        startOver1();
         startOver2(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
         System.out.println("...from scratch");
-
     }
 
     //if opening an image
     void startOverFromImage(BufferedImage image) {
         Canvas temp;
-        try {
-            temp = new Canvas(image);
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
-        }
-
-        startOver();
+        try { temp = new Canvas(image); }
+        catch (Exception e) { throw new IllegalArgumentException(); }
+        startOver1();
         currentState = temp;
-        saveCurrentState();
-        refresh();
         startOver2(currentState.getWidth(), currentState.getHeight());
+
         System.out.println("...from another file");
     }
 
@@ -125,44 +105,17 @@ public class ImageModel {
 
     /* DISPLAYING COORDINATES */
 
-    private void refreshCoordinates(int x, int y) {
-        if(isInBounds(x,y)) imageView.refreshCoordinates(x,y);
-        else clearCoordinates();
-    }
-
-    private void clearCoordinates() {
-        imageView.clearCoordinates();
-    }
-
     /*====== VIEWING TOOLS ======*/
 
     //blend the image with the tile background and then send that to the view
-    void refresh() {
-        imageView.refresh(new ImageIcon(currentState.getPixels()));
+    void refreshView() {
+        imageView.refresh(new ImageIcon(currentState.getPixels()),
+                          new ImageIcon(temporaryOverlay.getPixels()));
     }
 
-    //used for saving
+    //used for saving state
     BufferedImage getImage() {
         return currentState.getPixels();
-    }
-
-    //draw a checkerboard at a given size
-    static BufferedImage getBG(int w, int h, int squareSize) {
-        BufferedImage matrix = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
-        int[] squareColors = {
-                new Color(255,255,255,255).getARGB(),
-                new Color(255,200,200,200).getARGB()
-        }; boolean use1 = false;
-        for(int i = 0; i < w; i++) {
-            //every few pixels along the row, new color
-            if (i % squareSize == 0) use1 = !use1;
-            for (int j = 0; j < h; j++) {
-                //every few pixels in the column, new color
-                if (j % squareSize == 0) use1 = !use1;
-                if (use1) matrix.setRGB(i,j,squareColors[1]);
-                else matrix.setRGB(i,j,squareColors[0]);
-            }
-        } return matrix;
     }
 
     /*====== STATES, UNDOING AND REDOING ======*/
@@ -214,7 +167,7 @@ public class ImageModel {
         if(this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
-            this.refresh();
+            this.refreshView();
             System.out.println("Undone");
             printStates();
         } //else cant undo (nothing can be popped from the previous state
@@ -226,7 +179,7 @@ public class ImageModel {
         if(this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
             updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
-            this.refresh();
+            this.refreshView();
             System.out.println("Redone");
             printStates();
         } //else cant redo (nothing was previously undone
@@ -242,20 +195,43 @@ public class ImageModel {
 
     /*====== EDITING CANVAS ======*/
 
-    void setPixel(int x, int y, int argb) {
-        currentState.setPixel(x,y,argb);
+    void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
+        if(blend) {
+            if (useOverlay) temporaryOverlay.setPixel(x,y,argb);
+            else currentState.setPixel(x,y,argb);
+        } else {
+            if (useOverlay) temporaryOverlay.setPixelWithoutBlending(x,y,argb);
+            else currentState.setPixelWithoutBlending(x,y,argb);
+        }
     }
-    void setPixelWithoutBlending(int x, int y, int argb) {
-        currentState.setPixelWithoutBlending(x,y,argb);
-    }
+
+    /* FUNCTIONS USED BY MENUS */
 
     //this can be used directly by a menu
     void resize(int newX, int newY) {
         saveCurrentState(); //save current state
-        currentState.resize(newX, newY);
-        imageView.updateSizeLabel(newX, newY);
-        refresh();
+        resizeCanvases(newX,newY);
+        refreshView();
     }
+
+    private void resizeCanvases(int newX, int newY) {
+        imageView.updateSize(newX, newY);
+        currentState.resize(newX, newY);
+        temporaryOverlay.resize(newX, newY);
+    }
+
+    void flip(int option) { //0 = horizontal, else vertical
+        saveCurrentState();
+        currentState.flip(option % 2);
+        refreshView();
+    }
+
+    void rotate(int option) { //0 = left, 1 = right, else 180
+        saveCurrentState();
+        currentState.rotateOrtho(option % 3);
+        refreshView();
+    }
+
 
     /*====== ACCESSING CANVAS ======*/
 
@@ -267,12 +243,22 @@ public class ImageModel {
         return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
     }
 
-    int getPixel(int x, int y) {
-        return currentState.getPixel(x,y);
-    }
-
     Color getColorAtPixel(int x, int y) {
         if(isInBounds(x,y)) return new Color(currentState.getPixels().getRGB(x,y));
         else throw new IndexOutOfBoundsException();
     }
+
+
+    /* TEMPORARY OVERLAY */
+
+    void mergeOverlay() {
+        currentState.overlayImage(temporaryOverlay.getPixels());
+        clearOverlay();
+        refreshView();
+    }
+
+    void clearOverlay() {
+        temporaryOverlay.clear();
+    }
+
 }

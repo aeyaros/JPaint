@@ -4,10 +4,12 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-//ColorPreset: a button for choosing a preset color in the UI
-class ColorButton extends JPanel {
+//ColorPreset: is used as a label to show a color
+//used as a button by the sidebar presets
+//used by the color picker as a larger label
+class ColorButton extends JLabel {
     private Color color;
-    private BackgroundPanel bg;
+    private JLabel bg;
     private JLabel colorLabel;
     private int width;
     private int height;
@@ -19,13 +21,15 @@ class ColorButton extends JPanel {
         this.width = width;
         this.height = height;
         this.setOpaque(true);
-        this.color = color; //required so previous color can be initialized in setColor()
-        colorLabel = new JLabel();
-        bg = new BackgroundPanel();
         this.setLayout(new GridBagLayout());
-        this.add(bg);
-        bg.add(colorLabel);
+        this.color = color; //required so previous color can be initialized in setColor()
+
+        colorLabel = new JLabel();
+        this.add(colorLabel);
+
+        this.setIcon(BackgroundPanel.generateTileBG(width,height));
         setColor(color);
+
         this.setBorder(BorderFactory.createLoweredBevelBorder());
     }
 

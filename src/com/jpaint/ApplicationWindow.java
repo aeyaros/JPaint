@@ -42,8 +42,17 @@ class ApplicationWindow {
     void WindowSetup(int width, int height) {
         //initial setup
         mainFrame = new JFrame("JPaint");
-        mainFrame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+        //ask to save when closing window
+        mainFrame.addWindowListener(new WindowListener() {
+            @Override public void windowClosing(WindowEvent e) { exit(); }
+            @Override public void windowOpened(WindowEvent e) { }
+            @Override public void windowClosed(WindowEvent e) { }
+            @Override public void windowIconified(WindowEvent e) { }
+            @Override public void windowDeiconified(WindowEvent e) { }
+            @Override public void windowActivated(WindowEvent e) { }
+            @Override public void windowDeactivated(WindowEvent e) { }
+        });
 
         if(Main.IS_MAC) { //mac specific stuff
             System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
@@ -91,12 +100,10 @@ class ApplicationWindow {
         sizeLabel = new JLabel(" ");
 
         //then create view
-        theView = new ImageView(coordinatesLabel, sizeLabel);
+        theView = new ImageView(width, height, coordinatesLabel, sizeLabel);
         theView.setOpaque(false);
         theView.setBorder(null);
-        BackgroundPanel viewBackground = new BackgroundPanel();
-        viewBackground.add(theView);
-        imagePanel.add(viewBackground);
+        imagePanel.add(theView);
 
         //create model with a width, a height, and the view
         theModel = new ImageModel(width, height, theView);
@@ -238,12 +245,13 @@ class ApplicationWindow {
         menuItems.put("resize",new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
         transformMenu.addSeparator();
 
-        menuItems.put("fliph",new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> dummy()));
-        menuItems.put("flipv",new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_H, e -> dummy()));
+        menuItems.put("fliph",new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> transform("flipHorizontally")));
+        menuItems.put("flipv",new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_H, e -> transform("flipVertically")));
         transformMenu.addSeparator();
 
-        menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> dummy()));
-        menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> dummy()));
+        menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> transform("rotateLeft")));
+        menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotateRight")));
+        menuItems.put("rotateright",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotate180")));
 
 
         /*====== COLOR SCHEME ======*/
@@ -546,6 +554,18 @@ class ApplicationWindow {
 
     private void resize() {
         ResizeDialog resizeDialog = new ResizeDialog();
+    }
+
+    private void transform(String action) {
+        System.out.println(action);
+        switch (action) {
+            case "rotateLeft": theModel.rotate(0); break;
+            case "rotateRight": theModel.rotate(1); break;
+            case "rotate180": theModel.rotate(2); break;
+            case "flipHorizontal": theModel.flip(0); break;
+            case "flipVertical": theModel.flip(1); break;
+            default: break;
+        }
     }
 
     private void dummy() {} //temporary for menu listeners

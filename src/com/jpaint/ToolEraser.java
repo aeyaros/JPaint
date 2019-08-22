@@ -49,8 +49,8 @@ public class ToolEraser extends ToolPaintBrush {
         for(int y = negrad; y <= radius; y++) {
             for(int x = negrad; x <= radius; x++) {
                 if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-                    model.setPixelWithoutBlending(origX + x, origY + y, color);
+                    model.setPixel(origX + x, origY + y, color, false, false);
             }
-        } model.refresh();
+        } model.refreshView();
     }
 }

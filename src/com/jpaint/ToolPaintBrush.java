@@ -44,8 +44,8 @@ public class ToolPaintBrush extends ToolPencil {
         for(int y = negrad; y <= radius; y++) {
             for(int x = negrad; x <= radius; x++) {
                 if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-                    model.setPixel(origX + x, origY + y, color);
+                    model.setPixel(origX + x, origY + y, color, false,true);
             }
-        } model.refresh();
+        } model.refreshView();
     }
 }

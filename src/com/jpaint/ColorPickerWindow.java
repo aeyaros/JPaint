@@ -1,7 +1,6 @@
 package com.jpaint;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -14,7 +13,7 @@ class ColorPickerWindow {
     private JFrame frame;
     private JLabel[] labels;
     private JSlider[] sliders;
-    private JLabel colorLabel;
+    private ColorButton colorLabel;
     private int COLOR_LABEL_WIDTH = 128;
     private int COLOR_LABEL_HEIGHT = 64;
     private int SLIDER_BORDER = 8;
@@ -68,7 +67,6 @@ class ColorPickerWindow {
         mainPanel.setLayout(b);
 
 
-
         JPanel originalColorLabels = new JPanel();
         JPanel newColorLabels = new JPanel();
 
@@ -81,30 +79,28 @@ class ColorPickerWindow {
         originalColorLabels.add(originalLabelText);
 
         //label to show original color, is never changed once set
-        JLabel originalColorIconLabel = new JLabel();
-        setColorPane(originalColorIconLabel);
-        BackgroundPanel oldCheckersBG = new BackgroundPanel();
-        oldCheckersBG.add(originalColorIconLabel);
-        originalColorLabels.add(oldCheckersBG);
+        ColorButton oldColorButtonLabel = new ColorButton(colorButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
+        oldColorButtonLabel.setBorder(null);
+        originalColorLabels.add(oldColorButtonLabel);
+        setColorPane(oldColorButtonLabel);
 
-
+        //stuff for new color that is being set by user
         JLabel newLabelText = new JLabel("New");
         newLabelText.setHorizontalAlignment(SwingConstants.CENTER);
         newLabelText.setVerticalAlignment(SwingConstants.CENTER);
         newColorLabels.add(newLabelText);
 
         //add label to show new color color, changes when user uses controls on the window
-        colorLabel = new JLabel();
-        BackgroundPanel newCheckersBG = new BackgroundPanel();
+        colorLabel = new ColorButton(colorButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
+        colorLabel.setBorder(null);
+        newColorLabels.add(colorLabel);
         setColorPane(colorLabel);
-        newCheckersBG.add(colorLabel);
-        newColorLabels.add(newCheckersBG);
 
         //panel containing both colors
         JPanel colorPanel = new JPanel(new GridLayout(1,2));
+
         colorPanel.add(originalColorLabels);
         colorPanel.add(newColorLabels);
-
 
         mainPanel.add(colorPanel);
 
@@ -159,6 +155,7 @@ class ColorPickerWindow {
                 System.out.println("lost focus");
             }
         });
+
         frame.pack();
         frame.setLocationRelativeTo(mainFrame);
         frame.setVisible(true);
@@ -173,13 +170,13 @@ class ColorPickerWindow {
         }
     }
 
-    void updateChannel(int i) {
+    private void updateChannel(int i) {
         colorToChange.setChannel(i, sliders[i].getValue());
         labels[i].setText(Color.getChannelString(i) + ":" + colorToChange.getChannel(i));
         setColorPane(colorLabel);
     }
 
-    void setColorPane(JLabel pane) {
-        pane.setIcon(ColorButton.generateColorIcon(COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT, colorToChange.getARGB()));
+    private void setColorPane(ColorButton pane) {
+        pane.setColor(colorToChange);
     }
 }
