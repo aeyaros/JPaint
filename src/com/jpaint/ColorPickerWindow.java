@@ -117,7 +117,8 @@ class ColorPickerWindow {
             sliders[i] = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE, colorToChange.getChannel(i));
             sliders[i].addChangeListener(new sliderListener(i));
 
-            sliderPanels[i] = new JPanel(new GridBagLayout());
+            sliderPanels[i] = new JPanel();
+            sliderPanels[i].setLayout(new BoxLayout(sliderPanels[i], BoxLayout.X_AXIS));
             sliderPanels[i].add(sliders[i]);
             sliderPanels[i].add(labels[i]);
             sliderPanels[i].setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Color.getChannelString(i)));
