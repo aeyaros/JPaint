@@ -85,7 +85,7 @@ class ColorManager {
         //need to figure out a better way to format it before adding it
         //opacitySliderPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Opacity"));
 
-        opacitySliderPanel.add(innerContainer);
+        //opacitySliderPanel.add(innerContainer);
 
         //keep track of the tools being used
         this.tools = tools;
