@@ -9,7 +9,7 @@ public class ToolEraser extends ToolPaintBrush {
     ToolEraser(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
 
-        JRadioButton eraseWhite = new JRadioButton("White Eraser");
+        JRadioButton eraseWhite = new JRadioButton("White");
         eraseWhite.setSelected(true);
         JRadioButton eraseTrans = new JRadioButton("Transparent");
         eraseTrans.setSelected(false);
@@ -21,8 +21,14 @@ public class ToolEraser extends ToolPaintBrush {
         eraserButtons.add(eraseWhite);
         eraserButtons.add(eraseTrans);
 
-        upperCard.add(eraseWhite);
-        upperCard.add(eraseTrans);
+        JPanel eraserButtonPanel = new JPanel();
+        eraserButtonPanel.setLayout(new BoxLayout(eraserButtonPanel,BoxLayout.X_AXIS));
+        eraserButtonPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Eraser type"));
+
+        eraserButtonPanel.add(eraseWhite);
+        eraserButtonPanel.add(eraseTrans);
+
+        upperCard.add(eraserButtonPanel);
 
         //set up as a normal eraser
         setEraseToTransparent(false);

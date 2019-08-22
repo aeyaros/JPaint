@@ -81,7 +81,7 @@ class ApplicationWindow {
         //center panel has the top card and the main image panel
         JPanel centerPanel = new JPanel(new BorderLayout());
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.setBorder(new EmptyBorder(0,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE));
+        mainPanel.setBorder(new EmptyBorder(WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE));
 
         //image panel: a container which is inside a panel with scrollbars
         JPanel imagePanel = new JPanel();
@@ -130,7 +130,10 @@ class ApplicationWindow {
         JPanel sidePanel = new JPanel(new GridBagLayout());
         GridBagConstraints gridBagConstraints = new GridBagConstraints();
         gridBagConstraints.weighty = 0.0;
-        sidePanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE,0,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
+        gridBagConstraints.anchor = GridBagConstraints.NORTH;
+        gridBagConstraints.gridx = 0; //x - will remain 0
+
+        sidePanel.setBorder(new EmptyBorder(0,0,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
         mainPanel.add(sidePanel, BorderLayout.WEST);
 
 
@@ -138,8 +141,6 @@ class ApplicationWindow {
 
         //using gridbag layout, so I have to set all constraints initially
         // and then change y value each time I add something
-        gridBagConstraints.anchor = GridBagConstraints.NORTH;
-        gridBagConstraints.gridx = 0; //x - will remain 0
         EmptyBorder sidePanelBorder = new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE);
 
         //tools panel
@@ -449,7 +450,6 @@ class ApplicationWindow {
 
             JPanel fields = new JPanel(new GridLayout(0,1));
             JPanel labels = new JPanel(new GridLayout(0,1));
-
             widthField = new JTextField(MAX_INTEGER_DIGITS);
             heightField = new JTextField(MAX_INTEGER_DIGITS);
 
@@ -457,10 +457,8 @@ class ApplicationWindow {
 
             JLabel widthLabel = new JLabel("Width:");
             JLabel heightLabel = new JLabel("Height:");
-
             fields.add(widthField);
             fields.add(heightField);
-
             labels.add(widthLabel);
             labels.add(heightLabel);
 
@@ -475,11 +473,8 @@ class ApplicationWindow {
 
             buttons.add(applyButton);
             buttons.add(cancelButton);
-
             cancelButton.addActionListener(e -> close());
-
             applyButton.addActionListener(e -> apply());
-
             main.add(buttons, BorderLayout.SOUTH);
 
             this.pack();

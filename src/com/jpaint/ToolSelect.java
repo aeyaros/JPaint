@@ -1,13 +1,19 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 
 public class ToolSelect extends Tool {
     ToolSelect(String name, ImageModel model, String iconSource, String selectedIconSource) {
         super(name, model, iconSource, selectedIconSource);
         //set up upper card
-        upperCard.add(new JButton("select button"));
+        upperCard.setLayout(new CardLayout());
+        //set up upper card
+        JLabel infoText = new JLabel("Select tool - Not yet implemented");
+        infoText.setHorizontalAlignment(SwingConstants.CENTER);
+        infoText.setVerticalAlignment(SwingConstants.CENTER);
+        upperCard.add(infoText,0);
     }
 
     @Override

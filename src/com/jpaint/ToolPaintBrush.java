@@ -19,12 +19,17 @@ public class ToolPaintBrush extends ToolPencil {
         upperCard.removeAll();
         upperCard.setLayout(new GridLayout(1,0));
 
-        radiusLabel = new JLabel("", SwingConstants.RIGHT);
         radiusSlider = new JSlider(SwingConstants.HORIZONTAL,MIN_RADIUS,MAX_RADIUS,DEFAULT_RADIUS);
+        radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
         radiusSlider.addChangeListener(e -> setRadius(radiusSlider.getValue()));
 
-        upperCard.add(radiusLabel);
-        upperCard.add(radiusSlider);
+        JPanel radiusPanel = new JPanel();
+        radiusPanel.setLayout(new BoxLayout(radiusPanel,BoxLayout.X_AXIS));
+        radiusPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Brush Radius"));
+
+        radiusPanel.add(radiusLabel);
+        radiusPanel.add(radiusSlider);
+        upperCard.add(radiusPanel);
 
         setRadius(DEFAULT_RADIUS);
     }
@@ -32,7 +37,7 @@ public class ToolPaintBrush extends ToolPencil {
     void setRadius(int r) {
         radius = r;
         negrad = -r;
-        radiusLabel.setText("Radius: " + radius);
+        radiusLabel.setText(Integer.toString(radius));
     }
 
     @Override

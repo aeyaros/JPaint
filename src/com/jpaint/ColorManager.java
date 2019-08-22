@@ -59,17 +59,19 @@ class ColorManager {
 
         //set up panel for opacity slider
         opacitySlider = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE,Color.MAX_VALUE);
+
         opacityLabel = new JLabel("", SwingConstants.LEFT);
         setOpacityLabel();
+
 
         //outer panel has box layout that respects widths
         //inner panel has borderlayout for positioning elements
         JPanel innerContainer = new JPanel(new BorderLayout());
-        innerContainer.add(opacityLabel, BorderLayout.NORTH);
-        innerContainer.add(opacitySlider, BorderLayout.SOUTH);
-        innerContainer.setBorder(null);
-        innerContainer.setPreferredSize(new Dimension(
-                ApplicationWindow.TOOL_BUTTON_SIZE + 4 + ApplicationWindow.TOOL_BUTTON_SIZE,
+        innerContainer.add(opacityLabel, BorderLayout.EAST);
+        innerContainer.add(opacitySlider, BorderLayout.CENTER);
+
+        opacitySlider.setPreferredSize(new Dimension(
+                (int)Math.floor(ApplicationWindow.COLOR_BUTTON_SIZE*2.25),
                 ApplicationWindow.TOOL_BUTTON_SIZE)
         );
 
@@ -80,9 +82,10 @@ class ColorManager {
         });
 
         //disabling opacity slider for now by not adding it
-        //need to figure out efficient way to overlay images first
-        //so I can have checkered background
-        //////// opacitySliderPanel.add(innerContainer);
+        //need to figure out a better way to format it before adding it
+        //opacitySliderPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Opacity"));
+
+        opacitySliderPanel.add(innerContainer);
 
         //keep track of the tools being used
         this.tools = tools;
@@ -200,7 +203,7 @@ class ColorManager {
     }
 
     private void setOpacityLabel() {
-        opacityLabel.setText("Opacity: " + opacitySlider.getValue());
+        opacityLabel.setText(((opacitySlider.getValue() * 100)/255) + "%");
     }
 
     //take the selected colors and change their opacity

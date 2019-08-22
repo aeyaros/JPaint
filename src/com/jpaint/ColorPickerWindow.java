@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -16,7 +17,7 @@ class ColorPickerWindow {
     private ColorButton colorLabel;
     private int COLOR_LABEL_WIDTH = 128;
     private int COLOR_LABEL_HEIGHT = 64;
-    private int SLIDER_BORDER = 8;
+    private int SLIDER_BORDER = 12;
 
     //color stuff
     private Color colorToChange;
@@ -63,9 +64,8 @@ class ColorPickerWindow {
         //base panel containing layout
         JPanel mainPanel = new JPanel();
         frame.getContentPane().add(mainPanel);
-        BoxLayout b = new BoxLayout(mainPanel,BoxLayout.Y_AXIS);
-        mainPanel.setLayout(b);
 
+        mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
 
         JPanel originalColorLabels = new JPanel();
         JPanel newColorLabels = new JPanel();
@@ -75,7 +75,7 @@ class ColorPickerWindow {
 
         JLabel originalLabelText = new JLabel("Original");
         originalLabelText.setHorizontalAlignment(SwingConstants.CENTER);
-        originalLabelText.setVerticalAlignment(SwingConstants.CENTER);
+        originalLabelText.setVerticalAlignment(SwingConstants.TOP);
         originalColorLabels.add(originalLabelText);
 
         //label to show original color, is never changed once set
@@ -87,7 +87,7 @@ class ColorPickerWindow {
         //stuff for new color that is being set by user
         JLabel newLabelText = new JLabel("New");
         newLabelText.setHorizontalAlignment(SwingConstants.CENTER);
-        newLabelText.setVerticalAlignment(SwingConstants.CENTER);
+        newLabelText.setVerticalAlignment(SwingConstants.TOP);
         newColorLabels.add(newLabelText);
 
         //add label to show new color color, changes when user uses controls on the window
@@ -98,31 +98,35 @@ class ColorPickerWindow {
 
         //panel containing both colors
         JPanel colorPanel = new JPanel(new GridLayout(1,2));
+        colorPanel.setBorder(BorderFactory.createEmptyBorder(0,0,SLIDER_BORDER,0));
 
         colorPanel.add(originalColorLabels);
         colorPanel.add(newColorLabels);
 
         mainPanel.add(colorPanel);
 
+
         JPanel[] sliderPanels = new JPanel[4];
         sliders = new JSlider[sliderPanels.length];
         labels = new JLabel[sliderPanels.length];
 
         for(int i = 0; i < sliderPanels.length; i++) {
-            sliderPanels[i] = new JPanel(new BorderLayout());
 
-            labels[i] = new JLabel(Color.getChannelString(i) + ":", SwingConstants.LEFT);
-            sliderPanels[i].add(labels[i], BorderLayout.NORTH);
+            labels[i] = new JLabel(Integer.toString(colorToChange.getChannel(i)));
 
             sliders[i] = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE, colorToChange.getChannel(i));
             sliders[i].addChangeListener(new sliderListener(i));
 
-            sliderPanels[i].add(sliders[i], BorderLayout.SOUTH);
-            sliderPanels[i].setBorder(BorderFactory.createEmptyBorder(SLIDER_BORDER,0,0,0));
+            sliderPanels[i] = new JPanel(new GridBagLayout());
+            sliderPanels[i].add(sliders[i]);
+            sliderPanels[i].add(labels[i]);
+            sliderPanels[i].setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Color.getChannelString(i)));
         }
 
         //add sliders; red first
-        for(int i = 1; i < sliderPanels.length + 1; i++) mainPanel.add(sliderPanels[i % sliderPanels.length]);
+        for(int i = 1; i < sliderPanels.length + 1; i++) {
+            mainPanel.add(sliderPanels[i % sliderPanels.length]);
+        }
 
         //add OK and cancel button
         JPanel buttons = new JPanel(new GridLayout(1,0,6,0));
@@ -137,6 +141,7 @@ class ColorPickerWindow {
         buttons.add(applyButton);
         buttons.add(cancelButton);
         mainPanel.add(buttons);
+
         mainPanel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
 
         frame.setAlwaysOnTop(true);
@@ -172,7 +177,7 @@ class ColorPickerWindow {
 
     private void updateChannel(int i) {
         colorToChange.setChannel(i, sliders[i].getValue());
-        labels[i].setText(Color.getChannelString(i) + ":" + colorToChange.getChannel(i));
+        labels[i].setText(Integer.toString(colorToChange.getChannel(i)));
         setColorPane(colorLabel);
     }
 

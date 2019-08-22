@@ -4,11 +4,12 @@ package com.jpaint;
 public class Color {
     private short[] channels;
     private static final String[] channelNames = { "Opacity", "Red", "Green", "Blue" };
+    private static final int NUMBER_OF_VALUES = 256;
+    private static final int NUMBER_OF_CHANNELS = 4;
     static final int MAX_VALUE = 255;
     static final float MAX_VALUE_FLOAT = 255.0f;
     static final int MIN_VALUE = 0;
-    static final int NUMBER_OF_VALUES = 256;
-    static final int NUMBER_OF_CHANNELS = 4;
+
 
     /*====== CONSTRUCTORS ======*/
 
@@ -75,7 +76,6 @@ public class Color {
             //ith item is shifted left 32 - (8 * 1|2|3|4)
             argb += channels[i] << (Integer.SIZE - (Byte.SIZE * (i+1)));
         } return argb;
-        /*return (_channels[0] << 24) + (_channels[1] << 16) + (_channels[2] << 8) + (_channels[3]);*/
     }
 
     //get java color class object
@@ -104,16 +104,9 @@ public class Color {
         } System.out.print("\n");
     }
 
-    //return array of channels
-    private static int[] gcA(int input) {
-        int[] output = new int[4];
-        output[0] = input >> 24 & 0b11111111;
-        output[1] = input >> 16 & 0b11111111;
-        output[2] = input >> 8 & 0b11111111;
-        output[3] = input & 0b11111111;
-        return output;
-    }
+    /*====== ALPHA BLENDING ======*/
 
+    //based on alpha blend equations from wikipedia
     static int alphaBlend(int src_int, int dst_int) {
         int[] out = new int[NUMBER_OF_CHANNELS];
         int[] src = gcA(src_int);
@@ -155,6 +148,15 @@ public class Color {
         return ((out[0] << 24) + (out[1] << 16) + (out[2] << 8) + out[3]);
     }
 
+    //alpha blend helper function: return array of channels
+    private static int[] gcA(int input) {
+        int[] output = new int[4];
+        output[0] = input >> 24 & 0b11111111;
+        output[1] = input >> 16 & 0b11111111;
+        output[2] = input >> 8 & 0b11111111;
+        output[3] = input & 0b11111111;
+        return output;
+    }
 
 
 }
