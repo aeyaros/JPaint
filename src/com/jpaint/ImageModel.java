@@ -43,30 +43,30 @@ class ImageModel {
     /*====== STARTING OVER, AND SAVE STATUS ======*/
 
     //you can start over from scratch or from an image
-    //right now i have two helpers
-    //first do helper 1, then do something to set up the canvas, then do helper 2
 
-    //helper 1 - important
-    private void startOver1() {
+    private void startOver(Canvas temp) {
+        //set canvases to correct sizes
+        resizeCanvases(temp.getWidth(), temp.getHeight());
+        //clear canvases
         currentState.clear();
         pastStates.clear();
         undoneStates.clear();
-        System.out.print("Starting over...");
-    }
-
-    //helper 2 - important
-    private void startOver2(int w, int h) {
-        imageView.updateSize(w,h);
+        //set canvas
+        currentState = temp;
+        //update image view
+        imageView.updateSize(temp.getWidth(), temp.getHeight());
+        //save states and refresh
         saveCurrentState();
         refreshView();
+        //image is untouched and unsaved
         isUntouched = true;
         isSaved = false;
     }
 
     //if creating a new image
     void startOverFromScratch(int w, int h) {
-        startOver1();
-        startOver2(w, h);
+        startOver(new Canvas(w,h,false));
+
         System.out.println("...from scratch");
     }
 
@@ -75,9 +75,8 @@ class ImageModel {
         Canvas temp;
         try { temp = new Canvas(image); }
         catch (Exception e) { throw new IllegalArgumentException(); }
-        startOver1();
-        currentState = temp;
-        startOver2(currentState.getWidth(), currentState.getHeight());
+
+        startOver(temp);
 
         System.out.println("...from another file");
     }

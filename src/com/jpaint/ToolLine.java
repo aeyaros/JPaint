@@ -15,7 +15,6 @@ public class ToolLine extends Tool {
     private boolean useOverlay; //true if we are previewing, false if drawing for real
     private int width;
     private int negativeWidth; //for optimization
-    private int currentColor;
     private JSlider widthSlider;
     private JLabel widthLabel;
 
@@ -42,7 +41,6 @@ public class ToolLine extends Tool {
 
         setWidth(DEFALUT_WIDTH);
 
-        currentColor = new Color(255,0,0,0).getARGB();
         resetPoints();
         resetStates();
 
@@ -67,7 +65,7 @@ public class ToolLine extends Tool {
 
     //draw command used by draw function
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,color,width, negativeWidth, true, useOverlay);
+        makeCircle(x,y,color,width, negativeWidth, false, useOverlay);
     }
 
     private void resetStates() {
@@ -87,7 +85,6 @@ public class ToolLine extends Tool {
         //get current points
         x0 = startX;
         y0 = startY;
-        currentColor = color;
         refreshLinePreview(x0,y0, color);
     }
 
@@ -99,12 +96,12 @@ public class ToolLine extends Tool {
     }
 
     //on second click, or mouse release
-    private void finishLineDrawing(int endX, int endY) {
+    private void finishLineDrawing(int endX, int endY, int color) {
         //we know we are drawing the line now, and so we are going to save the old state
         model.saveCurrentState();
         model.clearOverlay();
         useOverlay = false;
-        drawLine(endX,endY,currentColor);
+        drawLine(endX,endY,color);
         useOverlay = true;
         model.refreshView();
     }
@@ -123,13 +120,13 @@ public class ToolLine extends Tool {
         //if the current tool isnt selected, then we should cancel; doenst work
         if(!this.button.isSelected()) cancelLineDrawing();
 
-        else if(twoClickMode) refreshLinePreview(e.getX(), e.getY(), currentColor);
+        else if(twoClickMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
     }
 
     //refresh preview if we are doing drag mode
     @Override
     public void toolDragged(MouseEvent e) {
-        if(dragMode) refreshLinePreview(e.getX(), e.getY(), currentColor);
+        if(dragMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
     }
 
     //handle mouseclicks for two click mode
@@ -139,10 +136,10 @@ public class ToolLine extends Tool {
         if(!dragMode) {
             if(!twoClickMode) { //first click
                 twoClickMode = true;
-                startLineDrawing(e.getX(), e.getY(),getColorIntByButton(e.getButton()));
+                startLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
             } else { //second click
                 //do stuff to finish line
-                finishLineDrawing(e.getX(), e.getY());
+                finishLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
                 twoClickMode = false;
             }
         }
@@ -166,7 +163,7 @@ public class ToolLine extends Tool {
         //end of drag
         if(dragMode && !twoClickMode) {
             //finish the drag stuff
-            finishLineDrawing(e.getX(),e.getY());
+            finishLineDrawing(e.getX(),e.getY(), getColorIntByButton(e.getButton()));
             //then set drag as false
             dragMode = false;
         }

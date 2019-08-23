@@ -12,6 +12,8 @@ import java.text.DecimalFormat;
 import java.util.Hashtable;
 
 class ApplicationWindow {
+    private final String APPLICATION_NAME = "JPaint";
+    private final String NEW_DOCUMENT = "New Document";
     //parameters for certain UI sizes
     final static int TOOL_BUTTON_SIZE = 48;
     final static int COLOR_BUTTON_SIZE = 32;
@@ -256,6 +258,9 @@ class ApplicationWindow {
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
 
+        /*====== SET TITLE ======*/
+        setTitle(NEW_DOCUMENT);
+
         /*====== SHOW WINDOW ======*/
         mainFrame.pack();
         mainFrame.setLocationRelativeTo(null); //center image
@@ -301,6 +306,7 @@ class ApplicationWindow {
         if(askToSave()) {
             theModel.startOverFromScratch(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
             theFile = null;
+            setTitle(NEW_DOCUMENT);
         }
     }
 
@@ -328,6 +334,9 @@ class ApplicationWindow {
                 theModel.setSaved();
                 //file was opened, save file object
                 theFile = file;
+                setTitle(theFile.getName());
+
+                //done
             } catch (Exception e) {
                 JOptionPane.showMessageDialog(mainFrame,
                         "The file \"" + file.getName() + "\" couldn't be opened. Please try again with a different file.",
@@ -345,6 +354,7 @@ class ApplicationWindow {
         //if model was already saved and still exists then just write it
         else if(theFile.exists()) { //if the file was saved and exists, then just write to it
             writeImageToFile(theFile);
+            //done
         } else { //otherwise, file was saved but doesn't exist anymore so you have to save as
             JOptionPane.showMessageDialog(mainFrame,
             "The file \"" + theFile.getName() + "\" no longer exists and may have been deleted. Please save as a new file.",
@@ -377,6 +387,7 @@ class ApplicationWindow {
             }
             //put stuff here
             writeImageToFile(file);
+            //done
         } else {
             System.out.println("Save command cancelled by user.");
         }
@@ -398,6 +409,10 @@ class ApplicationWindow {
             //file was saved, keep object here
             theFile = outputfile;
 
+            //set tile to new filename
+            setTitle(theFile.getName());
+
+            //done
         } catch (Exception e) {
             JOptionPane.showMessageDialog(mainFrame,
                     "The file \"" + outputfile.getName() + "\" couldn't be saved. Please try again in a different location or as a different file type.",
@@ -527,10 +542,12 @@ class ApplicationWindow {
                         if(result == 0) { //if OK option chosen
                             theModel.resize(newW, newH); //then resize
                             close(); //then close main dialog
+                            //done
                         }
                     } else { //no danger of cropping
                         theModel.resize(newW, newH); //then resize
                         close(); //then close main dialog
+                        //done
                     }
                 }
             } catch (NumberFormatException e) {
@@ -557,6 +574,10 @@ class ApplicationWindow {
             case "flipVertical": theModel.flip(1); break;
             default: break;
         }
+    }
+
+    private void setTitle(String documentTitle) {
+        mainFrame.setTitle(APPLICATION_NAME + " | " + documentTitle);
     }
 
     private void dummy() {} //temporary for menu listeners
