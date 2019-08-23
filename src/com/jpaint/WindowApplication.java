@@ -11,7 +11,7 @@ import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 
-class ApplicationWindow {
+class WindowApplication {
     private final String APPLICATION_NAME = "JPaint";
     private final String NEW_DOCUMENT = "New Document";
     //parameters for certain UI sizes
@@ -38,11 +38,11 @@ class ApplicationWindow {
     //path of opened/saved file
     private File theFile;
 
-    ApplicationWindow() { }
+    WindowApplication() { }
 
     void WindowSetup(int width, int height) {
         //initial setup
-        mainFrame = new JFrame("JPaint");
+        mainFrame = new JFrame(APPLICATION_NAME);
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //ask to save when closing window
         mainFrame.addWindowListener(new WindowListener() {
@@ -577,7 +577,7 @@ class ApplicationWindow {
     }
 
     private void setTitle(String documentTitle) {
-        mainFrame.setTitle(APPLICATION_NAME + " | " + documentTitle);
+        mainFrame.setTitle(APPLICATION_NAME + " - " + documentTitle);
     }
 
     private void dummy() {} //temporary for menu listeners

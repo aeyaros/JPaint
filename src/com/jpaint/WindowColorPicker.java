@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -8,7 +9,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
-class ColorPickerWindow {
+class WindowColorPicker {
     //window elements
     private JFrame frame;
     private JLabel[] labels;
@@ -25,10 +26,10 @@ class ColorPickerWindow {
 
     void close() {
         try {
+            colorButton.resetBorder();
             frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
-
         } catch (Exception e) {
-            System.out.println("Color picker window close event sent even though window already closed. This is not an issue.");
+            System.out.println("Color picker window close event sent even though window already closed. Ignore this message.");
         }
     }
 
@@ -39,7 +40,7 @@ class ColorPickerWindow {
     }
 
     //when initially created, we dont use it
-    ColorPickerWindow() {
+    WindowColorPicker() {
         close();
     }
 
@@ -49,6 +50,8 @@ class ColorPickerWindow {
         this.colorButton = colorButton; //not used until saving
         this.manageColors = manageColors; //not used until saving
         colorToChange = new Color(colorButton.getColor()); //store a copy of the original color
+
+        this.colorButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,SystemColor.controlHighlight,SystemColor.controlHighlight));
 
         frame = new JFrame("Color Picker");
 

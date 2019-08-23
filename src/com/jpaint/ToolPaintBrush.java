@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 public class ToolPaintBrush extends ToolPencil {
-    private final int MIN_RADIUS = 2;
+    private final int MIN_RADIUS = 0;
     private final int DEFAULT_RADIUS = 8;
     private final int MAX_RADIUS = 24;
     private JLabel radiusLabel;
@@ -37,7 +37,7 @@ public class ToolPaintBrush extends ToolPencil {
     private void setRadius(int r) {
         radius = r;
         negrad = -r;
-        radiusLabel.setText(Integer.toString(radius));
+        radiusLabel.setText(Double.toString((radius * 2 + 1)/2d));
     }
 
     public void draw(int x, int y, int color) {

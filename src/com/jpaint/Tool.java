@@ -2,7 +2,9 @@ package com.jpaint;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.EtchedBorder;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
@@ -29,22 +31,33 @@ abstract class Tool implements ToolInput {
         button.setOpaque(true);
         //button.setContentAreaFilled(false);
         button.setBorderPainted(true);
-        button.setBorder(BorderFactory.createEtchedBorder());
-        button.setSize(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE);
+        button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+        button.setSize(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE);
 
         try { //get icon of button
             Image image = ImageIO.read(getClass().getResource(iconSource));
-            image = image.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
+            image = image.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(image));
 
             Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
-            selectedImage = selectedImage.getScaledInstance(ApplicationWindow.TOOL_BUTTON_SIZE, ApplicationWindow.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
+            selectedImage = selectedImage.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setSelectedIcon(new ImageIcon(selectedImage));
         } catch(Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't load icon for " + name + " button from location " + iconSource);
         }
+
+        button.addItemListener(e -> {
+            if(e.getStateChange() == ItemEvent.SELECTED) {
+                //set border
+                button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlHighlight, SystemColor.controlHighlight));
+            } else if(e.getStateChange() == ItemEvent.DESELECTED) {
+                //deselect
+                button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+            }
+        });
     }
+
 
     void updateColors(Color left, Color middle, Color right) {
         colorsInts[0] = left.getARGB();

@@ -15,7 +15,7 @@ class Main {
         String lcOSName = System.getProperty("os.name").toLowerCase();
         IS_MAC = lcOSName.startsWith("mac os x");
 
-        ApplicationWindow window = new ApplicationWindow();
+        WindowApplication window = new WindowApplication();
         window.WindowSetup(DEFAULT_WINDOW_WIDTH, DEFAULT_WINDOW_HEIGHT);
     }
 }

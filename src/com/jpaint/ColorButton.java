@@ -21,6 +21,10 @@ class ColorButton extends JLabel {
         this.setLayout(new GridBagLayout());
         this.color = color; //required so previous color can be initialized in setColor()
         setColor(color);
+        resetBorder();
+    }
+
+    void resetBorder() {
         this.setBorder(BorderFactory.createLoweredBevelBorder());
     }
 

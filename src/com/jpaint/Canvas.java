@@ -160,7 +160,7 @@ class Canvas {
 
     //used for generating tiled backgrounds for translucent color
     static BufferedImage generateTileBG(int w, int h) {
-        final int squareSize = 8;
+        final int squareSize = 4;
 
         int[] squareColors = {
                 new Color(255,255,255,255).getARGB(),

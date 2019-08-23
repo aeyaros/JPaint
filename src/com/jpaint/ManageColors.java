@@ -40,7 +40,7 @@ class ManageColors {
     private JFrame mainFrame;
 
     //the color picker window
-    private ColorPickerWindow colorPickerWindow;
+    private WindowColorPicker windowColorPicker;
 
     ManageColors(Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel) {
         selectedColors = new ColorButton[3];
@@ -48,11 +48,11 @@ class ManageColors {
         //set current colors and add to the panel showing currently selected colors
         int halfMiddleWidth = 8; //half of the width of the middle button color selector
         selectedColors[0] = new ColorButton(colors[0 % colors.length],
-                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
+                WindowApplication.TOOL_BUTTON_SIZE - halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE);
         selectedColors[1] = new ColorButton(colors[1 % colors.length],
-                halfMiddleWidth + halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
+                halfMiddleWidth + halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE);
         selectedColors[2] = new ColorButton(colors[2 % colors.length],
-                ApplicationWindow.TOOL_BUTTON_SIZE - halfMiddleWidth, ApplicationWindow.COLOR_BUTTON_SIZE);
+                WindowApplication.TOOL_BUTTON_SIZE - halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE);
         selectedColorsPanel.add(selectedColors[0],0);
         selectedColorsPanel.add(selectedColors[1],1);
         selectedColorsPanel.add(selectedColors[2],2);
@@ -71,8 +71,8 @@ class ManageColors {
         innerContainer.add(opacitySlider, BorderLayout.CENTER);
 
         opacitySlider.setPreferredSize(new Dimension(
-                (int)Math.floor(ApplicationWindow.COLOR_BUTTON_SIZE*2.25),
-                ApplicationWindow.TOOL_BUTTON_SIZE)
+                (int)Math.floor(WindowApplication.COLOR_BUTTON_SIZE*2.25),
+                WindowApplication.TOOL_BUTTON_SIZE)
         );
 
         //add action listener to slider to update opacity of current color
@@ -96,7 +96,7 @@ class ManageColors {
         for(int i = 0; i < presetColors.length; i++) {
             //create the button
             presetColors[i] = new ColorButton(colors[i],
-                    ApplicationWindow.COLOR_BUTTON_SIZE, ApplicationWindow.COLOR_BUTTON_SIZE);
+                    WindowApplication.COLOR_BUTTON_SIZE, WindowApplication.COLOR_BUTTON_SIZE);
 
             //add event listener to the button
             //when it is clicked, the current color should be set
@@ -119,7 +119,7 @@ class ManageColors {
         this.mainFrame = mainFrame;
 
         //instantiate color picker
-        this.colorPickerWindow = new ColorPickerWindow();
+        this.windowColorPicker = new WindowColorPicker();
 
         //notify tools of color changes
         notifyTools();
@@ -216,8 +216,8 @@ class ManageColors {
     }
 
     private void setUpColorPicker(ColorButton colorToChange) {
-        colorPickerWindow.close(); //either window is open, closed already
+        windowColorPicker.close(); //either window is open, closed already
         //in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
-        colorPickerWindow.setColorPickerWindow(colorToChange, mainFrame, this);
+        windowColorPicker.setColorPickerWindow(colorToChange, mainFrame, this);
     }
 }
