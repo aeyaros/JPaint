@@ -33,11 +33,6 @@ class ImageModel {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
         startOverFromScratch(w,h);
-
-        //isUntouched = true; //initially, file not touched
-        //isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
-
-
     }
 
     /*====== STARTING OVER, AND SAVE STATUS ======*/
@@ -58,9 +53,8 @@ class ImageModel {
         //save states and refresh
         saveCurrentState();
         refreshView();
-        //image is untouched and unsaved
-        isUntouched = true;
-        isSaved = false;
+        isUntouched = true; //initially, file not touched
+        isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
     }
 
     //if creating a new image
@@ -84,7 +78,6 @@ class ImageModel {
     void setSaved() {
         this.isSaved = true;
         System.out.println("File set as saved");
-
     }
 
     void setUntouched() {

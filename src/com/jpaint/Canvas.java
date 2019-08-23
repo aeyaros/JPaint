@@ -107,10 +107,6 @@ class Canvas {
         return height;
     }
 
-    int getPixel(int w, int h) {
-        return pixels.getRGB(w,h);
-    }
-
     //overlay an image ontop of the canvas, with blending
     //assuming they are the same size
     void overlayImage(BufferedImage top) {

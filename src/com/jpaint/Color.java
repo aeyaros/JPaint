@@ -10,7 +10,6 @@ class Color {
     static final float MAX_VALUE_FLOAT = 255.0f;
     static final int MIN_VALUE = 0;
 
-
     /*====== CONSTRUCTORS ======*/
 
     //create a new color
@@ -79,7 +78,7 @@ class Color {
     }
 
     //get java color class object
-    public java.awt.Color getAWT() { //argb -> rgba
+    java.awt.Color getAWT() { //argb -> rgba
         return new java.awt.Color(channels[1], channels[2], channels[3], channels[0]);
     }
 
@@ -98,11 +97,11 @@ class Color {
     }
 
     //print out the values of the color to console
-    void print() {
+    /*void print() {
         for (short channel : channels) {
             System.out.print(channel + " ");
         } System.out.print("\n");
-    }
+    }*/
 
     /*====== ALPHA BLENDING ======*/
 

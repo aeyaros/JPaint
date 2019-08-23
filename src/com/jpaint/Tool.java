@@ -12,13 +12,11 @@ abstract class Tool implements ToolInput {
     ImageModel model; //the model class this tool acts on
     JPanel upperCard; //the upper panel shown when this tool is selected
     JToggleButton button; //the tool button
-    private String name;
     private int[] colorsInts;
 
     //set button name and add the model
-    Tool(String name, ImageModel model, String iconSource, String selectedIconSource) {
+    Tool(ImageModel model, String iconSource) {
         super();
-        this.name = name;
         this.model = model;
         colorsInts = new int[3];
 
@@ -38,35 +36,35 @@ abstract class Tool implements ToolInput {
             Image image = ImageIO.read(getClass().getResource(iconSource));
             image = image.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(image));
-
-            Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
-            selectedImage = selectedImage.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
-            button.setSelectedIcon(new ImageIcon(selectedImage));
+            button.setBackground(SystemColor.window);
+            //Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
+            //selectedImage = selectedImage.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
+            //button.setSelectedIcon(new ImageIcon(selectedImage));
         } catch(Exception e) {
             e.printStackTrace();
-            System.err.println("Couldn't load icon for " + name + " button from location " + iconSource);
+            System.err.println("Couldn't load icon for " + this.getClass().getName() + " button from location " + iconSource);
         }
 
         button.addItemListener(e -> {
             if(e.getStateChange() == ItemEvent.SELECTED) {
                 //set border
-                button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlHighlight, SystemColor.controlHighlight));
+                button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlLtHighlight, SystemColor.controlShadow));
+                //set background
+                button.setBackground(SystemColor.controlHighlight);
             } else if(e.getStateChange() == ItemEvent.DESELECTED) {
-                //deselect
+                //set border
                 button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+                //set background
+                button.setBackground(SystemColor.window);
+
             }
         });
     }
-
 
     void updateColors(Color left, Color middle, Color right) {
         colorsInts[0] = left.getARGB();
         colorsInts[1] = middle.getARGB();
         colorsInts[2] = right.getARGB();
-    }
-
-    String getName() {
-        return name;
     }
 
     int getColorIntByButton(int mouseEventButtonCode) {
@@ -122,5 +120,15 @@ abstract class Tool implements ToolInput {
                     model.setPixel(origX + x, origY + y, color, blend,useOverlay);
             }
         } model.refreshView();
+    }
+
+    void makeRegularPolygon(int origX, int origY, int color, int sides, int radius, boolean blend, boolean useOverlay) {
+        if(sides < 3) return; //cant have a polygon with less than 3 sides
+
+        //start point for rotation
+        //origin x + radius
+
+        //then rotate about origin n times for 360/n degrees
+
     }
 }

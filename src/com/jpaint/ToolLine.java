@@ -23,8 +23,8 @@ public class ToolLine extends Tool {
     private int y0;
 
 
-    ToolLine(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolLine(ImageModel model, String iconSource) {
+        super(model, iconSource);
         upperCard.setLayout(new GridLayout(1,0));
 
         widthSlider = new JSlider(SwingConstants.HORIZONTAL,MIN_WIDTH,MAX_WIDTH,DEFALUT_WIDTH);

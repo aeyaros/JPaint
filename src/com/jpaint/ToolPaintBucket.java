@@ -8,13 +8,13 @@ import java.util.ArrayDeque;
 
 public class ToolPaintBucket extends Tool {
     //boundaries of canvas
-    private int lowX = 0;
-    private int lowY = 0;
+    private final int lowX = 0;
+    private final int lowY = 0;
     private int highX;
     private int highY;
 
-    ToolPaintBucket(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource,selectedIconSource);
+    ToolPaintBucket(ImageModel model, String iconSource) {
+        super(model, iconSource);
         //set up upper card
         upperCard.setLayout(new CardLayout());
         //set up upper card
@@ -31,7 +31,8 @@ public class ToolPaintBucket extends Tool {
 
     //Node object for flood algorithm
     private class Node {
-        int x; int y;
+        int x;
+        int y;
         Node(int X, int Y) { x = X; y = Y; } //new node
         Node(Node n) { x = n.x; y = n.y; } //deep copy
 
@@ -142,19 +143,7 @@ public class ToolPaintBucket extends Tool {
     @Override public void toolMoved(MouseEvent e) { }
     @Override public void toolEntered(MouseEvent e) { }
     @Override public void toolExited(MouseEvent e) { }
-
-    @Override
-    public void toolKeyPressed(KeyEvent e) {
-
-    }
-
-    @Override
-    public void toolKeyReleased(KeyEvent e) {
-
-    }
-
-    @Override
-    public void toolKeyTyped(KeyEvent e) {
-
-    }
+    @Override public void toolKeyPressed(KeyEvent e) { }
+    @Override public void toolKeyReleased(KeyEvent e) { }
+    @Override public void toolKeyTyped(KeyEvent e) { }
 }

@@ -12,8 +12,8 @@ public class ToolColorPicker extends Tool {
     private JLabel[] ARGB;
     private String[] labelPrefixes = {"Opacity: ", "Red: ", "Green: ", "Blue: "};
 
-    ToolColorPicker(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolColorPicker(ImageModel model, String iconSource) {
+        super(model, iconSource);
         //set up upper card
         cards = new CardLayout();
         upperCard = new JPanel(cards);

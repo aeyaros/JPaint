@@ -19,25 +19,17 @@ class ManageTools {
         //create tools
         //add them to arraylist one by one, then copy to regular array to avoid magic numbers
         ArrayList<Tool> newTools = new ArrayList<>();
-        newTools.add(new ToolSelect("Select", theModel,
-                "icons/select.png", "icons/selected select.png"));
+        newTools.add(new ToolSelect(theModel, "icons/select.png"));
 
-        toolColorPicker = new ToolColorPicker("Picker", theModel,
-                "icons/colorpicker.png", "icons/selected colorpicker.png");
+        toolColorPicker = new ToolColorPicker(theModel, "icons/colorpicker.png");
         newTools.add(toolColorPicker); //later, add the color manager once it is declared
 
-        newTools.add(new ToolPencil("Pencil", theModel,
-                "icons/pencil.png", "icons/selected pencil.png"));
-        newTools.add(new ToolPaintBrush("Brush", theModel,
-                "icons/paintbrush.png", "icons/selected paintbrush.png"));
-        newTools.add(new ToolEraser("Eraser", theModel,
-                "icons/eraser.png", "icons/selected eraser.png"));
-        newTools.add(new ToolPaintBucket("Bucket", theModel,
-                "icons/paintbucket.png", "icons/selected paintbucket.png"));
-        newTools.add(new ToolLine("Line", theModel,
-                "icons/line.png", "icons/selected line.png"));
-        newTools.add(new ToolShapes("Shapes", theModel,
-                "icons/shapes.png", "icons/selected shapes.png"));
+        newTools.add(new ToolPencil(theModel, "icons/pencil.png"));
+        newTools.add(new ToolPaintBrush(theModel, "icons/paintbrush.png"));
+        newTools.add(new ToolEraser(theModel, "icons/eraser.png"));
+        newTools.add(new ToolPaintBucket(theModel, "icons/paintbucket.png"));
+        newTools.add(new ToolLine(theModel, "icons/line.png"));
+        newTools.add(new ToolShapes(theModel, "icons/shapes.png"));
         //update colors of tools
 
         tools = new Tool[newTools.size()]; //use regular array for better performance
@@ -71,7 +63,7 @@ class ManageTools {
             tools[i].button.addActionListener(new ToolButtonListener(i)); //add listener to button
 
             //add the tool's top card to the top panel
-            topPanel.add(tools[i].upperCard, tools[i].getName());
+            topPanel.add(tools[i].upperCard, Integer.toString(i)); //add to card, 'name' is the index as a string
 
             //add the tool's button to the button group
             buttonGroup.add(tools[i].button);
@@ -81,20 +73,15 @@ class ManageTools {
         }
 
         /*====== START WITH AN INITIAL TOOL SELECTED ======*/
-        int startingToolIndex = getIndexByToolName("Brush");
-        setCurrentTool(startingToolIndex); //start with pencil
+        setCurrentTool(3); //start with pencil
         //still need to make it initially selected
-        tools[startingToolIndex].button.setSelected(true);
+        tools[3].button.setSelected(true);
     }
 
     Tool[] getTools() {
         return tools;
     }
 
-    private int getIndexByToolName(String toolName) {
-        for(int i = 0; i < tools.length; i++) if(tools[i].getName().compareTo(toolName) == 0) return i;
-        return 0; //if no matching name return 0
-    }
 
     JPanel getTopPanel(){
         return topPanel;
@@ -119,7 +106,7 @@ class ManageTools {
 
     private void setCurrentTool(int i) {
         //show the tool's top card in the card panel
-        topLayout.show(topPanel, tools[i].getName());
+        topLayout.show(topPanel, Integer.toString(i)); //refer to 'name' here
 
         //set the current tool for mouse listeners to use
         controllerMouseStatic.setTool(i);

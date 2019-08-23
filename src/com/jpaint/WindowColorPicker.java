@@ -15,9 +15,9 @@ class WindowColorPicker {
     private JLabel[] labels;
     private JSlider[] sliders;
     private ColorButton colorLabel;
-    private int COLOR_LABEL_WIDTH = 128;
-    private int COLOR_LABEL_HEIGHT = 64;
-    private int SLIDER_BORDER = 12;
+    private final int COLOR_LABEL_WIDTH = 128;
+    private final int COLOR_LABEL_HEIGHT = 64;
+    private final int SLIDER_BORDER = 12;
 
     //color stuff
     private Color colorToChange;

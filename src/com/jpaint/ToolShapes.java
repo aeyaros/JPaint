@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolShapes extends Tool {
-    ToolShapes(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolShapes(ImageModel model, String iconSource) {
+        super(model, iconSource);
         //set up upper card
         upperCard.setLayout(new CardLayout());
         //set up upper card

@@ -1,13 +1,12 @@
 package com.jpaint;
 
-
 import javax.swing.*;
 
 public class ToolEraser extends ToolPaintBrush {
     private boolean eraseToTransparent;
 
-    ToolEraser(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolEraser(ImageModel model, String iconSource) {
+        super(model, iconSource);
 
         JRadioButton eraseWhite = new JRadioButton("White");
         eraseWhite.setSelected(true);
@@ -48,17 +47,6 @@ public class ToolEraser extends ToolPaintBrush {
 
     @Override
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,getEraserColor(),radius,negrad,false,false);
-        //eraseCircle(x,y,getEraserColor());
+        makeCircle(x,y,getEraserColor(),radius, negativeRadius,false,false);
     }
-
-    /*
-    private void eraseCircle(int origX, int origY, int color) {
-        for(int y = negrad; y <= radius; y++) {
-            for(int x = negrad; x <= radius; x++) {
-                if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-                    model.setPixel(origX + x, origY + y, color, false, false);
-            }
-        } model.refreshView();
-    }*/
 }

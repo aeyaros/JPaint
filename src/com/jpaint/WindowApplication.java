@@ -561,7 +561,7 @@ class WindowApplication {
     }
 
     private void resize() {
-        ResizeDialog resizeDialog = new ResizeDialog();
+        new ResizeDialog();
     }
 
     private void transform(String action) {

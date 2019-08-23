@@ -11,10 +11,11 @@ public class ToolPaintBrush extends ToolPencil {
     private JSlider radiusSlider;
 
     int radius;
-    int negrad;
+    int negativeRadius; //just radius * -1, for slightly less operations in certain functions
 
-    ToolPaintBrush(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolPaintBrush(ImageModel model, String iconSource) {
+        super(model, iconSource);
+
         //set up upper card
         upperCard.removeAll();
         upperCard.setLayout(new GridLayout(1,0));
@@ -36,12 +37,12 @@ public class ToolPaintBrush extends ToolPencil {
 
     private void setRadius(int r) {
         radius = r;
-        negrad = -r;
+        negativeRadius = -r;
         radiusLabel.setText(Double.toString((radius * 2 + 1)/2d));
     }
 
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,color, radius, negrad,false, true);
+        makeCircle(x,y,color, radius, negativeRadius,false, true);
     }
 
 

@@ -6,8 +6,8 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolPencil extends Tool {
-    ToolPencil(String name, ImageModel model, String iconSource, String selectedIconSource) {
-        super(name, model, iconSource, selectedIconSource);
+    ToolPencil(ImageModel model, String iconSource) {
+        super(model, iconSource);
         upperCard.setLayout(new CardLayout());
         //set up upper card
         JLabel infoText = new JLabel("Click and drag to draw.");
@@ -89,8 +89,6 @@ public class ToolPencil extends Tool {
         draw(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
         model.refreshView();
     }
-    
-
 
     @Override public void toolMoved(MouseEvent e) {
 
