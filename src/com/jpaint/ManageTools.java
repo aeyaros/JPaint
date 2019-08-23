@@ -6,15 +6,16 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class ToolsManager {
+class ManageTools {
     private Tool[] tools;
-    private MouseStaticController mouseStaticController;
-    private MouseMotionController mouseMotionController;
+    private ControllerMouseStatic controllerMouseStatic;
+    private ControllerMouseMotion controllerMouseMotion;
+    private ControllerKey controllerKey;
     private JPanel topPanel;
     private CardLayout topLayout;
     private ToolColorPicker toolColorPicker;
 
-    ToolsManager(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
+    ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
         //create tools
         //add them to arraylist one by one, then copy to regular array to avoid magic numbers
         ArrayList<Tool> newTools = new ArrayList<>();
@@ -43,11 +44,15 @@ class ToolsManager {
         for(int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
 
         //create both static and motion mouse controllers and add them to the view
-        mouseStaticController = new MouseStaticController(tools);
-        theView.addMouseListener(mouseStaticController);
+        controllerMouseStatic = new ControllerMouseStatic(tools);
+        theView.addMouseListener(controllerMouseStatic);
 
-        mouseMotionController = new MouseMotionController(tools);
-        theView.addMouseMotionListener(mouseMotionController);
+        controllerMouseMotion = new ControllerMouseMotion(tools);
+        theView.addMouseMotionListener(controllerMouseMotion);
+
+        controllerKey = new ControllerKey(tools);
+        toolsPanel.addKeyListener(controllerKey);
+
 
         //set up top panel for tool-specific controls
         topPanel = new JPanel();
@@ -73,8 +78,6 @@ class ToolsManager {
 
             //add the tool's button to the sidebar
             toolsPanel.add(tools[i].button); //add button to panel on sidebar
-
-            //System.out.println("Added " + tools[i].getName());
         }
 
         /*====== START WITH AN INITIAL TOOL SELECTED ======*/
@@ -88,7 +91,7 @@ class ToolsManager {
         return tools;
     }
 
-    int getIndexByToolName(String toolName) {
+    private int getIndexByToolName(String toolName) {
         for(int i = 0; i < tools.length; i++) if(tools[i].getName().compareTo(toolName) == 0) return i;
         return 0; //if no matching name return 0
     }
@@ -97,8 +100,8 @@ class ToolsManager {
         return topPanel;
     }
 
-    void addColorManager(ColorManager colorManager) {
-        toolColorPicker.addColorManager(colorManager);
+    void addColorManager(ManageColors manageColors) {
+        toolColorPicker.addColorManager(manageColors);
     }
 
     //allows me to pass an index value through the action listener so I can use it to set the mouse controllers
@@ -119,7 +122,7 @@ class ToolsManager {
         topLayout.show(topPanel, tools[i].getName());
 
         //set the current tool for mouse listeners to use
-        mouseStaticController.setTool(i);
-        mouseMotionController.setTool(i);
+        controllerMouseStatic.setTool(i);
+        controllerMouseMotion.setTool(i);
     }
 }

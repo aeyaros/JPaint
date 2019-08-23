@@ -34,23 +34,15 @@ public class ToolPaintBrush extends ToolPencil {
         setRadius(DEFAULT_RADIUS);
     }
 
-    void setRadius(int r) {
+    private void setRadius(int r) {
         radius = r;
         negrad = -r;
         radiusLabel.setText(Integer.toString(radius));
     }
 
-    @Override
-    protected void draw(int x, int y, int color) {
-        makeCircle(x,y,color);
+    public void draw(int x, int y, int color) {
+        makeCircle(x,y,color, radius, negrad,false, true);
     }
 
-    protected void makeCircle(int origX, int origY, int color) {
-        for(int y = negrad; y <= radius; y++) {
-            for(int x = negrad; x <= radius; x++) {
-                if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-                    model.setPixel(origX + x, origY + y, color, false,true);
-            }
-        } model.refreshView();
-    }
+
 }

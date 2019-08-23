@@ -2,6 +2,7 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.util.ArrayDeque;
 
@@ -23,8 +24,9 @@ public class ToolPaintBucket extends Tool {
         upperCard.add(infoText,0);
     }
 
-    private void draw(int x, int y, int c) {
-        model.setPixel(x,y,c,true,false);
+    @Override
+    public void draw(int x, int y, int color) {
+        model.setPixel(x,y,color,true,false);
     }
 
     //Node object for flood algorithm
@@ -140,4 +142,19 @@ public class ToolPaintBucket extends Tool {
     @Override public void toolMoved(MouseEvent e) { }
     @Override public void toolEntered(MouseEvent e) { }
     @Override public void toolExited(MouseEvent e) { }
+
+    @Override
+    public void toolKeyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void toolKeyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void toolKeyTyped(KeyEvent e) {
+
+    }
 }

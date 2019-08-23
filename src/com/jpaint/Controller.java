@@ -9,11 +9,11 @@ thus, this class allows for adding and changing tool used by listeners
 derived classes actually implement the mouselistener
 interfaces and send the events to the tools
 */
-public abstract class MouseController {
+public abstract class Controller {
     Tool[] tools;
     int index;
 
-    MouseController(Tool[] tools) {
+    Controller(Tool[] tools) {
         this.tools = tools;
         index = 0;
     }

@@ -2,10 +2,11 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolColorPicker extends Tool {
-    private ColorManager colorManager;
+    private ManageColors manageColors;
     private CardLayout cards;
     private JPanel coordinates;
     private JLabel[] ARGB;
@@ -38,8 +39,8 @@ public class ToolColorPicker extends Tool {
         } clearStatus();
     }
 
-    void addColorManager(ColorManager colorManager) {
-        this.colorManager = colorManager;
+    void addColorManager(ManageColors colorManager) {
+        this.manageColors = manageColors;
     }
 
     private Color getColorAtPixel(int x, int y) {
@@ -79,7 +80,7 @@ public class ToolColorPicker extends Tool {
     private void setColor(int x, int y, int buttonCode) {
         if(model.isInBounds(x,y)) {
             Color c = getColorAtPixel(x,y);
-            colorManager.setButtonColor(c, buttonCode);
+            manageColors.setButtonColor(c, buttonCode);
         }
     }
 
@@ -126,4 +127,9 @@ public class ToolColorPicker extends Tool {
     public void toolExited(MouseEvent e) {
         clearStatus();
     }
+
+    @Override public void draw(int x, int y, int color) { }
+    @Override public void toolKeyPressed(KeyEvent e) { }
+    @Override public void toolKeyReleased(KeyEvent e) { }
+    @Override public void toolKeyTyped(KeyEvent e) { }
 }

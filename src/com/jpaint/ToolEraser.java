@@ -47,10 +47,12 @@ public class ToolEraser extends ToolPaintBrush {
     }
 
     @Override
-    protected void draw(int x, int y, int color) {
-        eraseCircle(x,y,getEraserColor());
+    public void draw(int x, int y, int color) {
+        makeCircle(x,y,getEraserColor(),radius,negrad,false,false);
+        //eraseCircle(x,y,getEraserColor());
     }
 
+    /*
     private void eraseCircle(int origX, int origY, int color) {
         for(int y = negrad; y <= radius; y++) {
             for(int x = negrad; x <= radius; x++) {
@@ -58,5 +60,5 @@ public class ToolEraser extends ToolPaintBrush {
                     model.setPixel(origX + x, origY + y, color, false, false);
             }
         } model.refreshView();
-    }
+    }*/
 }

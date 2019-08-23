@@ -5,7 +5,7 @@ import java.awt.*;
 import java.awt.event.*;
 
 //manage selected colors
-class ColorManager {
+class ManageColors {
     //default preset colors
     private final Color[] colors = {
             new Color(255,  0,  0,  0), //black
@@ -42,7 +42,7 @@ class ColorManager {
     //the color picker window
     private ColorPickerWindow colorPickerWindow;
 
-    ColorManager(Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel) {
+    ManageColors(Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel) {
         selectedColors = new ColorButton[3];
 
         //set current colors and add to the panel showing currently selected colors

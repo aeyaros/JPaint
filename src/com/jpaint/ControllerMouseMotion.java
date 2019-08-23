@@ -4,8 +4,8 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
 
 //send mouse motion events to tools
-public class MouseMotionController extends MouseController implements MouseMotionListener {
-    MouseMotionController(Tool[] tools) { super(tools); }
+public class ControllerMouseMotion extends Controller implements MouseMotionListener {
+    ControllerMouseMotion(Tool[] tools) { super(tools); }
     @Override public void mouseDragged(MouseEvent e) {
         tools[index].toolDragged(e);
     }

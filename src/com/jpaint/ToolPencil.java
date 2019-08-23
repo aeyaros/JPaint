@@ -2,6 +2,7 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolPencil extends Tool {
@@ -27,7 +28,7 @@ public class ToolPencil extends Tool {
     }
 
 
-    protected void draw(int x, int y, int color) {
+    public void draw(int x, int y, int color) {
         model.setPixel(x, y, color, false,true); //draw at the point
     }
 
@@ -89,44 +90,12 @@ public class ToolPencil extends Tool {
         model.refreshView();
     }
     
-    //source of algorithm:
-    //https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
-    //version that accounts for x and y error; a Java implementation
-    //only a limited amount of mouse events are actually captured
-    //this results in a row of dots on the canvas
-    //this is solved by drawing a line from the current dot to the previous dot
-    private void bresenham(int x0, int y0, int x1, int y1, int color) {
-        int dx = Math.abs(x1 - x0);
-        int sx = -1;
-        if(x0 < x1) sx = 1;
 
-        int dy = -1 * Math.abs(y1 - y0);
-        int sy = -1;
-        if(y0 < y1) sy = 1;
-
-        int err = dx + dy; //error value ex_y
-        int e2;
-
-        while (x0 != x1 || y0 != y1) { //until we reach the current point
-            //calculate next point on line towards current point
-            // and update past coordinates (x0, y0) to that point
-            e2 = 2 * err;
-            if (e2 >= dy) {
-                err += dy; // e_xy + e_x > 0
-                x0 += sx;
-            }
-            if (e2 <= dx) { // e_xy + e_y < 0
-                err += dx;
-                y0 += sy;
-            }
-
-            //then draw at that point
-            draw(x0,y0,color);
-        }
-    }
 
     @Override public void toolMoved(MouseEvent e) {
 
     }
-
+    @Override public void toolKeyPressed(KeyEvent e) { }
+    @Override public void toolKeyReleased(KeyEvent e) { }
+    @Override public void toolKeyTyped(KeyEvent e) { }
 }

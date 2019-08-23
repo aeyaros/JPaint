@@ -2,6 +2,7 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolSelect extends Tool {
@@ -48,6 +49,26 @@ public class ToolSelect extends Tool {
 
     @Override
     public void toolExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void draw(int x, int y, int color) {
+
+    }
+
+    @Override
+    public void toolKeyPressed(KeyEvent e) {
+
+    }
+
+    @Override
+    public void toolKeyReleased(KeyEvent e) {
+
+    }
+
+    @Override
+    public void toolKeyTyped(KeyEvent e) {
 
     }
 }

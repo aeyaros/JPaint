@@ -176,17 +176,17 @@ class ApplicationWindow {
         /*====== SET UP TOOLS ======*/
 
         //class for managing tools
-        ToolsManager toolsManager = new ToolsManager(toolsPanel, theModel, theView);
+        ManageTools manageTools = new ManageTools(toolsPanel, theModel, theView);
 
         //add top panel to the north of the center panel
-        centerPanel.add(toolsManager.getTopPanel(), BorderLayout.NORTH);
+        centerPanel.add(manageTools.getTopPanel(), BorderLayout.NORTH);
 
         /*====== SET UP COLORS ======*/
 
         //color manager for managing selected colors and giving tools access to them
         //created with three initial colors
-        ColorManager colorManager = new ColorManager(toolsManager.getTools(), mainFrame, presetPanel, selectedColorsPanel, opacityPanel);
-        toolsManager.addColorManager(colorManager);
+        ManageColors manageColors = new ManageColors(manageTools.getTools(), mainFrame, presetPanel, selectedColorsPanel, opacityPanel);
+        manageTools.addColorManager(manageColors);
 
 
         /*====== MENU BAR ======*/

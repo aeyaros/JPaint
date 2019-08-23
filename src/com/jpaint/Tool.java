@@ -56,7 +56,7 @@ public abstract class Tool implements ToolInput {
         return name;
     }
 
-    protected int getColorIntByButton(int mouseEventButtonCode) {
+    int getColorIntByButton(int mouseEventButtonCode) {
         switch (mouseEventButtonCode) {
             case MouseEvent.BUTTON2: return colorsInts[1];
             case MouseEvent.BUTTON3: return colorsInts[2];
@@ -64,15 +64,50 @@ public abstract class Tool implements ToolInput {
         }
     }
 
-    protected Color getColorByButton(int buttonNumber) {
-        return new Color(getColorIntByButton(buttonNumber));
+    /*====== DRAWING TOOLS ======*/
+
+    //source of algorithm:
+    //https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
+    //version that accounts for x and y error; a Java implementation
+    //only a limited amount of mouse events are actually captured
+    //this results in a row of dots on the canvas
+    //this is solved by drawing a line from the current dot to the previous dot
+    void bresenham(int x0, int y0, int x1, int y1, int color) {
+        int dx = Math.abs(x1 - x0);
+        int sx = -1;
+        if(x0 < x1) sx = 1;
+
+        int dy = -1 * Math.abs(y1 - y0);
+        int sy = -1;
+        if(y0 < y1) sy = 1;
+
+        int err = dx + dy; //error value ex_y
+        int e2;
+
+        while (x0 != x1 || y0 != y1) { //until we reach the current point
+            //calculate next point on line towards current point
+            // and update past coordinates (x0, y0) to that point
+            e2 = 2 * err;
+            if (e2 >= dy) {
+                err += dy; // e_xy + e_x > 0
+                x0 += sx;
+            }
+            if (e2 <= dx) { // e_xy + e_y < 0
+                err += dx;
+                y0 += sy;
+            }
+
+            //then draw at that point
+            draw(x0,y0,color);
+        }
     }
 
-    @Override public abstract void toolDragged(MouseEvent e);
-    @Override public abstract void toolMoved(MouseEvent e);
-    @Override public abstract void toolClicked(MouseEvent e);
-    @Override public abstract void toolPressed(MouseEvent e);
-    @Override public abstract void toolReleased(MouseEvent e);
-    @Override public abstract void toolEntered(MouseEvent e);
-    @Override public abstract void toolExited(MouseEvent e);
+    void makeCircle(int origX, int origY, int color, int radius, int negativeRadius, boolean blend, boolean useOverlay) {
+        for(int y = negativeRadius; y <= radius; y++) {
+            for(int x = negativeRadius; x <= radius; x++) {
+                if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
+                    model.setPixel(origX + x, origY + y, color, blend,useOverlay);
+            }
+        } model.refreshView();
+    }
 }

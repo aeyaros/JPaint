@@ -1,7 +1,6 @@
 package com.jpaint;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -22,7 +21,7 @@ class ColorPickerWindow {
     //color stuff
     private Color colorToChange;
     private ColorButton colorButton;
-    private ColorManager colorManager;
+    private ManageColors manageColors;
 
     void close() {
         try {
@@ -35,7 +34,7 @@ class ColorPickerWindow {
 
     private void save() {
         colorButton.setColor(colorToChange);
-        colorManager.notifyTools();
+        manageColors.notifyTools();
         close();
     }
 
@@ -45,10 +44,10 @@ class ColorPickerWindow {
     }
 
     //each time color button double clicked, set up the window and open it
-    void setColorPickerWindow(ColorButton colorButton, JFrame mainFrame, ColorManager colorManager) {
+    void setColorPickerWindow(ColorButton colorButton, JFrame mainFrame, ManageColors manageColors) {
 
         this.colorButton = colorButton; //not used until saving
-        this.colorManager = colorManager; //not used until saving
+        this.manageColors = manageColors; //not used until saving
         colorToChange = new Color(colorButton.getColor()); //store a copy of the original color
 
         frame = new JFrame("Color Picker");
