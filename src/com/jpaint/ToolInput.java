@@ -4,7 +4,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 //interface for editing the canvas
-public interface ToolInput {
+interface ToolInput {
     //key listener
     void toolKeyPressed(KeyEvent e);
     void toolKeyReleased(KeyEvent e);

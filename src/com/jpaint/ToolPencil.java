@@ -20,10 +20,10 @@ public class ToolPencil extends Tool {
     }
 
     //store previous coordinates between drag events
-    protected int pastX;
-    protected int pastY;
+    private int pastX;
+    private int pastY;
 
-    protected boolean canDraw() {
+    private boolean canDraw() {
         return (pastY != -1 && pastX != -1);
     }
 
@@ -32,7 +32,7 @@ public class ToolPencil extends Tool {
         model.setPixel(x, y, color, false,true); //draw at the point
     }
 
-    protected void preventDrawing() {
+    private void preventDrawing() {
         pastX = -1;
         pastY = -1;
     }

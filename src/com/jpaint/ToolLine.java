@@ -7,9 +7,9 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolLine extends Tool {
-    private final int MIN_WIDTH = 0;
+    private final int MIN_WIDTH = 0; //technically width is 2n+1
     private final int MAX_WIDTH = 11;
-    private final int DEFALUT_WIDTH = 0;
+    private final int DEFALUT_WIDTH = 1;
     private boolean twoClickMode;//if we are drawing line using two clicks
     private boolean dragMode; //if we are dragging the line instead of two clicks
     private boolean useOverlay; //true if we are previewing, false if drawing for real
@@ -77,8 +77,8 @@ public class ToolLine extends Tool {
     }
 
     private void resetPoints() {
-        int x0 = -1;
-        int y0 = -1;
+        x0 = -1;
+        y0 = -1;
     }
 
     //on first click or mousedown

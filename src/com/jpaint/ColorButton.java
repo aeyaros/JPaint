@@ -9,12 +9,9 @@ import java.awt.image.BufferedImage;
 //used by the color picker as a larger label
 class ColorButton extends JLabel {
     private Color color;
-    private JLabel bg;
-    private JLabel colorLabel;
+    private Color previousColor;
     private int width;
     private int height;
-
-    private Color previousColor;
 
     ColorButton(Color color, int width, int height) {
         super();
@@ -23,24 +20,17 @@ class ColorButton extends JLabel {
         this.setOpaque(true);
         this.setLayout(new GridBagLayout());
         this.color = color; //required so previous color can be initialized in setColor()
-
-        colorLabel = new JLabel();
-        this.add(colorLabel);
-
-        this.setIcon(BackgroundPanel.generateTileBG(width,height));
         setColor(color);
-
         this.setBorder(BorderFactory.createLoweredBevelBorder());
     }
 
-    static ImageIcon generateColorIcon(int w, int h, int c) {
-        int pixelCount = w * h; //number of pixels in icon
-        int[] iconArray = new int[pixelCount]; //create array of pixels
-        for(int i = 0; i < pixelCount; i++) iconArray[i] = c; //set colors of pixels
-        //create a buffered image and then add the pixels to it
-        BufferedImage bufferedImage = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-        bufferedImage.setRGB(0,0, w, h, iconArray,0,1);
-        return new ImageIcon(bufferedImage); //return imageicon from the bufferedimage
+    private ImageIcon generateColorIcon(int w, int h, int c) {
+        BufferedImage bufferedImage = Canvas.generateTileBG(w,h);
+        for(int i = 0; i < w; i++) {
+            for(int j = 0; j < h; j++) {
+                bufferedImage.setRGB(i,j,Color.alphaBlend(c,bufferedImage.getRGB(i,j)));
+            }
+        } return new ImageIcon(bufferedImage);
     }
 
     Color getColor() {
@@ -50,7 +40,7 @@ class ColorButton extends JLabel {
     void setColor(Color newColor) {
         previousColor = new Color(color);
         color = new Color(newColor);
-        colorLabel.setIcon(generateColorIcon(width, height, color.getARGB()));
+        this.setIcon(generateColorIcon(width, height, color.getARGB()));
     }
 
     Color getPreviousColor() {

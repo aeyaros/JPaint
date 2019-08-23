@@ -1,7 +1,7 @@
 package com.jpaint;
 
 //Color: used for storing color information (aside from the image array itself, which is argb-ints)
-public class Color {
+class Color {
     private short[] channels;
     private static final String[] channelNames = { "Opacity", "Red", "Green", "Blue" };
     private static final int NUMBER_OF_VALUES = 256;

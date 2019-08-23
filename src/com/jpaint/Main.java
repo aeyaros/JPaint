@@ -6,7 +6,7 @@ package com.jpaint;
  *    JPaint     *
 \* * * * * * * * */
 
-public class Main {
+class Main {
     static boolean IS_MAC;
     final static int DEFAULT_WINDOW_WIDTH = 640;
     final static int DEFAULT_WINDOW_HEIGHT = 480;

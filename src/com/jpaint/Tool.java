@@ -6,9 +6,9 @@ import java.awt.*;
 import java.awt.event.MouseEvent;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
-public abstract class Tool implements ToolInput {
-    protected ImageModel model; //the model class this tool acts on
-    protected JPanel upperCard; //the upper panel shown when this tool is selected
+abstract class Tool implements ToolInput {
+    ImageModel model; //the model class this tool acts on
+    JPanel upperCard; //the upper panel shown when this tool is selected
     JToggleButton button; //the tool button
     private String name;
     private int[] colorsInts;

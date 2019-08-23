@@ -52,7 +52,7 @@ class ImageView extends JLabel {
     //important - sets the base icon which needs to be a certain size
     //otherwise the labels added to it wont show
     void updateSize(int w, int h) {
-        this.setIcon(BackgroundPanel.generateTileBG(w, h));
+        this.setIcon(new ImageIcon(Canvas.generateTileBG(w, h)));
         sizeLabel.setText("Width: " + w + ", Height: " + h);
     }
 
@@ -66,12 +66,7 @@ class ImageView extends JLabel {
     private void refreshCoordinates(int x, int y) {
         coordinatesLabel.setText("x: " + x + "px, y: " + y + "px");
     }
-
     private void clearCoordinates() {
         coordinatesLabel.setText("");
-    }
-
-    JLabel getImageOverlay() {
-        return imageOverlay;
     }
 }

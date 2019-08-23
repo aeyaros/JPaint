@@ -3,7 +3,7 @@ package com.jpaint;
 import javax.swing.*;
 import java.awt.event.ActionListener;
 
-public class MenuItem extends JMenuItem {
+class MenuItem extends JMenuItem {
     MenuItem(String label, int keyEvent, int modifiers, JMenu menu, int mnemonic, ActionListener listener) {
         super(label);
         this.addActionListener(listener);

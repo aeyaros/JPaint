@@ -4,7 +4,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 
 //send mouse static events to tools
-public class ControllerMouseStatic extends Controller implements MouseListener {
+class ControllerMouseStatic extends Controller implements MouseListener {
     ControllerMouseStatic(Tool[] tools) { super(tools); }
     @Override public void mouseClicked(MouseEvent e) {
         tools[index].toolClicked(e);

@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
-public class ImageModel {
+class ImageModel {
     private ImageView imageView; //a view for the model to update
     private Canvas temporaryOverlay; //used by tools as a temporary surface to draw on before it is applied to the model
     private Canvas currentState; //current state of the drawing
@@ -15,8 +15,6 @@ public class ImageModel {
     //image save states
     private boolean isUntouched; //if brand new
     private boolean isSaved; //if file was saved to the disk (i.e. if file was opened, or if it was created and saved)
-
-
     private final int MAX_UNDO = 50;
     private final int MAX_REDO = 50;
 
@@ -34,7 +32,7 @@ public class ImageModel {
     private void initializeModel(int w, int h) {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-        startOverFromScratch();
+        startOverFromScratch(w,h);
 
         //isUntouched = true; //initially, file not touched
         //isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
@@ -66,9 +64,9 @@ public class ImageModel {
     }
 
     //if creating a new image
-    void startOverFromScratch() {
+    void startOverFromScratch(int w, int h) {
         startOver1();
-        startOver2(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
+        startOver2(w, h);
         System.out.println("...from scratch");
     }
 
@@ -196,11 +194,11 @@ public class ImageModel {
     /*====== EDITING CANVAS ======*/
 
     void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
-        if(blend) {
-            if (useOverlay) temporaryOverlay.setPixel(x,y,argb);
-            else currentState.setPixel(x,y,argb);
+        if(useOverlay) {
+            if(blend)temporaryOverlay.setPixel(x,y,argb);
+            else temporaryOverlay.setPixelWithoutBlending(x,y,argb);
         } else {
-            if (useOverlay) temporaryOverlay.setPixelWithoutBlending(x,y,argb);
+            if(blend)currentState.setPixel(x,y,argb);
             else currentState.setPixelWithoutBlending(x,y,argb);
         }
     }

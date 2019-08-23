@@ -48,10 +48,6 @@ class Canvas {
         pixels = sourceImage;
     }
 
-    void testChangeColor() {
-        pixels = newBlankImage(width,height, new Color(128,0,0,255).getARGB());
-    }
-
     private BufferedImage newBlankImage(int w, int h, int baseColor) {
         BufferedImage newImage = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
         for(int i = 0; i < w; i++) {
@@ -160,6 +156,31 @@ class Canvas {
         System.out.println(newPixels.getWidth());
         newPixels = selectedOp.filter(pixels, newPixels);
         pixels = newPixels;
+    }
+
+    //used for generating tiled backgrounds for translucent color
+    static BufferedImage generateTileBG(int w, int h) {
+        final int squareSize = 8;
+
+        int[] squareColors = {
+                new Color(255,255,255,255).getARGB(),
+                new Color(255,200,200,200).getARGB()
+        };
+
+        BufferedImage tiled = new BufferedImage(w,h ,BufferedImage.TYPE_INT_ARGB);
+
+        //draw a checkerboard at a given size
+        boolean startingColumnColor = false; //alternate starting color every 8 rows
+        boolean use1; //alternate color used every 8 columns
+        for(int i = 0; i < w; i++) {
+            if(i % squareSize == 0) startingColumnColor = !startingColumnColor;
+            use1 = startingColumnColor; //set use1 to starting color
+            for (int j = 0; j < h; j++) {
+                if(j % squareSize == 0) use1 = !use1;
+                if(use1) tiled.setRGB(i,j,squareColors[1]);
+                else tiled.setRGB(i,j,squareColors[0]);
+            }
+        } return tiled;
     }
 }
 

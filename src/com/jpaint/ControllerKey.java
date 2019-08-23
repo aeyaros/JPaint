@@ -3,7 +3,7 @@ package com.jpaint;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
-public class ControllerKey extends Controller implements KeyListener {
+class ControllerKey extends Controller implements KeyListener {
     ControllerKey(Tool[] tools) {
         super(tools);
     }

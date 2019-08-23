@@ -26,7 +26,6 @@ class ApplicationWindow {
 
     //windows
     private JFrame mainFrame;
-    private ColorPickerWindow colorPickerWindow;
 
     //labels
     private JLabel coordinatesLabel;
@@ -221,7 +220,7 @@ class ApplicationWindow {
         menuItems.put("saveas",new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> saveas()));
         fileMenu.addSeparator();
 
-        menuItems.put("print",new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> dummy()));
+        menuItems.put("print",new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> print()));
         fileMenu.addSeparator();
 
         if(Main.IS_MAC) menuItems.put("close",new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,e -> exit()));
@@ -252,8 +251,7 @@ class ApplicationWindow {
 
         menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> transform("rotateLeft")));
         menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotateRight")));
-        menuItems.put("rotateright",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotate180")));
-
+        menuItems.put("rotate180",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotate180")));
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
@@ -283,13 +281,11 @@ class ApplicationWindow {
                 null,
                 options,
                 options[0]);
-        if(result == 0) { //if save option chosen
-            save(); //save the file
-            return true; //go to next action
-        } else if (result == 1) { //if dont save was chosen
-            return true; //go to next action without saving
-        } else { //if cancel was chosen
-            return false; //dont go to next action
+        switch (result) {
+            case 0: save(); //if save option chosen save the file
+                return true; //go to next action
+            case 1: return true;//if dont save was chosen go to next action without saving
+            default: return false; //if cancel was chosen dont go to next action
         }
     }
 
@@ -303,7 +299,7 @@ class ApplicationWindow {
 
     private void newFile() {
         if(askToSave()) {
-            theModel.startOverFromScratch();
+            theModel.startOverFromScratch(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
             theFile = null;
         }
     }

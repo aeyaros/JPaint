@@ -71,6 +71,8 @@ class ColorPickerWindow {
 
         BoxLayout oc = new BoxLayout(originalColorLabels,BoxLayout.Y_AXIS);
         BoxLayout nc = new BoxLayout(newColorLabels,BoxLayout.Y_AXIS);
+        originalColorLabels.setLayout(oc);
+        newColorLabels.setLayout(nc);
 
         JLabel originalLabelText = new JLabel("Original");
         originalLabelText.setHorizontalAlignment(SwingConstants.CENTER);

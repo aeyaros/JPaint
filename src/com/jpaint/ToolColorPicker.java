@@ -20,11 +20,12 @@ public class ToolColorPicker extends Tool {
 
         //add coordinates panel with grid layout
         coordinates = new JPanel(new GridLayout(1,4));
-        coordinates.setOpaque(true);
         upperCard.add(coordinates,0);
 
         //add panel to be shown when not hovering over the image
         JLabel infoText = new JLabel("Hover over the image, then click to pick a color.");
+        infoText.setOpaque(true);
+        infoText.setBackground(SystemColor.window);
         infoText.setHorizontalAlignment(SwingConstants.CENTER);
         infoText.setVerticalAlignment(SwingConstants.CENTER);
         upperCard.add(infoText);
@@ -33,13 +34,14 @@ public class ToolColorPicker extends Tool {
         ARGB = new JLabel[4];
         for(int i = 0; i < ARGB.length; i++) {
             ARGB[i] = new JLabel("");
+            ARGB[i].setOpaque(true);
             ARGB[i].setHorizontalAlignment(SwingConstants.CENTER);
             ARGB[i].setVerticalAlignment(SwingConstants.CENTER);
             coordinates.add(ARGB[i]);
         } clearStatus();
     }
 
-    void addColorManager(ManageColors colorManager) {
+    void addColorManager(ManageColors manageColors) {
         this.manageColors = manageColors;
     }
 
@@ -52,8 +54,8 @@ public class ToolColorPicker extends Tool {
             //set background to selected color
             try {
                 Color c = getColorAtPixel(x, y);
-                coordinates.setBackground(c.getAWT());
                 for(int i = 0; i < ARGB.length; i++) {
+                    ARGB[i].setBackground(c.getAWT());
                     //invert color of text if color is too dark
                     if(isDarkColor(c)) ARGB[i].setForeground(java.awt.Color.white);
                     else ARGB[i].setForeground(java.awt.Color.black);
@@ -85,9 +87,10 @@ public class ToolColorPicker extends Tool {
     }
 
     private void clearStatus() {
-        coordinates.setBackground(new Color(Color.MAX_VALUE,Color.MAX_VALUE/2,Color.MAX_VALUE/2,Color.MAX_VALUE/2).getAWT());
-        for(JLabel l: ARGB) l.setText("");
-        cards.last(upperCard);
+        for(JLabel l: ARGB) {
+            l.setText("");
+            l.setBackground(java.awt.Color.white);
+        } cards.last(upperCard);
         //System.out.print("Cleared!");
     }
 

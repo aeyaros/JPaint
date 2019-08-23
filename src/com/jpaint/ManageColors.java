@@ -215,7 +215,7 @@ class ManageColors {
         } notifyTools(); //notify tools of the change
     }
 
-    void setUpColorPicker(ColorButton colorToChange) {
+    private void setUpColorPicker(ColorButton colorToChange) {
         colorPickerWindow.close(); //either window is open, closed already
         //in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
         colorPickerWindow.setColorPickerWindow(colorToChange, mainFrame, this);

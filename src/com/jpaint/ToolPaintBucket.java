@@ -55,7 +55,7 @@ public class ToolPaintBucket extends Tool {
             else throw new IndexOutOfBoundsException();
         }
         //print out a node
-        void print() { System.out.println("node " + x + "," + y + " "); }
+        //void print() { System.out.println("node " + x + "," + y + " "); }
     }
 
     private void fill(int x, int y, int buttonCode) {
