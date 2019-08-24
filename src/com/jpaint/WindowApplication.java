@@ -12,6 +12,7 @@ import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
 import java.io.File;
+import java.io.IOException;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
 
@@ -207,6 +208,9 @@ class WindowApplication {
         JMenu transformMenu = new JMenu("Transform");
         menuBar.add(transformMenu);
 
+        JMenu helpMenu = new JMenu("Help");
+        menuBar.add(helpMenu);
+
         //add the menubar
         mainFrame.setJMenuBar(menuBar);
 
@@ -259,6 +263,22 @@ class WindowApplication {
         menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> rotate(0)));
         menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> rotate(1)));
         menuItems.put("rotate180",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(2)));
+
+
+        menuItems.put("about",new MenuItem("About " + APPLICATION_NAME, helpMenu, KeyEvent.VK_U, e -> {
+            Image image = null;
+            try {
+                image = ImageIO.read(getClass().getResource("icons/appicon.png"));
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+            image = image.getScaledInstance(64,64, Image.SCALE_SMOOTH);
+            JOptionPane.showMessageDialog(mainFrame,APPLICATION_NAME +
+                            " is a fun painting program inspired by Apple's MacPaint (from 1984) \n" +
+                            "and old versions of Microsoft Paint. Created by Andrew Yaros in 2019, \n" +
+                            "originally for the CS 338 (GUIs) class at Drexel University.",
+                    "About " + APPLICATION_NAME, JOptionPane.INFORMATION_MESSAGE, new ImageIcon(image));
+        }));
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());

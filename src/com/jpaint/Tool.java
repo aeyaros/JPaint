@@ -6,6 +6,7 @@ import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
 abstract class Tool implements ToolInput {
@@ -37,9 +38,18 @@ abstract class Tool implements ToolInput {
             image = image.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
             button.setIcon(new ImageIcon(image));
             button.setBackground(SystemColor.window);
-            //Image selectedImage = ImageIO.read(getClass().getResource(selectedIconSource));
-            //selectedImage = selectedImage.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH);
-            //button.setSelectedIcon(new ImageIcon(selectedImage));
+            //get the same image for the selected state, but invert the colors
+            BufferedImage selectedImage = ImageIO.read(getClass().getResource(iconSource));
+            for(int i = 0; i < selectedImage.getWidth(); i++) {
+                for(int j = 0; j < selectedImage.getHeight(); j++) {
+                    Color c = new Color(selectedImage.getRGB(i,j));
+                    for(int k = 1; k < 4; k++){
+                        c.setChannel(k,255 - c.getChannel(k));
+                    } selectedImage.setRGB(i,j,c.getARGB());
+                }
+            } button.setSelectedIcon(new ImageIcon(
+                    selectedImage.getScaledInstance(
+                            WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH)));
         } catch(Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't load icon for " + this.getClass().getName() + " button from location " + iconSource);
