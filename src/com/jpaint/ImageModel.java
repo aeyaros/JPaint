@@ -32,7 +32,7 @@ class ImageModel {
     private void initializeModel(int w, int h) {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-        startOverFromScratch(w,h, false);
+        startOverFromScratch(w, h, false);
     }
 
     /*====== STARTING OVER, AND SAVE STATUS ======*/
@@ -60,7 +60,7 @@ class ImageModel {
 
     //if creating a new image
     void startOverFromScratch(int w, int h, boolean transparent) {
-        startOver(new Canvas(w,h,transparent));
+        startOver(new Canvas(w, h, transparent));
 
         System.out.println("...from scratch");
     }
@@ -68,8 +68,11 @@ class ImageModel {
     //if opening an image
     void startOverFromImage(BufferedImage image) {
         Canvas temp;
-        try { temp = new Canvas(image); }
-        catch (Exception e) { throw new IllegalArgumentException(); }
+        try {
+            temp = new Canvas(image);
+        } catch (Exception e) {
+            throw new IllegalArgumentException();
+        }
 
         startOver(temp);
 
@@ -101,7 +104,7 @@ class ImageModel {
     //send the current state of the model to the view
     void refreshView() {
         imageView.refresh(new ImageIcon(currentState.getPixels()),
-                          new ImageIcon(currentState.getOverlay()));
+                new ImageIcon(currentState.getOverlay()));
     }
 
     //used for saving state
@@ -120,11 +123,12 @@ class ImageModel {
         addToPastStates(currentState);
 
         //if too many undo'ed states then remove an action from the undo list
-        if(pastStates.size() > MAX_UNDO) pastStates.removeLast();
+        if (pastStates.size() > MAX_UNDO) pastStates.removeLast();
 
         //we just did a new action; we cant keep the old undone actions as we are starting a new branch
         undoneStates.clear();
-        System.out.println("Saved current state"); printStates();
+        System.out.println("Saved current state");
+        printStates();
     }
 
     //update the current state (note: this is used for undo/redo)
@@ -133,29 +137,33 @@ class ImageModel {
     }
 
     //returns true if number of past states > 0
-    private boolean canUndo() { return pastStates.size() > 1; }
+    private boolean canUndo() {
+        return pastStates.size() > 1;
+    }
 
     //returns true if number of undone states > 0
-    private boolean canRedo() { return undoneStates.size() > 0; }
+    private boolean canRedo() {
+        return undoneStates.size() > 0;
+    }
 
     //add to past states - this happens if we take any action to change the canvas, or if we redo
     private void addToPastStates(Canvas canvas) {
         pastStates.addFirst(new Canvas(canvas)); //push state to deque
         isUntouched = false; //the image is no longer untouched, because we have done something
         System.out.println("Model is not untouched anymore");
-        if(pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
+        if (pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
     }
 
     //add a state to undone states when undoing
     private void addToUndoneStates(Canvas canvas) {
         undoneStates.addFirst(new Canvas(canvas)); //push state to deque
         isUntouched = false;
-        if(undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
+        if (undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
     }
 
     //undo the most recently made change
     void undo() {
-        if(this.canUndo()) { //if we can undo
+        if (this.canUndo()) { //if we can undo
             addToUndoneStates(currentState); //push current state to beginning of undone states
             updateCurrentState(pastStates.removeFirst()); //pop past state to current state
             this.refreshView();
@@ -167,7 +175,7 @@ class ImageModel {
 
     //redo most recently undone state
     void redo() {
-        if(this.canRedo()) { //if we can redo
+        if (this.canRedo()) { //if we can redo
             addToPastStates(currentState); //push current state to past states
             updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
             this.refreshView();
@@ -178,17 +186,17 @@ class ImageModel {
     }
 
     private void printStates() {
-        if(pastStates.size() > 0) for(int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
+        if (pastStates.size() > 0) for (int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
         System.out.print("[c]"); //for current state
-        if(undoneStates.size() > 0) for(int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
+        if (undoneStates.size() > 0) for (int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
         System.out.print('\n');
     }
 
     /*====== EDITING CANVAS ======*/
 
     void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
-        if(blend) currentState.setPixel(x,y,argb,useOverlay);
-        else currentState.setPixelWithoutBlending(x,y,argb,useOverlay);
+        if (blend) currentState.setPixel(x, y, argb, useOverlay);
+        else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
         /*
         if(useOverlay) {
             if(blend)temporaryOverlay.setPixel(x,y,argb);
@@ -204,7 +212,7 @@ class ImageModel {
     //this can be used directly by a menu
     void resize(int newX, int newY) {
         saveCurrentState(); //save current state
-        resizeCanvases(newX,newY);
+        resizeCanvases(newX, newY);
         refreshView();
     }
 
@@ -231,8 +239,13 @@ class ImageModel {
 
     /*====== ACCESSING CANVAS ======*/
 
-    int getWidth() { return currentState.getWidth(); }
-    int getHeight() { return currentState.getHeight(); }
+    int getWidth() {
+        return currentState.getWidth();
+    }
+
+    int getHeight() {
+        return currentState.getHeight();
+    }
 
     //return true if coordinate is inside the bounds of the canvas
     boolean isInBounds(int x, int y) {
@@ -240,7 +253,7 @@ class ImageModel {
     }
 
     Color getColorAtPixel(int x, int y) {
-        if(isInBounds(x,y)) return new Color(currentState.getPixels().getRGB(x,y));
+        if (isInBounds(x, y)) return new Color(currentState.getPixels().getRGB(x, y));
         else throw new IndexOutOfBoundsException();
     }
 

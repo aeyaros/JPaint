@@ -5,12 +5,11 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.InputEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 import java.awt.image.BufferedImage;
-import java.awt.print.PageFormat;
-import java.awt.print.Printable;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.io.IOException;
 import java.text.DecimalFormat;
@@ -29,7 +28,7 @@ class WindowApplication {
     private final int MINIMUM_WINDOW_HEIGHT = 560;
     private final int THIN_EMPTY_BORDER_SIZE = 6;
     private final int WINDOW_CHROME_SIZE = 8;
-    private final Color PAGE_BACKGROUND_COLOR = new Color(255,180,180,200);
+    private final Color PAGE_BACKGROUND_COLOR = new Color(255, 180, 180, 200);
 
     //windows
     private JFrame mainFrame;
@@ -43,7 +42,8 @@ class WindowApplication {
     //path of opened/saved file
     private File theFile;
 
-    WindowApplication() { }
+    WindowApplication() {
+    }
 
     void WindowSetup(int width, int height) {
         //initial setup
@@ -51,16 +51,37 @@ class WindowApplication {
         mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
         //ask to save when closing window
         mainFrame.addWindowListener(new WindowListener() {
-            @Override public void windowClosing(WindowEvent e) { exit(); }
-            @Override public void windowOpened(WindowEvent e) { }
-            @Override public void windowClosed(WindowEvent e) { }
-            @Override public void windowIconified(WindowEvent e) { }
-            @Override public void windowDeiconified(WindowEvent e) { }
-            @Override public void windowActivated(WindowEvent e) { }
-            @Override public void windowDeactivated(WindowEvent e) { }
+            @Override
+            public void windowClosing(WindowEvent e) {
+                exit();
+            }
+
+            @Override
+            public void windowOpened(WindowEvent e) {
+            }
+
+            @Override
+            public void windowClosed(WindowEvent e) {
+            }
+
+            @Override
+            public void windowIconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeiconified(WindowEvent e) {
+            }
+
+            @Override
+            public void windowActivated(WindowEvent e) {
+            }
+
+            @Override
+            public void windowDeactivated(WindowEvent e) {
+            }
         });
 
-        if(Main.IS_MAC) { //mac specific stuff
+        if (Main.IS_MAC) { //mac specific stuff
             System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
 
             //these dont really work; I need to do plist stuff; low priority for now
@@ -69,9 +90,11 @@ class WindowApplication {
         }
 
         try { //I have to do this after setting the app title or it will revert to the class name
-            UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
             //UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName()); // */
-        } catch (Exception e) { e.printStackTrace(); }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         /* // JFrame.setDefaultLookAndFeelDecorated(true); // */
 
         //set minimum dimensions
@@ -87,7 +110,7 @@ class WindowApplication {
         //center panel has the top card and the main image panel
         JPanel centerPanel = new JPanel(new BorderLayout());
         mainPanel.add(centerPanel, BorderLayout.CENTER);
-        mainPanel.setBorder(new EmptyBorder(WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE,WINDOW_CHROME_SIZE));
+        mainPanel.setBorder(new EmptyBorder(WINDOW_CHROME_SIZE, WINDOW_CHROME_SIZE, WINDOW_CHROME_SIZE, WINDOW_CHROME_SIZE));
 
         //image panel: a container which is inside a panel with scrollbars
         JPanel imagePanel = new JPanel();
@@ -117,7 +140,7 @@ class WindowApplication {
         //bottom bar
         JPanel bottomBar = new JPanel();
         bottomBar.setLayout(new BorderLayout());
-        bottomBar.setBorder(BorderFactory.createEmptyBorder(WINDOW_CHROME_SIZE,0,0,0));
+        bottomBar.setBorder(BorderFactory.createEmptyBorder(WINDOW_CHROME_SIZE, 0, 0, 0));
         centerPanel.add(bottomBar, BorderLayout.SOUTH);
 
         JPanel coordinatesPanel = new JPanel(new BorderLayout());
@@ -139,7 +162,7 @@ class WindowApplication {
         gridBagConstraints.anchor = GridBagConstraints.NORTH;
         gridBagConstraints.gridx = 0; //x - will remain 0
 
-        sidePanel.setBorder(new EmptyBorder(0,0,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
+        sidePanel.setBorder(new EmptyBorder(0, 0, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE));
         mainPanel.add(sidePanel, BorderLayout.WEST);
 
 
@@ -147,16 +170,16 @@ class WindowApplication {
 
         //using gridbag layout, so I have to set all constraints initially
         // and then change y value each time I add something
-        EmptyBorder sidePanelBorder = new EmptyBorder(THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE);
+        EmptyBorder sidePanelBorder = new EmptyBorder(THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE);
 
         //tools panel
-        JPanel toolsPanel = new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS,TOOL_BUTTON_GAP,TOOL_BUTTON_GAP));
+        JPanel toolsPanel = new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS, TOOL_BUTTON_GAP, TOOL_BUTTON_GAP));
         toolsPanel.setBorder(sidePanelBorder);
         gridBagConstraints.gridy = 0; //y - will be changed as I add components
         sidePanel.add(toolsPanel, gridBagConstraints);
 
         //color presets panel
-        JPanel presetPanel = new JPanel(new GridLayout(0, NUMBER_COLOR_COLUMNS,0,0));
+        JPanel presetPanel = new JPanel(new GridLayout(0, NUMBER_COLOR_COLUMNS, 0, 0));
         presetPanel.setBorder(sidePanelBorder);
         gridBagConstraints.gridy = 1;
         sidePanel.add(presetPanel, gridBagConstraints);
@@ -165,19 +188,19 @@ class WindowApplication {
         JPanel opacityPanel = new JPanel();
         BoxLayout opacityLayout = new BoxLayout(opacityPanel, BoxLayout.Y_AXIS);
         opacityPanel.setLayout(opacityLayout);
-        opacityPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE*3,THIN_EMPTY_BORDER_SIZE, 0,THIN_EMPTY_BORDER_SIZE));
+        opacityPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE * 3, THIN_EMPTY_BORDER_SIZE, 0, THIN_EMPTY_BORDER_SIZE));
         gridBagConstraints.gridy = 2;
         sidePanel.add(opacityPanel, gridBagConstraints);
 
         //selected colors panel
         JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
-        selectedColorsPanel.setBorder(new EmptyBorder(0,THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
+        selectedColorsPanel.setBorder(new EmptyBorder(0, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE));
         gridBagConstraints.gridy = 3;
         sidePanel.add(selectedColorsPanel, gridBagConstraints);
 
         //add empty padding at bottom of sidebar
         gridBagConstraints.weighty = 1.0;
-        sidePanel.add(Box.createVerticalGlue(),gridBagConstraints);
+        sidePanel.add(Box.createVerticalGlue(), gridBagConstraints);
 
         /*====== SET UP TOOLS ======*/
 
@@ -222,58 +245,62 @@ class WindowApplication {
         int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 
         //file menu
-        menuItems.put("new",new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile(false)));
-        menuItems.put("newtrans",new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T, e -> newFile(true)));
+        menuItems.put("new", new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile(false)));
+        menuItems.put("newtrans", new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T, e -> newFile(true)));
         fileMenu.addSeparator();
 
-        menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> openFile()));
-        menuItems.put("save",new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> save()));
-        menuItems.put("saveas",new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> saveas()));
+        menuItems.put("open", new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O, e -> openFile()));
+        menuItems.put("save", new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S, e -> save()));
+        menuItems.put("saveas", new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A, e -> saveas()));
         fileMenu.addSeparator();
 
-        menuItems.put("print",new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,e -> print()));
+        menuItems.put("print", new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P, e -> print()));
         fileMenu.addSeparator();
 
-        if(Main.IS_MAC) menuItems.put("close",new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,e -> exit()));
-        else menuItems.put("exit",new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,e -> exit()));
+        if (Main.IS_MAC)
+            menuItems.put("close", new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W, e -> exit()));
+        else
+            menuItems.put("exit", new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E, e -> exit()));
 
         //edit menu
-        menuItems.put("undo",new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
+        menuItems.put("undo", new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
         MenuItem redoItem; //shortcut changes depending on platform
-        if(Main.IS_MAC) redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z,e -> redo());
-        else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y,e -> redo());
-        menuItems.put("redo",redoItem);
+        if (Main.IS_MAC)
+            redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z, e -> redo());
+        else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y, e -> redo());
+        menuItems.put("redo", redoItem);
         editMenu.addSeparator();
 
-        menuItems.put("selectall",new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A, e -> dummy()));
+        menuItems.put("selectall", new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A, e -> dummy()));
         editMenu.addSeparator();
 
-        menuItems.put("cut",new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X, e -> dummy()));
-        menuItems.put("copy",new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C, e -> dummy()));
-        menuItems.put("paste",new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V, e -> dummy()));
+        menuItems.put("cut", new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X, e -> dummy()));
+        menuItems.put("copy", new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C, e -> dummy()));
+        menuItems.put("paste", new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V, e -> dummy()));
 
         //transform menu
-        menuItems.put("resize",new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
+        menuItems.put("resize", new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
         transformMenu.addSeparator();
 
-        menuItems.put("fliph",new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> flip(true)));
-        menuItems.put("flipv",new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V, e -> flip(false)));
+        menuItems.put("fliph", new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> flip(true)));
+        menuItems.put("flipv", new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V, e -> flip(false)));
         transformMenu.addSeparator();
 
-        menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> rotate(0)));
-        menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> rotate(1)));
-        menuItems.put("rotate180",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(2)));
+        menuItems.put("rotateleft", new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> rotate(0)));
+        menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> rotate(1)));
+        menuItems.put("rotate180", new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(2)));
 
 
-        menuItems.put("about",new MenuItem("About " + APPLICATION_NAME, helpMenu, KeyEvent.VK_U, e -> {
+        menuItems.put("about", new MenuItem("About " + APPLICATION_NAME, helpMenu, KeyEvent.VK_U, e -> {
             Image image = null;
             try {
                 image = ImageIO.read(getClass().getResource("icons/appicon.png"));
             } catch (IOException ex) {
                 ex.printStackTrace();
-            }
-            image = image.getScaledInstance(64,64, Image.SCALE_SMOOTH);
-            JOptionPane.showMessageDialog(mainFrame,APPLICATION_NAME +
+            } try{
+                image = image.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+            } catch (NullPointerException ignored) { }
+            JOptionPane.showMessageDialog(mainFrame, APPLICATION_NAME +
                             " is a fun painting program inspired by Apple's MacPaint (from 1984) \n" +
                             "and old versions of Microsoft Paint. Created by Andrew Yaros in 2019, \n" +
                             "originally for the CS 338 (GUIs) class at Drexel University.",
@@ -297,7 +324,7 @@ class WindowApplication {
     private boolean askToSave() {
         System.out.println("asking to save");
         //check to see if file was edited
-        if(theModel.isUntouched()) {
+        if (theModel.isUntouched()) {
             return true; //not asking to save since user hasn't done anything
         } //else, we need to ask if user wants to save
         Object[] options = {"Save",
@@ -312,23 +339,31 @@ class WindowApplication {
                 options,
                 options[0]);
         switch (result) {
-            case 0: save(); //if save option chosen save the file
+            case 0:
+                save(); //if save option chosen save the file
                 return true; //go to next action
-            case 1: return true;//if dont save was chosen go to next action without saving
-            default: return false; //if cancel was chosen dont go to next action
+            case 1:
+                return true;//if dont save was chosen go to next action without saving
+            default:
+                return false; //if cancel was chosen dont go to next action
         }
     }
 
     private void exit() {
-        if(askToSave()) System.exit(0);
+        if (askToSave()) System.exit(0);
     }
 
     //undo/redo
-    private void undo() { theModel.undo(); }
-    private void redo() { theModel.redo(); }
+    private void undo() {
+        theModel.undo();
+    }
+
+    private void redo() {
+        theModel.redo();
+    }
 
     private void newFile(boolean transparent) {
-        if(askToSave()) {
+        if (askToSave()) {
             theModel.startOverFromScratch(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT, transparent);
             theFile = null;
             setTitle(NEW_DOCUMENT);
@@ -340,7 +375,7 @@ class WindowApplication {
         String extension = "png";
 
         //if user clicks the cancel button and declines to save
-        if(!askToSave()) return; // then dont open a file
+        if (!askToSave()) return; // then dont open a file
 
         JFileChooser fileChooser = new JFileChooser();
         FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", extension);
@@ -375,16 +410,16 @@ class WindowApplication {
     }
 
     private void save() {
-        if(!theModel.isSaved()) saveas(); //if not saved, save the file as something
-        //if model was already saved and still exists then just write it
-        else if(theFile.exists()) { //if the file was saved and exists, then just write to it
+        if (!theModel.isSaved()) saveas(); //if not saved, save the file as something
+            //if model was already saved and still exists then just write it
+        else if (theFile.exists()) { //if the file was saved and exists, then just write to it
             writeImageToFile(theFile);
             //done
         } else { //otherwise, file was saved but doesn't exist anymore so you have to save as
             JOptionPane.showMessageDialog(mainFrame,
-            "The file \"" + theFile.getName() + "\" no longer exists and may have been deleted. Please save as a new file.",
-            "File not found",
-            JOptionPane.ERROR_MESSAGE);
+                    "The file \"" + theFile.getName() + "\" no longer exists and may have been deleted. Please save as a new file.",
+                    "File not found",
+                    JOptionPane.ERROR_MESSAGE);
             saveas();
         }
     }
@@ -397,7 +432,7 @@ class WindowApplication {
         FileNameExtensionFilter imageFilters = new FileNameExtensionFilter("PNG files", "png");
         fileChooser.setFileFilter(imageFilters);
 
-        if(theFile != null) fileChooser.setSelectedFile(theFile);
+        if (theFile != null) fileChooser.setSelectedFile(theFile);
         else {
             File fileToSave = new File("New image" + "." + extension);
             fileChooser.setSelectedFile(fileToSave);
@@ -407,7 +442,7 @@ class WindowApplication {
         //then write to image file
         if (returnVal == JFileChooser.APPROVE_OPTION) {
             File file = fileChooser.getSelectedFile();
-            if(!file.getAbsolutePath().endsWith(extension)) {
+            if (!file.getAbsolutePath().endsWith(extension)) {
                 file = new File(file.getAbsolutePath() + "." + extension);
             }
             //put stuff here
@@ -423,7 +458,7 @@ class WindowApplication {
             // retrieve image
             BufferedImage imageToSave = theModel.getImage();
 
-            ImageIO.write(imageToSave, "png",outputfile);
+            ImageIO.write(imageToSave, "png", outputfile);
 
             System.out.println("Saved image to file:" + outputfile.getAbsolutePath());
 
@@ -457,21 +492,21 @@ class WindowApplication {
         JTextField widthField;
         JTextField heightField;
         final int MAX_INTEGER_DIGITS = 5; //not sure if I can handle 100,000 pixels :/
-        int MAX_RESIZE = (int) Math.pow(10,MAX_INTEGER_DIGITS);
+        int MAX_RESIZE = (int) Math.pow(10, MAX_INTEGER_DIGITS);
 
         ResizeDialog() {
-            super(mainFrame, "Resize Image",true);
+            super(mainFrame, "Resize Image", true);
             //set up small modal dialog box
             //JDialog resizeDiag = new JDialog(mainFrame, "Resize Image", true);
             this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
             this.setResizable(false);
             JPanel main = new JPanel(new BorderLayout());
-            main.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
+            main.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
             this.getContentPane().add(main);
 
             //message
             JLabel message = new JLabel("Enter the new dimensions (in pixels):");
-            message.setBorder(BorderFactory.createEmptyBorder(0,0,17,0));
+            message.setBorder(BorderFactory.createEmptyBorder(0, 0, 17, 0));
             main.add(message, BorderLayout.NORTH);
 
             //input fields, labels
@@ -484,8 +519,8 @@ class WindowApplication {
             intFormat.setMinimumIntegerDigits(1);
             intFormat.setMaximumIntegerDigits(MAX_INTEGER_DIGITS);
 
-            JPanel fields = new JPanel(new GridLayout(0,1));
-            JPanel labels = new JPanel(new GridLayout(0,1));
+            JPanel fields = new JPanel(new GridLayout(0, 1));
+            JPanel labels = new JPanel(new GridLayout(0, 1));
             widthField = new JTextField(MAX_INTEGER_DIGITS);
             heightField = new JTextField(MAX_INTEGER_DIGITS);
 
@@ -504,8 +539,8 @@ class WindowApplication {
             //buttons
             JButton applyButton = new JButton("Apply");
             JButton cancelButton = new JButton("Cancel");
-            JPanel buttons = new JPanel(new GridLayout(0,2,6,0));
-            buttons.setBorder(BorderFactory.createEmptyBorder(17,0,0,0));
+            JPanel buttons = new JPanel(new GridLayout(0, 2, 6, 0));
+            buttons.setBorder(BorderFactory.createEmptyBorder(17, 0, 0, 0));
 
             buttons.add(applyButton);
             buttons.add(cancelButton);
@@ -517,6 +552,7 @@ class WindowApplication {
             this.setLocationRelativeTo(mainFrame);
             this.setVisible(true);
         }
+
         void setFieldsToDefault() {
             widthField.setText(Integer.toString(theModel.getWidth()));
             heightField.setText(Integer.toString(theModel.getHeight()));
@@ -537,13 +573,13 @@ class WindowApplication {
                 int newH = Integer.parseInt(heightField.getText());
 
                 //check bounds of input
-                if(newW <= 0 || newH <= 0) {
+                if (newW <= 0 || newH <= 0) {
                     JOptionPane.showMessageDialog(this,
                             "You entered a negative number. Please only type positive whole numbers.",
                             "Error",
                             JOptionPane.ERROR_MESSAGE);
                     setFieldsToDefault();
-                } else if(newW > MAX_RESIZE || newH > MAX_RESIZE) {
+                } else if (newW > MAX_RESIZE || newH > MAX_RESIZE) {
                     JOptionPane.showMessageDialog(this,
                             "You entered a very large number! Please only type numbers less than" + MAX_RESIZE + ".",
                             "Error",
@@ -551,7 +587,7 @@ class WindowApplication {
                     setFieldsToDefault();
                 } else { //if input within bounds
                     //check if image will be cropped (a dimension is smaller than the previous dimension)
-                    if(newW < theModel.getWidth() || newH < theModel.getHeight()) {
+                    if (newW < theModel.getWidth() || newH < theModel.getHeight()) {
                         //if crop, ask for confirmation
                         //Custom button text
                         Object[] options = {"OK",
@@ -564,7 +600,7 @@ class WindowApplication {
                                 null,
                                 options,
                                 options[1]);
-                        if(result == 0) { //if OK option chosen
+                        if (result == 0) { //if OK option chosen
                             theModel.resize(newW, newH); //then resize
                             close(); //then close main dialog
                             //done
@@ -590,16 +626,23 @@ class WindowApplication {
     }
 
     private void flip(boolean horizontally) {
-        if(horizontally) theModel.flip(0);
+        if (horizontally) theModel.flip(0);
         else theModel.flip(1);
     }
 
     private void rotate(int option) {
         switch (option) {
-            case 0: theModel.rotate(0); break;//left
-            case 1: theModel.rotate(1); break;//right
-            case 2: theModel.rotate(2); break;//180
-            default: break;
+            case 0:
+                theModel.rotate(0);
+                break;//left
+            case 1:
+                theModel.rotate(1);
+                break;//right
+            case 2:
+                theModel.rotate(2);
+                break;//180
+            default:
+                break;
         }
     }
 
@@ -607,5 +650,6 @@ class WindowApplication {
         mainFrame.setTitle(APPLICATION_NAME + " - " + documentTitle);
     }
 
-    private void dummy() {} //temporary for menu listeners
+    private void dummy() {
+    } //temporary for menu listeners
 }

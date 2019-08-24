@@ -24,15 +24,15 @@ public class ToolLine extends Tool {
 
     ToolLine(ImageModel model, String iconSource) {
         super(model, iconSource);
-        upperCard.setLayout(new GridLayout(1,0));
+        upperCard.setLayout(new GridLayout(1, 0));
 
-        widthSlider = new JSlider(SwingConstants.HORIZONTAL,MIN_WIDTH,MAX_WIDTH,DEFALUT_WIDTH);
+        widthSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_WIDTH, MAX_WIDTH, DEFALUT_WIDTH);
         widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
         widthSlider.addChangeListener(e -> setWidth(widthSlider.getValue()));
 
         JPanel widthPanel = new JPanel();
-        widthPanel.setLayout(new BoxLayout(widthPanel,BoxLayout.X_AXIS));
-        widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Line Width"));
+        widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
+        widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Line Width"));
 
         widthPanel.add(widthLabel);
         widthPanel.add(widthSlider);
@@ -45,7 +45,7 @@ public class ToolLine extends Tool {
 
         //cancel the operation if we select a different tool
         button.addItemListener(e -> {
-            if(e.getStateChange() == ItemEvent.DESELECTED) {
+            if (e.getStateChange() == ItemEvent.DESELECTED) {
                 cancelLineDrawing();
             }
         });
@@ -59,12 +59,12 @@ public class ToolLine extends Tool {
 
     //draw the line from the starting point to the current (ending) point
     private void drawLine(int endX, int endY, int color) {
-        bresenham(x0,y0,endX,endY,color);
+        bresenham(x0, y0, endX, endY, color);
     }
 
     //draw command used by draw function
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,color,width, negativeWidth, false, true);
+        makeCircle(x, y, color, width, negativeWidth, false, true);
     }
 
     private void resetStates() {
@@ -83,13 +83,13 @@ public class ToolLine extends Tool {
         //get current points
         x0 = startX;
         y0 = startY;
-        refreshLinePreview(x0,y0, color);
+        refreshLinePreview(x0, y0, color);
     }
 
     //when mouse is moved
     private void refreshLinePreview(int x1, int y1, int color) {
         model.clearOverlay();
-        bresenham(x0,y0,x1,y1,color);
+        bresenham(x0, y0, x1, y1, color);
     }
 
     //on second click, or mouse release
@@ -97,7 +97,7 @@ public class ToolLine extends Tool {
         //we know we are drawing the line now, and so we are going to save the old state
         model.saveCurrentState();
         model.clearOverlay();
-        drawLine(endX,endY,color);
+        drawLine(endX, endY, color);
         model.mergeOverlay();
         model.refreshView();
     }
@@ -114,23 +114,23 @@ public class ToolLine extends Tool {
     @Override
     public void toolMoved(MouseEvent e) {
         //if the current tool isnt selected, then we should cancel; doenst work
-        if(!this.button.isSelected()) cancelLineDrawing();
+        if (!this.button.isSelected()) cancelLineDrawing();
 
-        else if(twoClickMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+        else if (twoClickMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
     }
 
     //refresh preview if we are doing drag mode
     @Override
     public void toolDragged(MouseEvent e) {
-        if(dragMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+        if (dragMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
     }
 
     //handle mouseclicks for two click mode
     @Override
     public void toolClicked(MouseEvent e) {
         //make sure we arent in drag mode before doing anything
-        if(!dragMode) {
-            if(!twoClickMode) { //first click
+        if (!dragMode) {
+            if (!twoClickMode) { //first click
                 twoClickMode = true;
                 startLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
             } else { //second click
@@ -147,7 +147,7 @@ public class ToolLine extends Tool {
     @Override
     public void toolPressed(MouseEvent e) {
         //start of drag if neither mode is enabled
-        if(!dragMode && !twoClickMode) {
+        if (!dragMode && !twoClickMode) {
             dragMode = true; //set as drag mode
             startLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
         }
@@ -157,22 +157,27 @@ public class ToolLine extends Tool {
     @Override
     public void toolReleased(MouseEvent e) {
         //end of drag
-        if(dragMode && !twoClickMode) {
+        if (dragMode && !twoClickMode) {
             //finish the drag stuff
-            finishLineDrawing(e.getX(),e.getY(), getColorIntByButton(e.getButton()));
+            finishLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
             //then set drag as false
             dragMode = false;
         }
     }
 
-    @Override public void toolEntered(MouseEvent e) { }
-    @Override public void toolExited(MouseEvent e) { }
+    @Override
+    public void toolEntered(MouseEvent e) {
+    }
+
+    @Override
+    public void toolExited(MouseEvent e) {
+    }
 
     //if a user presses escape, then cancel line drawing
     @Override
     public void toolKeyPressed(KeyEvent e) {
         System.out.println(e.getExtendedKeyCode() + "!");
-        if(e.getExtendedKeyCode() == KeyEvent.VK_ESCAPE ||
+        if (e.getExtendedKeyCode() == KeyEvent.VK_ESCAPE ||
                 e.getExtendedKeyCode() == KeyEvent.VK_CLEAR ||
                 e.getExtendedKeyCode() == KeyEvent.VK_CANCEL ||
                 e.getExtendedKeyCode() == KeyEvent.VK_BACK_SPACE ||
@@ -183,6 +188,11 @@ public class ToolLine extends Tool {
         }
     }
 
-    @Override public void toolKeyTyped(KeyEvent e) { }
-    @Override public void toolKeyReleased(KeyEvent e) { }
+    @Override
+    public void toolKeyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void toolKeyReleased(KeyEvent e) {
+    }
 }

@@ -33,7 +33,7 @@ class ManageTools {
         //update colors of tools
 
         tools = new Tool[newTools.size()]; //use regular array for better performance
-        for(int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
+        for (int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
 
         //create both static and motion mouse controllers and add them to the view
         controllerMouseStatic = new ControllerMouseStatic(tools);
@@ -56,7 +56,7 @@ class ManageTools {
         ButtonGroup buttonGroup = new ButtonGroup();
 
         //add listeners to tools
-        for(int i = 0; i < tools.length; i++) {// t: tools) {
+        for (int i = 0; i < tools.length; i++) {// t: tools) {
             //add an event listener to the tool button
             //to define behavior when tool button is pressed
             tools[i].button.putClientProperty("index", i); //set index of the button
@@ -83,7 +83,7 @@ class ManageTools {
     }
 
 
-    JPanel getTopPanel(){
+    JPanel getTopPanel() {
         return topPanel;
     }
 
@@ -94,6 +94,7 @@ class ManageTools {
     //allows me to pass an index value through the action listener so I can use it to set the mouse controllers
     private class ToolButtonListener implements ActionListener {
         private int _index;
+
         ToolButtonListener(int index) {
             _index = index;
         }

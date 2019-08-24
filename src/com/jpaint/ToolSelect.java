@@ -14,7 +14,7 @@ public class ToolSelect extends Tool {
         JLabel infoText = new JLabel("Select tool - Not yet implemented");
         infoText.setHorizontalAlignment(SwingConstants.CENTER);
         infoText.setVerticalAlignment(SwingConstants.CENTER);
-        upperCard.add(infoText,0);
+        upperCard.add(infoText, 0);
     }
 
     @Override

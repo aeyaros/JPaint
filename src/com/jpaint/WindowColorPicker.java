@@ -51,7 +51,7 @@ class WindowColorPicker {
         this.manageColors = manageColors; //not used until saving
         colorToChange = new Color(colorButton.getColor()); //store a copy of the original color
 
-        this.colorButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED,SystemColor.controlHighlight,SystemColor.controlHighlight));
+        this.colorButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, SystemColor.controlHighlight, SystemColor.controlHighlight));
 
         frame = new JFrame("Color Picker");
 
@@ -67,13 +67,13 @@ class WindowColorPicker {
         JPanel mainPanel = new JPanel();
         frame.getContentPane().add(mainPanel);
 
-        mainPanel.setLayout(new BoxLayout(mainPanel,BoxLayout.Y_AXIS));
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         JPanel originalColorLabels = new JPanel();
         JPanel newColorLabels = new JPanel();
 
-        BoxLayout oc = new BoxLayout(originalColorLabels,BoxLayout.Y_AXIS);
-        BoxLayout nc = new BoxLayout(newColorLabels,BoxLayout.Y_AXIS);
+        BoxLayout oc = new BoxLayout(originalColorLabels, BoxLayout.Y_AXIS);
+        BoxLayout nc = new BoxLayout(newColorLabels, BoxLayout.Y_AXIS);
         originalColorLabels.setLayout(oc);
         newColorLabels.setLayout(nc);
 
@@ -101,8 +101,8 @@ class WindowColorPicker {
         setColorPane(colorLabel);
 
         //panel containing both colors
-        JPanel colorPanel = new JPanel(new GridLayout(1,2));
-        colorPanel.setBorder(BorderFactory.createEmptyBorder(0,0,SLIDER_BORDER,0));
+        JPanel colorPanel = new JPanel(new GridLayout(1, 2));
+        colorPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, SLIDER_BORDER, 0));
 
         colorPanel.add(originalColorLabels);
         colorPanel.add(newColorLabels);
@@ -114,11 +114,11 @@ class WindowColorPicker {
         sliders = new JSlider[sliderPanels.length];
         labels = new JLabel[sliderPanels.length];
 
-        for(int i = 0; i < sliderPanels.length; i++) {
+        for (int i = 0; i < sliderPanels.length; i++) {
 
             labels[i] = new JLabel(Integer.toString(colorToChange.getChannel(i)));
 
-            sliders[i] = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE, colorToChange.getChannel(i));
+            sliders[i] = new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE, colorToChange.getChannel(i));
             sliders[i].addChangeListener(new sliderListener(i));
 
             sliderPanels[i] = new JPanel();
@@ -129,16 +129,16 @@ class WindowColorPicker {
         }
 
         //add sliders; red first
-        for(int i = 1; i < sliderPanels.length + 1; i++) {
+        for (int i = 1; i < sliderPanels.length + 1; i++) {
             mainPanel.add(sliderPanels[i % sliderPanels.length]);
         }
 
         //add OK and cancel button
-        JPanel buttons = new JPanel(new GridLayout(1,0,6,0));
+        JPanel buttons = new JPanel(new GridLayout(1, 0, 6, 0));
 
         JButton applyButton = new JButton("Apply");
         JButton cancelButton = new JButton("Cancel");
-        buttons.setBorder(new EmptyBorder(17,0,12,0));
+        buttons.setBorder(new EmptyBorder(17, 0, 12, 0));
 
         applyButton.addActionListener(e -> save());
         cancelButton.addActionListener(e -> close());
@@ -147,7 +147,7 @@ class WindowColorPicker {
         buttons.add(cancelButton);
         mainPanel.add(buttons);
 
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(12,12,12,12));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
 
         frame.setAlwaysOnTop(true);
 
@@ -173,9 +173,13 @@ class WindowColorPicker {
 
     private class sliderListener implements ChangeListener {
         private int index;
-        sliderListener(int index) { this.index = index; }
 
-        @Override public void stateChanged(ChangeEvent e) {
+        sliderListener(int index) {
+            this.index = index;
+        }
+
+        @Override
+        public void stateChanged(ChangeEvent e) {
             updateChannel(index);
         }
     }

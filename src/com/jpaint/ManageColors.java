@@ -2,24 +2,26 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 
 //manage selected colors
 class ManageColors {
     //default preset colors
     private final Color[] colors = {
-            new Color(255,  0,  0,  0), //black
-            new Color(255,128,128,128), //gray
-            new Color(255,255,255,255), //white
-            new Color(255,255,  0,255), //magenta
-            new Color(255,255,  0,  0), //red
-            new Color(255,255,128,  0), //orange
-            new Color(255,255,255,  0), //yellow
-            new Color(255,  0,255,  0), //green
-            new Color(255,  0,128,  0), //dark green
-            new Color(255,  0,255,255), //cyan
-            new Color(255,  0,  0,255), //blue
-            new Color(255,128,  0,255)  //purple
+            new Color(255, 0, 0, 0), //black
+            new Color(255, 128, 128, 128), //gray
+            new Color(255, 255, 255, 255), //white
+            new Color(255, 255, 0, 255), //magenta
+            new Color(255, 255, 0, 0), //red
+            new Color(255, 255, 128, 0), //orange
+            new Color(255, 255, 255, 0), //yellow
+            new Color(255, 0, 255, 0), //green
+            new Color(255, 0, 128, 0), //dark green
+            new Color(255, 0, 255, 255), //cyan
+            new Color(255, 0, 0, 255), //blue
+            new Color(255, 128, 0, 255)  //purple
     };
 
     //the currently selected colors
@@ -53,12 +55,12 @@ class ManageColors {
                 halfMiddleWidth + halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE);
         selectedColors[2] = new ColorButton(colors[2 % colors.length],
                 WindowApplication.TOOL_BUTTON_SIZE - halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE);
-        selectedColorsPanel.add(selectedColors[0],0);
-        selectedColorsPanel.add(selectedColors[1],1);
-        selectedColorsPanel.add(selectedColors[2],2);
+        selectedColorsPanel.add(selectedColors[0], 0);
+        selectedColorsPanel.add(selectedColors[1], 1);
+        selectedColorsPanel.add(selectedColors[2], 2);
 
         //set up panel for opacity slider
-        opacitySlider = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE,Color.MAX_VALUE);
+        opacitySlider = new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE, Color.MAX_VALUE);
 
         opacityLabel = new JLabel("", SwingConstants.CENTER);
         opacityLabel.setHorizontalTextPosition(SwingConstants.CENTER);
@@ -74,7 +76,7 @@ class ManageColors {
         innerContainer.add(opacityLabel, BorderLayout.NORTH);
         innerContainer.add(opacitySlider, BorderLayout.SOUTH);
         innerContainer.setBorder(null);
-        opacitySlider.setPreferredSize(new Dimension((int)Math.floor(WindowApplication.COLOR_BUTTON_SIZE*3.5), WindowApplication.TOOL_BUTTON_SIZE));
+        opacitySlider.setPreferredSize(new Dimension((int) Math.floor(WindowApplication.COLOR_BUTTON_SIZE * 3.5), WindowApplication.TOOL_BUTTON_SIZE));
 
         //add action listener to slider to update opacity of current color
         opacitySlider.addChangeListener(e -> {
@@ -94,7 +96,7 @@ class ManageColors {
         //build the list of color presets from input
         presetColors = new ColorButton[colors.length];
 
-        for(int i = 0; i < presetColors.length; i++) {
+        for (int i = 0; i < presetColors.length; i++) {
             //create the button
             presetColors[i] = new ColorButton(colors[i],
                     WindowApplication.COLOR_BUTTON_SIZE, WindowApplication.COLOR_BUTTON_SIZE);
@@ -130,9 +132,9 @@ class ManageColors {
     void notifyTools() {
         for (Tool t : tools) {
             t.updateColors(
-                selectedColors[0].getColor(),
-                selectedColors[1].getColor(),
-                selectedColors[2].getColor()
+                    selectedColors[0].getColor(),
+                    selectedColors[1].getColor(),
+                    selectedColors[2].getColor()
             );
         }
     }
@@ -142,12 +144,14 @@ class ManageColors {
     //used for clicking the preset color buttons
     private class ColorButtonListener implements MouseListener, MouseMotionListener {
         ColorButton colorButton;
+
         ColorButtonListener(ColorButton colorButton) {
             this.colorButton = colorButton;
         }
 
-        @Override public void mouseClicked(MouseEvent e) { //when a color preset is clicked
-            if(e.getClickCount() > 1) { //if double click or more
+        @Override
+        public void mouseClicked(MouseEvent e) { //when a color preset is clicked
+            if (e.getClickCount() > 1) { //if double click or more
                 //double click; restore previous color to the corresponding button
                 setButtonColor(accessButton(e.getButton()).getPreviousColor(), e.getButton());
                 //open the window to edit the color
@@ -159,18 +163,35 @@ class ManageColors {
                 setButtonColor(colorButton.getColor(), e.getButton());
 
                 //System.out.println("singleclick");
-            } notifyTools();
+            }
+            notifyTools();
         }
+
         //user may move mouse slightly when clicking, so we need a mousedragged event too
-        @Override public void mouseDragged(MouseEvent e) {
+        @Override
+        public void mouseDragged(MouseEvent e) {
             mouseClicked(e);
         }
 
-        @Override public void mousePressed(MouseEvent e) { }
-        @Override public void mouseReleased(MouseEvent e) { }
-        @Override public void mouseEntered(MouseEvent e) { }
-        @Override public void mouseExited(MouseEvent e) { }
-        @Override public void mouseMoved(MouseEvent e) { }
+        @Override
+        public void mousePressed(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseReleased(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseEntered(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseExited(MouseEvent e) {
+        }
+
+        @Override
+        public void mouseMoved(MouseEvent e) {
+        }
     }
 
     private class SelectButtonListener extends ColorButtonListener {
@@ -178,11 +199,13 @@ class ManageColors {
             super(colorButton);
         }
 
-        @Override public void mouseClicked(MouseEvent e) {
-            if(e.getClickCount() > 1) setUpColorPicker(colorButton);
+        @Override
+        public void mouseClicked(MouseEvent e) {
+            if (e.getClickCount() > 1) setUpColorPicker(colorButton);
         }
 
-        @Override public void mouseDragged(MouseEvent e) {
+        @Override
+        public void mouseDragged(MouseEvent e) {
             mouseClicked(e);
         }
     }
@@ -190,10 +213,13 @@ class ManageColors {
     //given a mouse event, return the color button indicated by the mouse event
     //either left, middle, or right button returns corresponding ColorButton object
     private ColorButton accessButton(int buttonCode) {
-        switch(buttonCode) {
-            case MouseEvent.BUTTON2: return selectedColors[1];
-            case MouseEvent.BUTTON3: return selectedColors[2];
-            default: return selectedColors[0]; //MouseEvent.BUTTON1
+        switch (buttonCode) {
+            case MouseEvent.BUTTON2:
+                return selectedColors[1];
+            case MouseEvent.BUTTON3:
+                return selectedColors[2];
+            default:
+                return selectedColors[0]; //MouseEvent.BUTTON1
         }
     }
 
@@ -204,16 +230,17 @@ class ManageColors {
     }
 
     private void setOpacityLabel() {
-        opacityLabel.setText("Opacity: " + ((opacitySlider.getValue() * 100)/255) + "%");
+        opacityLabel.setText("Opacity: " + ((opacitySlider.getValue() * 100) / 255) + "%");
     }
 
     //take the selected colors and change their opacity
     private void setSelectedColorOpacity(int opacity) {
-        for(ColorButton cb: selectedColors) {
+        for (ColorButton cb : selectedColors) {
             Color c = new Color(cb.getColor());
             c.setChannel(0, opacity);
             cb.setColor(c);
-        } notifyTools(); //notify tools of the change
+        }
+        notifyTools(); //notify tools of the change
     }
 
     private void setUpColorPicker(ColorButton colorToChange) {

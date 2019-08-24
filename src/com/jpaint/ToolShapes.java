@@ -14,7 +14,7 @@ public class ToolShapes extends Tool {
         JLabel infoText = new JLabel("Shapes tool - Not yet implemented");
         infoText.setHorizontalAlignment(SwingConstants.CENTER);
         infoText.setVerticalAlignment(SwingConstants.CENTER);
-        upperCard.add(infoText,0);
+        upperCard.add(infoText, 0);
     }
 
     @Override
@@ -71,7 +71,6 @@ public class ToolShapes extends Tool {
     public void toolKeyTyped(KeyEvent e) {
 
     }
-
 
 
 }

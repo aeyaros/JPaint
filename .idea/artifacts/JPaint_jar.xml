@@ -3,6 +3,7 @@
     <output-path>$PROJECT_DIR$/out/artifacts/JPaint_jar</output-path>
     <root id="archive" name="JPaint.jar">
       <element id="module-output" name="JPaint" />
+      <element id="module-source" name="JPaint" />
     </root>
   </artifact>
 </component>

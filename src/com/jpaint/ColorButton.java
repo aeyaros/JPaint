@@ -29,12 +29,13 @@ class ColorButton extends JLabel {
     }
 
     private ImageIcon generateColorIcon(int w, int h, int c) {
-        BufferedImage bufferedImage = Canvas.generateTileBG(w,h);
-        for(int i = 0; i < w; i++) {
-            for(int j = 0; j < h; j++) {
-                bufferedImage.setRGB(i,j,Color.alphaBlend(c,bufferedImage.getRGB(i,j)));
+        BufferedImage bufferedImage = Canvas.generateTileBG(w, h);
+        for (int i = 0; i < w; i++) {
+            for (int j = 0; j < h; j++) {
+                bufferedImage.setRGB(i, j, Color.alphaBlend(c, bufferedImage.getRGB(i, j)));
             }
-        } return new ImageIcon(bufferedImage);
+        }
+        return new ImageIcon(bufferedImage);
     }
 
     Color getColor() {

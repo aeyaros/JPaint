@@ -40,28 +40,30 @@ abstract class Tool implements ToolInput {
             button.setBackground(SystemColor.window);
             //get the same image for the selected state, but invert the colors
             BufferedImage selectedImage = ImageIO.read(getClass().getResource(iconSource));
-            for(int i = 0; i < selectedImage.getWidth(); i++) {
-                for(int j = 0; j < selectedImage.getHeight(); j++) {
-                    Color c = new Color(selectedImage.getRGB(i,j));
-                    for(int k = 1; k < 4; k++){
-                        c.setChannel(k,255 - c.getChannel(k));
-                    } selectedImage.setRGB(i,j,c.getARGB());
+            for (int i = 0; i < selectedImage.getWidth(); i++) {
+                for (int j = 0; j < selectedImage.getHeight(); j++) {
+                    Color c = new Color(selectedImage.getRGB(i, j));
+                    for (int k = 1; k < 4; k++) {
+                        c.setChannel(k, 255 - c.getChannel(k));
+                    }
+                    selectedImage.setRGB(i, j, c.getARGB());
                 }
-            } button.setSelectedIcon(new ImageIcon(
+            }
+            button.setSelectedIcon(new ImageIcon(
                     selectedImage.getScaledInstance(
                             WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH)));
-        } catch(Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
             System.err.println("Couldn't load icon for " + this.getClass().getName() + " button from location " + iconSource);
         }
 
         button.addItemListener(e -> {
-            if(e.getStateChange() == ItemEvent.SELECTED) {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
                 //set border
                 button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlLtHighlight, SystemColor.controlShadow));
                 //set background
                 button.setBackground(SystemColor.controlHighlight);
-            } else if(e.getStateChange() == ItemEvent.DESELECTED) {
+            } else if (e.getStateChange() == ItemEvent.DESELECTED) {
                 //set border
                 button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
                 //set background
@@ -79,9 +81,12 @@ abstract class Tool implements ToolInput {
 
     int getColorIntByButton(int mouseEventButtonCode) {
         switch (mouseEventButtonCode) {
-            case MouseEvent.BUTTON2: return colorsInts[1];
-            case MouseEvent.BUTTON3: return colorsInts[2];
-            default: return colorsInts[0]; //MouseEvent.BUTTON1
+            case MouseEvent.BUTTON2:
+                return colorsInts[1];
+            case MouseEvent.BUTTON3:
+                return colorsInts[2];
+            default:
+                return colorsInts[0]; //MouseEvent.BUTTON1
         }
     }
 
@@ -96,11 +101,11 @@ abstract class Tool implements ToolInput {
     void bresenham(int x0, int y0, int x1, int y1, int color) {
         int dx = Math.abs(x1 - x0);
         int sx = -1;
-        if(x0 < x1) sx = 1;
+        if (x0 < x1) sx = 1;
 
         int dy = -1 * Math.abs(y1 - y0);
         int sy = -1;
-        if(y0 < y1) sy = 1;
+        if (y0 < y1) sy = 1;
 
         int err = dx + dy; //error value ex_y
         int e2;
@@ -119,21 +124,22 @@ abstract class Tool implements ToolInput {
             }
 
             //then draw at that point
-            draw(x0,y0,color);
+            draw(x0, y0, color);
         }
     }
 
     void makeCircle(int origX, int origY, int color, int radius, int negativeRadius, boolean blend, boolean useOverlay) {
-        for(int y = negativeRadius; y <= radius; y++) {
-            for(int x = negativeRadius; x <= radius; x++) {
+        for (int y = negativeRadius; y <= radius; y++) {
+            for (int x = negativeRadius; x <= radius; x++) {
                 if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-                    model.setPixel(origX + x, origY + y, color, blend,useOverlay);
+                    model.setPixel(origX + x, origY + y, color, blend, useOverlay);
             }
-        } model.refreshView();
+        }
+        model.refreshView();
     }
 
     void makeRegularPolygon(int origX, int origY, int color, int sides, int radius, boolean blend, boolean useOverlay) {
-        if(sides < 3) return; //cant have a polygon with less than 3 sides
+        if (sides < 3) return; //cant have a polygon with less than 3 sides
 
         //start point for rotation
         //origin x + radius

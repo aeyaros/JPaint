@@ -21,8 +21,8 @@ public class ToolEraser extends ToolPaintBrush {
         eraserButtons.add(eraseTrans);
 
         JPanel eraserButtonPanel = new JPanel();
-        eraserButtonPanel.setLayout(new BoxLayout(eraserButtonPanel,BoxLayout.X_AXIS));
-        eraserButtonPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(),"Eraser type"));
+        eraserButtonPanel.setLayout(new BoxLayout(eraserButtonPanel, BoxLayout.X_AXIS));
+        eraserButtonPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Eraser type"));
 
         eraserButtonPanel.add(eraseWhite);
         eraserButtonPanel.add(eraseTrans);
@@ -40,13 +40,13 @@ public class ToolEraser extends ToolPaintBrush {
     //change how the eraser erases
     private int getEraserColor() {
         int value;
-        if(eraseToTransparent) value = Color.MIN_VALUE; //erase to transparent
+        if (eraseToTransparent) value = Color.MIN_VALUE; //erase to transparent
         else value = Color.MAX_VALUE; //erase to white
-        return new Color(value,value,value,value).getARGB();
+        return new Color(value, value, value, value).getARGB();
     }
 
     @Override
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,getEraserColor(),radius, negativeRadius,false,false);
+        makeCircle(x, y, getEraserColor(), radius, negativeRadius, false, false);
     }
 }

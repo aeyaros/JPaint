@@ -31,7 +31,7 @@ class ImageView extends JLabel {
         imageOverlay = new JLabel();
 
         //update tileBG icon, and size label
-        updateSize(w,h);
+        updateSize(w, h);
 
         //set up canvases
         currentImage.setLayout(new BoxLayout(currentImage, BoxLayout.X_AXIS));
@@ -40,17 +40,39 @@ class ImageView extends JLabel {
 
         //show mouse coordinates in a view
         this.addMouseMotionListener(new MouseMotionListener() {
-            @Override public void mouseMoved(MouseEvent e) {
-                refreshCoordinates(e.getX(), e.getY()); }
-            @Override public void mouseDragged(MouseEvent e) {
-                refreshCoordinates(e.getX(), e.getY()); } });
+            @Override
+            public void mouseMoved(MouseEvent e) {
+                refreshCoordinates(e.getX(), e.getY());
+            }
+
+            @Override
+            public void mouseDragged(MouseEvent e) {
+                refreshCoordinates(e.getX(), e.getY());
+            }
+        });
         this.addMouseListener(new MouseListener() {
             //when pointer leaves canvas, display nothing
-            @Override public void mouseExited(MouseEvent e) { clearCoordinates(); }
-            @Override public void mouseClicked(MouseEvent e) {}
-            @Override public void mousePressed(MouseEvent e) {}
-            @Override public void mouseReleased(MouseEvent e) {}
-            @Override public void mouseEntered(MouseEvent e) {} });
+            @Override
+            public void mouseExited(MouseEvent e) {
+                clearCoordinates();
+            }
+
+            @Override
+            public void mouseClicked(MouseEvent e) {
+            }
+
+            @Override
+            public void mousePressed(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e) {
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+            }
+        });
     }
 
     //important - sets the base icon which needs to be a certain size
@@ -63,13 +85,13 @@ class ImageView extends JLabel {
     }
 
     //update the view
-    void refresh(ImageIcon baseIcon, ImageIcon overlayIcon ) {
+    void refresh(ImageIcon baseIcon, ImageIcon overlayIcon) {
         //this is where I should overlay the canvas on the checkerboard
         currentImage.setIcon(baseIcon);
         imageOverlay.setIcon(overlayIcon);
 
         //if the image has new dimensions, update them
-        if(baseIcon.getIconWidth() != width || baseIcon.getIconHeight() != height) {
+        if (baseIcon.getIconWidth() != width || baseIcon.getIconHeight() != height) {
             updateSize(baseIcon.getIconWidth(), baseIcon.getIconHeight());
         }
     }
@@ -77,6 +99,7 @@ class ImageView extends JLabel {
     private void refreshCoordinates(int x, int y) {
         coordinatesLabel.setText("x: " + x + "px, y: " + y + "px");
     }
+
     private void clearCoordinates() {
         coordinatesLabel.setText("");
     }

@@ -17,6 +17,7 @@ abstract class Controller {
         this.tools = tools;
         index = 0;
     }
+
     public void setTool(int newIndex) {
         index = newIndex % tools.length;
     }
