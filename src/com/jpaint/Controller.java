@@ -10,15 +10,15 @@ derived classes actually implement the mouselistener
 interfaces and send the events to the tools
 */
 abstract class Controller {
-    Tool[] tools;
-    int index;
+Tool[] tools;
+int index;
 
-    Controller(Tool[] tools) {
-        this.tools = tools;
-        index = 0;
-    }
+Controller(Tool[] tools) {
+	this.tools = tools;
+	index = 0;
+}
 
-    public void setTool(int newIndex) {
-        index = newIndex % tools.length;
-    }
+public void setTool(int newIndex) {
+	index = newIndex % tools.length;
+}
 }

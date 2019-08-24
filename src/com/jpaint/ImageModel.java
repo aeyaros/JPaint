@@ -6,268 +6,257 @@ import java.util.ArrayDeque;
 
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
 class ImageModel {
-    private ImageView imageView; //a view for the model to update
-    //private Canvas temporaryOverlay; //used by tools as a temporary surface to draw on before it is applied to the model
-    private Canvas currentState; //current state of the drawing
-    private ArrayDeque<Canvas> pastStates; //previous states
-    private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
+private final int MAX_UNDO = 50;
+private final int MAX_REDO = 50;
+private ImageView imageView; //a view for the model to update
+private Canvas currentState; //current state of the drawing
+private ArrayDeque<Canvas> pastStates; //previous states
+private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
+//image save states
+private boolean isUntouched; //if brand new
+private boolean isSaved; //if file was saved to the disk (i.e. if file was opened, or if it was created and saved)
 
-    //image save states
-    private boolean isUntouched; //if brand new
-    private boolean isSaved; //if file was saved to the disk (i.e. if file was opened, or if it was created and saved)
-    private final int MAX_UNDO = 50;
-    private final int MAX_REDO = 50;
+/*====== GENERAL ======*/
 
-    /*====== GENERAL ======*/
+//create a new image model with a width and a height
+ImageModel(int w, int h, ImageView imageView) {
+	currentState = new Canvas(w, h, false);
+	this.imageView = imageView;
+	initializeModel(w, h);
+}
 
-    //create a new image model with a width and a height
-    ImageModel(int w, int h, ImageView imageView) {
-        currentState = new Canvas(w, h, false);
-        //temporaryOverlay = new Canvas(w,h,true);
-        this.imageView = imageView;
-        initializeModel(w, h);
-    }
+//functionality shared by both constructors
+private void initializeModel(int w, int h) {
+	pastStates = new ArrayDeque<>();
+	undoneStates = new ArrayDeque<>();
+	startOverFromScratch(w, h, false);
+}
 
-    //functionality shared by both constructors
-    private void initializeModel(int w, int h) {
-        pastStates = new ArrayDeque<>();
-        undoneStates = new ArrayDeque<>();
-        startOverFromScratch(w, h, false);
-    }
+/*====== STARTING OVER, AND SAVE STATUS ======*/
 
-    /*====== STARTING OVER, AND SAVE STATUS ======*/
+//you can start over from scratch or from an image
 
-    //you can start over from scratch or from an image
+private void startOver(Canvas temp) {
+	//set canvases to correct sizes
+	resizeCanvases(temp.getWidth(), temp.getHeight());
+	
+	//clear canvases
+	currentState.clearAll();
+	pastStates.clear();
+	undoneStates.clear();
+	//set canvas
+	currentState = temp;
+	//update image view
+	imageView.updateSize(temp.getWidth(), temp.getHeight());
+	//save states and refresh
+	saveCurrentState();
+	refreshView();
+	isUntouched = true; //initially, file not touched
+	isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
+}
 
-    private void startOver(Canvas temp) {
-        //set canvases to correct sizes
-        resizeCanvases(temp.getWidth(), temp.getHeight());
+//if creating a new image
+void startOverFromScratch(int w, int h, boolean transparent) {
+	startOver(new Canvas(w, h, transparent));
+	
+	System.out.println("...from scratch");
+}
 
-        //clear canvases
-        currentState.clearAll();
-        pastStates.clear();
-        undoneStates.clear();
-        //set canvas
-        currentState = temp;
-        //update image view
-        imageView.updateSize(temp.getWidth(), temp.getHeight());
-        //save states and refresh
-        saveCurrentState();
-        refreshView();
-        isUntouched = true; //initially, file not touched
-        isSaved = false; //assuming it isn't saved unless this is set by the open or save commands
-    }
+//if opening an image
+void startOverFromImage(BufferedImage image) {
+	Canvas temp;
+	try {
+		temp = new Canvas(image);
+	} catch (Exception e) {
+		throw new IllegalArgumentException();
+	}
+	
+	startOver(temp);
+	
+	System.out.println("...from another file");
+}
 
-    //if creating a new image
-    void startOverFromScratch(int w, int h, boolean transparent) {
-        startOver(new Canvas(w, h, transparent));
+void setSaved() {
+	this.isSaved = true;
+	System.out.println("File set as saved");
+}
 
-        System.out.println("...from scratch");
-    }
+void setUntouched() {
+	this.isUntouched = true;
+	System.out.println("File set as untouched");
+}
 
-    //if opening an image
-    void startOverFromImage(BufferedImage image) {
-        Canvas temp;
-        try {
-            temp = new Canvas(image);
-        } catch (Exception e) {
-            throw new IllegalArgumentException();
-        }
+boolean isSaved() {
+	return isSaved;
+}
 
-        startOver(temp);
+boolean isUntouched() {
+	return isUntouched;
+}
 
-        System.out.println("...from another file");
-    }
+/* DISPLAYING COORDINATES */
 
-    void setSaved() {
-        this.isSaved = true;
-        System.out.println("File set as saved");
-    }
+/*====== VIEWING TOOLS ======*/
 
-    void setUntouched() {
-        this.isUntouched = true;
-        System.out.println("File set as untouched");
-    }
+//send the current state of the model to the view
+void refreshView() {
+	imageView.refresh(
+		  new ImageIcon(currentState.getPixels()),
+		  new ImageIcon(currentState.getOverlay())
+	                 );
+}
 
-    boolean isSaved() {
-        return isSaved;
-    }
+//used for saving state
+BufferedImage getImage() {
+	return currentState.getPixels();
+}
 
-    boolean isUntouched() {
-        return isUntouched;
-    }
+/*====== STATES, UNDOING AND REDOING ======*/
 
-    /* DISPLAYING COORDINATES */
+//get the current state of the drawing
+//private Canvas getCurrentState() { return currentState; }
 
-    /*====== VIEWING TOOLS ======*/
+//before a tool is used, save state to past states
+void saveCurrentState() {
+	//save current state
+	addToPastStates(currentState);
+	
+	//if too many undo'ed states then remove an action from the undo list
+	if (pastStates.size() > MAX_UNDO) pastStates.removeLast();
+	
+	//we just did a new action; we cant keep the old undone actions as we are starting a new branch
+	undoneStates.clear();
+	System.out.println("Saved current state");
+	printStates();
+}
 
-    //send the current state of the model to the view
-    void refreshView() {
-        imageView.refresh(new ImageIcon(currentState.getPixels()),
-                new ImageIcon(currentState.getOverlay()));
-    }
+//update the current state (note: this is used for undo/redo)
+private void updateCurrentState(Canvas canvas) {
+	currentState = new Canvas(canvas);
+}
 
-    //used for saving state
-    BufferedImage getImage() {
-        return currentState.getPixels();
-    }
+//returns true if number of past states > 0
+private boolean canUndo() {
+	return pastStates.size() > 1;
+}
 
-    /*====== STATES, UNDOING AND REDOING ======*/
+//returns true if number of undone states > 0
+private boolean canRedo() {
+	return undoneStates.size() > 0;
+}
 
-    //get the current state of the drawing
-    //private Canvas getCurrentState() { return currentState; }
+//add to past states - this happens if we take any action to change the canvas, or if we redo
+private void addToPastStates(Canvas canvas) {
+	pastStates.addFirst(new Canvas(canvas)); //push state to deque
+	isUntouched = false; //the image is no longer untouched, because we have done something
+	System.out.println("Model is not untouched anymore");
+	if (pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
+}
 
-    //before a tool is used, save state to past states
-    void saveCurrentState() {
-        //save current state
-        addToPastStates(currentState);
+//add a state to undone states when undoing
+private void addToUndoneStates(Canvas canvas) {
+	undoneStates.addFirst(new Canvas(canvas)); //push state to deque
+	isUntouched = false;
+	if (undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
+}
 
-        //if too many undo'ed states then remove an action from the undo list
-        if (pastStates.size() > MAX_UNDO) pastStates.removeLast();
+//undo the most recently made change
+void undo() {
+	if (this.canUndo()) { //if we can undo
+		addToUndoneStates(currentState); //push current state to beginning of undone states
+		updateCurrentState(pastStates.removeFirst()); //pop past state to current state
+		this.refreshView();
+		System.out.println("Undone");
+		printStates();
+	} //else cant undo (nothing can be popped from the previous state
+	else System.out.println("Can't undo");
+}
 
-        //we just did a new action; we cant keep the old undone actions as we are starting a new branch
-        undoneStates.clear();
-        System.out.println("Saved current state");
-        printStates();
-    }
+//redo most recently undone state
+void redo() {
+	if (this.canRedo()) { //if we can redo
+		addToPastStates(currentState); //push current state to past states
+		updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
+		this.refreshView();
+		System.out.println("Redone");
+		printStates();
+	} //else cant redo (nothing was previously undone
+	else System.out.println("Can't redo");
+}
 
-    //update the current state (note: this is used for undo/redo)
-    private void updateCurrentState(Canvas canvas) {
-        currentState = new Canvas(canvas);
-    }
+private void printStates() {
+	if (pastStates.size() > 0) for (int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
+	System.out.print("[c]"); //for current state
+	if (undoneStates.size() > 0) for (int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
+	System.out.print('\n');
+}
 
-    //returns true if number of past states > 0
-    private boolean canUndo() {
-        return pastStates.size() > 1;
-    }
+/*====== EDITING CANVAS ======*/
 
-    //returns true if number of undone states > 0
-    private boolean canRedo() {
-        return undoneStates.size() > 0;
-    }
+void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
+	if (blend) currentState.setPixel(x, y, argb, useOverlay);
+	else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
+}
 
-    //add to past states - this happens if we take any action to change the canvas, or if we redo
-    private void addToPastStates(Canvas canvas) {
-        pastStates.addFirst(new Canvas(canvas)); //push state to deque
-        isUntouched = false; //the image is no longer untouched, because we have done something
-        System.out.println("Model is not untouched anymore");
-        if (pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
-    }
+/* FUNCTIONS USED BY MENUS */
 
-    //add a state to undone states when undoing
-    private void addToUndoneStates(Canvas canvas) {
-        undoneStates.addFirst(new Canvas(canvas)); //push state to deque
-        isUntouched = false;
-        if (undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
-    }
+//this can be used directly by a menu
+void resize(int newX, int newY) {
+	saveCurrentState(); //save current state
+	resizeCanvases(newX, newY);
+	refreshView();
+}
 
-    //undo the most recently made change
-    void undo() {
-        if (this.canUndo()) { //if we can undo
-            addToUndoneStates(currentState); //push current state to beginning of undone states
-            updateCurrentState(pastStates.removeFirst()); //pop past state to current state
-            this.refreshView();
-            System.out.println("Undone");
-            printStates();
-        } //else cant undo (nothing can be popped from the previous state
-        else System.out.println("Can't undo");
-    }
+//used by the resize and startover functions
+private void resizeCanvases(int newX, int newY) {
+	currentState.resize(newX, newY);
+}
 
-    //redo most recently undone state
-    void redo() {
-        if (this.canRedo()) { //if we can redo
-            addToPastStates(currentState); //push current state to past states
-            updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
-            this.refreshView();
-            System.out.println("Redone");
-            printStates();
-        } //else cant redo (nothing was previously undone
-        else System.out.println("Can't redo");
-    }
+//used directly by a menu
+void flip(int option) { //0 = horizontal, else vertical
+	saveCurrentState();
+	currentState.flip(option % 2);
+	refreshView();
+}
 
-    private void printStates() {
-        if (pastStates.size() > 0) for (int i = 0; i < pastStates.size(); i++) System.out.print("[p]");
-        System.out.print("[c]"); //for current state
-        if (undoneStates.size() > 0) for (int i = 0; i < undoneStates.size(); i++) System.out.print("[f]");
-        System.out.print('\n');
-    }
-
-    /*====== EDITING CANVAS ======*/
-
-    void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
-        if (blend) currentState.setPixel(x, y, argb, useOverlay);
-        else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
-        /*
-        if(useOverlay) {
-            if(blend)temporaryOverlay.setPixel(x,y,argb);
-            else temporaryOverlay.setPixelWithoutBlending(x,y,argb);
-        } else {
-            if(blend)currentState.setPixel(x,y,argb);
-            else currentState.setPixelWithoutBlending(x,y,argb);
-        }*/
-    }
-
-    /* FUNCTIONS USED BY MENUS */
-
-    //this can be used directly by a menu
-    void resize(int newX, int newY) {
-        saveCurrentState(); //save current state
-        resizeCanvases(newX, newY);
-        refreshView();
-    }
-
-    //used by the resize and startover functions
-    private void resizeCanvases(int newX, int newY) {
-        currentState.resize(newX, newY);
-        //temporaryOverlay.resize(newX, newY);
-    }
-
-    //used directly by a menu
-    void flip(int option) { //0 = horizontal, else vertical
-        saveCurrentState();
-        currentState.flip(option % 2);
-        refreshView();
-    }
-
-    //used directly by a menu
-    void rotate(int option) { //0 = left, 1 = right, else 180
-        saveCurrentState();
-        currentState.rotateOrtho(option % 3);
-        refreshView();
-    }
+//used directly by a menu
+void rotate(int option) { //0 = left, 1 = right, else 180
+	saveCurrentState();
+	currentState.rotateOrtho(option % 3);
+	refreshView();
+}
 
 
-    /*====== ACCESSING CANVAS ======*/
+/*====== ACCESSING CANVAS ======*/
 
-    int getWidth() {
-        return currentState.getWidth();
-    }
+int getWidth() {
+	return currentState.getWidth();
+}
 
-    int getHeight() {
-        return currentState.getHeight();
-    }
+int getHeight() {
+	return currentState.getHeight();
+}
 
-    //return true if coordinate is inside the bounds of the canvas
-    boolean isInBounds(int x, int y) {
-        return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
-    }
+//return true if coordinate is inside the bounds of the canvas
+boolean isInBounds(int x, int y) {
+	return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
+}
 
-    Color getColorAtPixel(int x, int y) {
-        if (isInBounds(x, y)) return new Color(currentState.getPixels().getRGB(x, y));
-        else throw new IndexOutOfBoundsException();
-    }
+Color getColorAtPixel(int x, int y) {
+	if (isInBounds(x, y)) return new Color(currentState.getPixels().getRGB(x, y));
+	else throw new IndexOutOfBoundsException();
+}
 
 
-    /* TEMPORARY OVERLAY */
+/* TEMPORARY OVERLAY */
 
-    void mergeOverlay() {
-        currentState.merge();//temporaryOverlay.getPixels());
-        //clearOverlay();
-        refreshView();
-    }
+void mergeOverlay() {
+	currentState.merge();
+	refreshView();
+}
 
-    void clearOverlay() {
-        currentState.clearOverlay();
-    }
+void clearOverlay() {
+	currentState.clearOverlay();
+}
 
 }
