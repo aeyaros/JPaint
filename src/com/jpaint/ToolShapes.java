@@ -15,6 +15,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	infoText.setHorizontalAlignment(SwingConstants.CENTER);
 	infoText.setVerticalAlignment(SwingConstants.CENTER);
 	upperCard.add(infoText, 0);
+	generateTriangle();
 }
 
 @Override
@@ -54,7 +55,7 @@ public void toolExited(MouseEvent e) {
 
 @Override
 public void draw(int x, int y, int color) {
-
+	model.setPixel(x,y,color,true,false);
 }
 
 @Override
@@ -71,6 +72,5 @@ public void toolKeyReleased(KeyEvent e) {
 public void toolKeyTyped(KeyEvent e) {
 
 }
-
 
 }

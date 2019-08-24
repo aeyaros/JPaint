@@ -7,13 +7,21 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
+import java.util.ArrayDeque;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
 abstract class Tool implements ToolInput {
 ImageModel model; //the model class this tool acts on
 JPanel upperCard; //the upper panel shown when this tool is selected
 JToggleButton button; //the tool button
-private int[] colorsInts;
+private int[] colorsInts; //the colors available to draw with
+
+//used by some tools
+//boundaries of canvas
+private final int lowX = 0;
+private final int lowY = 0;
+private int highX;
+private int highY;
 
 //set button name and add the model
 Tool(ImageModel model, String iconSource) {
@@ -97,6 +105,86 @@ int getColorIntByButton(int mouseEventButtonCode) {
 
 /*====== DRAWING TOOLS ======*/
 
+void fill(int x, int y, int buttonCode) {
+	//Implementing a Flood-fill algorithm from Wikipedia
+	//https://en.wikipedia.org/wiki/Flood_fill
+	
+	//get current width and height
+	highX = model.getWidth();
+	highY = model.getHeight();
+	
+	if (!model.isInBounds(x, y)) return; //cancel if point out of bounds of canvas
+	
+	int target; //color to try and fill in
+	
+	try {
+		target = model.getColorAtPixel(x, y).getARGB(); //color of spot clicked
+	} catch (IndexOutOfBoundsException exc) {
+		System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
+		//exc.printStackTrace();
+		return;
+	}
+	
+	int replacement = getColorIntByButton(buttonCode); //color selected by user
+	
+	//no need to save state unless there's actually something for us to do
+	if (target == replacement) return; //return if target = replacement
+	
+	//if we made it here, then we can do the fill; save state
+	model.saveCurrentState();
+	
+	draw(x, y, target); //draw at coordinate
+	ArrayDeque<Node> nodes = new ArrayDeque<>(); //create empty queue
+	nodes.addLast(new Node(x, y)); //add initial node to queue
+	
+	while (nodes.size() > 0) { //while queue not empty
+		Node n = new Node(
+			  nodes.removeFirst());//pop n from queue
+		//if color to north, south, east, or west of n is target color,
+		//then set that node to replacement and add it to the queue
+		char[] dirs = {'N', 'S', 'E', 'W'};
+		for (char dir: dirs) {
+			try {
+				if (n.get(dir).c() == target) {
+					n.get(dir).set(replacement);
+					nodes.addLast(n.get(dir));
+				}
+			} catch (IndexOutOfBoundsException ignored) { }
+		}
+	} //loop until queue empty again
+	model.refreshView();
+}
+
+//Node object for flood algorithm
+private class Node {
+	int x;
+	int y;
+	
+	Node(int X, int Y) { x = X; y = Y; } //new node
+	Node(Node n) { x = n.x; y = n.y; } //deep copy
+	int c() { return model.getColorAtPixel(x, y).getARGB(); } //get color of node
+	void set(int c) { draw(x, y, c); } //set color of node
+	
+	Node get(char c) { //get a node by direction character
+		switch (c) { //return node if it is in bounds, otherwise break and throw
+			case 'N':
+				if (y + 1 < highY) return new Node(x, y + 1);
+				else break;
+			case 'S':
+				if (y - 1 >= lowY) return new Node(x, y - 1);
+				else break;
+			case 'E':
+				if (x - 1 >= lowX) return new Node(x - 1, y);
+				else break;
+			case 'W':
+				if (x + 1 < highX) return new Node(x + 1, y);
+				else break;
+			default:
+				break;//if unrecognized char, throw exception anyway
+		} throw new IndexOutOfBoundsException(); //if here, out of bounds
+	}
+}
+
 //source of algorithm:
 //https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 //version that accounts for x and y error; a Java implementation
@@ -143,42 +231,32 @@ void makeCircle(int origX, int origY, int color, int radius, int negativeRadius,
 	model.refreshView();
 }
 
-
-
-int[][] getPolyPoints(int origX, int origY, int color, int sides, int radius, boolean flip, boolean blend, boolean useOverlay) {
-	if (sides < 3) throw new IllegalArgumentException("Can't have a polygon with less than 3 sides");
-	int[] origin = {origX, origY};
-	int[][] points = new int[sides][2];
-	//start point for rotation
-	if(flip) {
-		points[0][0] = origin[0];
-		points[0][1] = origin[1] + radius;
-	} else {
-		points[0][0] = origin[0] + radius;
-		points[0][1] = origin[1];
+void generateTriangle() {
+	int[][] points = getPolyPoints(200, 200, 5, 10, -90);
+	for (int i = 0; i < points.length; i++) {
+		bresenham(
+			  points[i][0],
+			  points[i][1],
+			  points[(i + 1) % points.length][0],
+			  points[(i + 1) % points.length][1],
+			  new Color(255, 0, 0, 0).getARGB()
+		         );
+		System.out.println("---" + points[i][0] + " " + points[i][1]);
 	}
 	
-	//then rotate about origin n times for 360/n degrees
-	double theta = 360.0d / sides;
-	for(int i = 1; i < sides; i++) {
-		points[i] = rotatePoint(origin, points[i-1], theta);
-	}
-	
-	return points;
 }
 
-private int[] rotatePoint(int[] pivot, int[] oldPoint, double theta) {
-	//subtract pivot point
-	int[] newPoint = {oldPoint[0] - pivot[0], oldPoint[1] - pivot[1]};
-	
-	double[] trig = { Math.cos(theta), Math.sin(theta) };
-	//calculate rotation, then add back pivot point
-	newPoint[0] = (int)((trig[0] * newPoint[0]) + (trig[1] * newPoint[0])) + pivot[0];
-	newPoint[1] = (int)((trig[1] * newPoint[1]) - (trig[0] * newPoint[0])) + pivot[1];
-	
-	return newPoint;
+private int[][] getPolyPoints(int originX, int originY, int sides, int radius, int angleOffset) {
+	int[][] points = new int[sides][2];//holds return values
+	double initialAngle = angleOffset * Math.PI / 180d;
+	double theta = (2d * Math.PI) / (double) sides;
+	double currentAngle;
+	for (int i = 0; i < sides; i++) {
+		currentAngle = (theta * i) + initialAngle;
+		points[i][0] = (int) (radius * Math.cos(currentAngle)) + originX;
+		points[i][1] = (int) (radius * Math.sin(currentAngle)) + originY;
+	} return points;
 }
-
 
 
 void setCursor() {
