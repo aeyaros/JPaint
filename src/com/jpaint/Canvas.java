@@ -8,6 +8,7 @@ import java.awt.image.BufferedImageOp;
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
     private BufferedImage pixels;
+    private BufferedImage overlay;
     private int width;
     private int height;
 
@@ -25,6 +26,7 @@ class Canvas {
         width = w;
         height = h;
         pixels = newBlankImage(w,h, defaultColor);
+        overlay = newBlankImage(w,h, transparentInt);
     }
 
     //deep copy constructor
@@ -38,6 +40,7 @@ class Canvas {
                 pixels.setRGB(i,j,oldCanvas.pixels.getRGB(i,j));
             }
         }
+        overlay = newBlankImage(pixels.getWidth(), pixels.getHeight(), transparentInt);
     }
 
     //canvas from a bufferedImage
@@ -57,19 +60,28 @@ class Canvas {
         } return newImage;
     }
 
-    void clear() {
+    void clearAll() {
         pixels = newBlankImage(width, height, defaultColor);
+        clearOverlay();
+    }
+
+    void clearOverlay() {
+        overlay = newBlankImage(width, height, transparentInt);
     }
 
     /*====== MODIFIERS ======*/
-    void setPixel(int x, int y, int color) {
-        try { pixels.setRGB(x,y,Color.alphaBlend(color, pixels.getRGB(x,y))); }
-        catch (Exception ignored) {}
+    void setPixel(int x, int y, int color, boolean useOverlay) {
+        try {
+            if(useOverlay) overlay.setRGB(x,y,Color.alphaBlend(color, overlay.getRGB(x,y)));
+            else pixels.setRGB(x,y,Color.alphaBlend(color, pixels.getRGB(x,y)));
+        } catch (Exception ignored) {}
     }
 
-    void setPixelWithoutBlending(int x, int y, int exactColor) {
-        try { pixels.setRGB(x,y,exactColor); }
-        catch (Exception ignored) {}
+    void setPixelWithoutBlending(int x, int y, int exactColor, boolean useOverlay) {
+        try {
+            if(useOverlay) overlay.setRGB(x,y,exactColor);
+            else pixels.setRGB(x,y,exactColor);
+        } catch (Exception ignored) {}
     }
 
     //currently resizes by adding or removing from origin
@@ -94,64 +106,124 @@ class Canvas {
         pixels = newPixels;
         width = newX;
         height = newY;
+        overlay = newBlankImage(width,height,transparentInt);
     }
 
     /*====== ACCESSORS ======*/
-    BufferedImage getPixels() {
-        return pixels;
-    }
-    int getWidth() {
-        return width;
-    }
-    int getHeight() {
-        return height;
-    }
+    BufferedImage getPixels() { return pixels; }
+    BufferedImage getOverlay() { return overlay; }
+    int getWidth() { return width; }
+    int getHeight() { return height; }
 
     //overlay an image ontop of the canvas, with blending
     //assuming they are the same size
-    void overlayImage(BufferedImage top) {
-        int w = top.getWidth(); int h = top.getHeight();
-        if(w != this.getWidth() || h != this.getHeight()) {
-            throw new IllegalArgumentException("Cannot overlay canvases of different sizes");
-        }
+    void merge() { //BufferedImage top) {
+     //   int w = top.getWidth(); int h = top.getHeight();
+     //   if(w != this.getWidth() || h != this.getHeight()) {
+     //       throw new IllegalArgumentException("Cannot overlay canvases of different sizes");
+     //   }
 
         //BufferedImage output = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
-        for(int i = 0; i < w; i++)
-            for(int j = 0; j < h; j++)
-                this.pixels.setRGB(i,j, Color.alphaBlend(top.getRGB(i,j), this.pixels.getRGB(i,j)));
+        for(int i = 0; i < width; i++)
+            for(int j = 0; j < height; j++)
+                this.pixels.setRGB(i,j, Color.alphaBlend(overlay.getRGB(i,j),
+                        this.pixels.getRGB(i,j)));
+        overlay = newBlankImage(width, height, transparentInt);
     }
 
     void rotateOrtho(int option) {
+        BufferedImage newPixels;
+        if(option == 0 || option == 1) {
+            newPixels = newBlankImage(height, width, defaultColor);
+            for(int i = 0; i < width; i++) {
+                for(int j = 0; j < height; j++) {
+                    if(option == 0) newPixels.setRGB(j,(width - 1) - i, pixels.getRGB(i,j));
+                    else newPixels.setRGB((height - 1) - j, i,pixels.getRGB(i,j));
+                    /* //normal
+                    [0][1][2][3][4]
+                    [5][6][7][8][9]
+                    [A][B][C][D][E]
+
+                    //rotate left
+                    //access width in reverse order
+                    //access height in normal order
+                    [4][9][E]
+                    [3][8][D]
+                    [2][7][C]
+                    [1][6][B]
+                    [0][5][A]
+
+                    //rotate right
+                    //access width in normal order
+                    //access height in reverse order
+                    [A][5][0]
+                    [B][6][1]
+                    [C][7][2]
+                    [D][8][3]
+                    [E][9][4]
+                  */
+                }
+            }
+        } else {
+            newPixels = newBlankImage(width, height, defaultColor);
+            for(int i = 0; i < width; i++) {
+                for(int j = 0; j < height; j++) {
+                    newPixels.setRGB((width - 1) - i,(height - 1) - j, pixels.getRGB(i,j));
+                }
+            }
+        } pixels = newPixels;
+        if(option == 0 || option == 1) {
+            System.out.println("old: " + width +" " + height);
+            int temp = width; //old width is new height
+            //noinspection SuspiciousNameCombination
+            width = height; //set width to old height
+            height = temp; //set height to new height
+            System.out.println("new: " + width +" " + height);
+        }
+        overlay = newBlankImage(width, height, transparentInt);
+        /*
         BufferedImageOp rotateLeft = new AffineTransformOp(AffineTransform.getRotateInstance((Math.PI) / 2, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
         BufferedImageOp rotate180 = new AffineTransformOp(AffineTransform.getRotateInstance(Math.PI, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
         BufferedImageOp rotateRight = new AffineTransformOp(AffineTransform.getRotateInstance((3 * Math.PI) / 2, (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
         BufferedImageOp selectedOp;
 
-        switch (option) {
-            case 0 :selectedOp = rotateLeft; break;
-            case 1: selectedOp = rotateRight; break;
-            default: selectedOp = rotate180; break;
+//       BufferedImage newPixels;
+        if(option == 0 || option == 1) {
+            if(option == 0)  selectedOp = rotateLeft;
+            else selectedOp = rotateRight;
+            //noinspection SuspiciousNameCombination,SuspiciousNameCombination
+            //newPixels = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
+        } else {
+            //newPixels = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+            selectedOp = rotate180;
         }
 
         System.out.println(pixels.getWidth() + " " + pixels.getHeight());
         BufferedImage newPixels = selectedOp.createCompatibleDestImage(pixels, pixels.getColorModel());
+        System.out.println(newPixels.getWidth() + " " + newPixels.getHeight());
+
         newPixels = selectedOp.filter(pixels, newPixels);
         pixels = newPixels;
+
+        if(option == 0 || option == 1) {
+            System.out.println("old: " + width +" " + height);
+            int newHeight = width; //old width is new height
+            width = height; //set width to old height
+            height = newHeight; //set height to new height
+            System.out.println("new: " + width +" " + height);
+        }
+       // pixels = newPixels;
+        */
     }
 
     void flip(int option) {
-        BufferedImageOp flipHorizontal = new AffineTransformOp(AffineTransform.getScaleInstance(-1.0,1.0),AffineTransformOp.TYPE_BICUBIC);
-        BufferedImageOp flipVertical = new AffineTransformOp(AffineTransform.getScaleInstance(1.0,-1.0),AffineTransformOp.TYPE_BICUBIC);
-        BufferedImageOp selectedOp;
-
-        if (option == 0) selectedOp = flipHorizontal;
-        else selectedOp = flipVertical;
-
         BufferedImage newPixels = newBlankImage(width, height, defaultColor);
-                //selectedOp.createCompatibleDestImage(pixels, pixels.getColorModel());
-        System.out.println(newPixels.getWidth());
-        newPixels = selectedOp.filter(pixels, newPixels);
-        pixels = newPixels;
+        for(int i = 0; i < width; i++) {
+            for(int j = 0; j < height; j++) {
+                if(option == 0) newPixels.setRGB((width - 1) - i, j,pixels.getRGB(i,j));
+                else newPixels.setRGB(i, (height - 1) - j,pixels.getRGB(i,j));
+            }
+        } pixels = newPixels;
     }
 
     //used for generating tiled backgrounds for translucent color

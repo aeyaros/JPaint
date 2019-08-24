@@ -7,7 +7,7 @@ import java.util.ArrayDeque;
 //ImageModel: THIS IS THE MAIN MODEL CLASS, contains canvas and state functionality
 class ImageModel {
     private ImageView imageView; //a view for the model to update
-    private Canvas temporaryOverlay; //used by tools as a temporary surface to draw on before it is applied to the model
+    //private Canvas temporaryOverlay; //used by tools as a temporary surface to draw on before it is applied to the model
     private Canvas currentState; //current state of the drawing
     private ArrayDeque<Canvas> pastStates; //previous states
     private ArrayDeque<Canvas> undoneStates; //"future states" that were undone
@@ -23,7 +23,7 @@ class ImageModel {
     //create a new image model with a width and a height
     ImageModel(int w, int h, ImageView imageView) {
         currentState = new Canvas(w, h, false);
-        temporaryOverlay = new Canvas(w,h,true);
+        //temporaryOverlay = new Canvas(w,h,true);
         this.imageView = imageView;
         initializeModel(w, h);
     }
@@ -42,8 +42,9 @@ class ImageModel {
     private void startOver(Canvas temp) {
         //set canvases to correct sizes
         resizeCanvases(temp.getWidth(), temp.getHeight());
+
         //clear canvases
-        currentState.clear();
+        currentState.clearAll();
         pastStates.clear();
         undoneStates.clear();
         //set canvas
@@ -97,10 +98,10 @@ class ImageModel {
 
     /*====== VIEWING TOOLS ======*/
 
-    //blend the image with the tile background and then send that to the view
+    //send the current state of the model to the view
     void refreshView() {
         imageView.refresh(new ImageIcon(currentState.getPixels()),
-                          new ImageIcon(temporaryOverlay.getPixels()));
+                          new ImageIcon(currentState.getOverlay()));
     }
 
     //used for saving state
@@ -186,13 +187,16 @@ class ImageModel {
     /*====== EDITING CANVAS ======*/
 
     void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
+        if(blend) currentState.setPixel(x,y,argb,useOverlay);
+        else currentState.setPixelWithoutBlending(x,y,argb,useOverlay);
+        /*
         if(useOverlay) {
             if(blend)temporaryOverlay.setPixel(x,y,argb);
             else temporaryOverlay.setPixelWithoutBlending(x,y,argb);
         } else {
             if(blend)currentState.setPixel(x,y,argb);
             else currentState.setPixelWithoutBlending(x,y,argb);
-        }
+        }*/
     }
 
     /* FUNCTIONS USED BY MENUS */
@@ -204,18 +208,20 @@ class ImageModel {
         refreshView();
     }
 
+    //used by the resize and startover functions
     private void resizeCanvases(int newX, int newY) {
-        imageView.updateSize(newX, newY);
         currentState.resize(newX, newY);
-        temporaryOverlay.resize(newX, newY);
+        //temporaryOverlay.resize(newX, newY);
     }
 
+    //used directly by a menu
     void flip(int option) { //0 = horizontal, else vertical
         saveCurrentState();
         currentState.flip(option % 2);
         refreshView();
     }
 
+    //used directly by a menu
     void rotate(int option) { //0 = left, 1 = right, else 180
         saveCurrentState();
         currentState.rotateOrtho(option % 3);
@@ -242,13 +248,13 @@ class ImageModel {
     /* TEMPORARY OVERLAY */
 
     void mergeOverlay() {
-        currentState.overlayImage(temporaryOverlay.getPixels());
-        clearOverlay();
+        currentState.merge();//temporaryOverlay.getPixels());
+        //clearOverlay();
         refreshView();
     }
 
     void clearOverlay() {
-        temporaryOverlay.clear();
+        currentState.clearOverlay();
     }
 
 }

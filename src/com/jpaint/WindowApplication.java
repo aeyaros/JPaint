@@ -251,13 +251,13 @@ class WindowApplication {
         menuItems.put("resize",new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
         transformMenu.addSeparator();
 
-        menuItems.put("fliph",new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> transform("flipHorizontally")));
-        menuItems.put("flipv",new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_H, e -> transform("flipVertically")));
+        menuItems.put("fliph",new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> flip(true)));
+        menuItems.put("flipv",new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V, e -> flip(false)));
         transformMenu.addSeparator();
 
-        menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> transform("rotateLeft")));
-        menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotateRight")));
-        menuItems.put("rotate180",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_R, e -> transform("rotate180")));
+        menuItems.put("rotateleft",new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L, e -> rotate(0)));
+        menuItems.put("rotateright",new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R, e -> rotate(1)));
+        menuItems.put("rotate180",new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(2)));
 
         /*====== COLOR SCHEME ======*/
         imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
@@ -568,14 +568,16 @@ class WindowApplication {
         new ResizeDialog();
     }
 
-    private void transform(String action) {
-        System.out.println(action);
-        switch (action) {
-            case "rotateLeft": theModel.rotate(0); break;
-            case "rotateRight": theModel.rotate(1); break;
-            case "rotate180": theModel.rotate(2); break;
-            case "flipHorizontal": theModel.flip(0); break;
-            case "flipVertical": theModel.flip(1); break;
+    private void flip(boolean horizontally) {
+        if(horizontally) theModel.flip(0);
+        else theModel.flip(1);
+    }
+
+    private void rotate(int option) {
+        switch (option) {
+            case 0: theModel.rotate(0); break;//left
+            case 1: theModel.rotate(1); break;//right
+            case 2: theModel.rotate(2); break;//180
             default: break;
         }
     }

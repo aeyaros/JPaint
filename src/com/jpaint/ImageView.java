@@ -11,9 +11,13 @@ class ImageView extends JLabel {
     private JLabel sizeLabel;
     private JLabel currentImage; //the main drawing
     private JLabel imageOverlay; //the overlay on top of the drawing
+    private int width;
+    private int height;
 
     ImageView(int w, int h, JLabel coordinatesLabel, JLabel sizeLabel) {
         super();
+        width = w;
+        height = h;
         //set some properties
         this.setOpaque(true);
         this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -53,6 +57,8 @@ class ImageView extends JLabel {
     //otherwise the labels added to it wont show
     void updateSize(int w, int h) {
         this.setIcon(new ImageIcon(Canvas.generateTileBG(w, h)));
+        width = w;
+        height = h;
         sizeLabel.setText("Width: " + w + ", Height: " + h);
     }
 
@@ -61,6 +67,11 @@ class ImageView extends JLabel {
         //this is where I should overlay the canvas on the checkerboard
         currentImage.setIcon(baseIcon);
         imageOverlay.setIcon(overlayIcon);
+
+        //if the image has new dimensions, update them
+        if(baseIcon.getIconWidth() != width || baseIcon.getIconHeight() != height) {
+            updateSize(baseIcon.getIconWidth(), baseIcon.getIconHeight());
+        }
     }
 
     private void refreshCoordinates(int x, int y) {
