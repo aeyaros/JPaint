@@ -218,10 +218,11 @@ class WindowApplication {
         int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
 
         //file menu
-        menuItems.put("new",new MenuItem("New", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile()));
-        menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> openFile()));
+        menuItems.put("new",new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N, e -> newFile(false)));
+        menuItems.put("newtrans",new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T, e -> newFile(true)));
         fileMenu.addSeparator();
 
+        menuItems.put("open",new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,e -> openFile()));
         menuItems.put("save",new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,e -> save()));
         menuItems.put("saveas",new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,e -> saveas()));
         fileMenu.addSeparator();
@@ -306,9 +307,9 @@ class WindowApplication {
     private void undo() { theModel.undo(); }
     private void redo() { theModel.redo(); }
 
-    private void newFile() {
+    private void newFile(boolean transparent) {
         if(askToSave()) {
-            theModel.startOverFromScratch(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT);
+            theModel.startOverFromScratch(Main.DEFAULT_WINDOW_WIDTH, Main.DEFAULT_WINDOW_HEIGHT, transparent);
             theFile = null;
             setTitle(NEW_DOCUMENT);
         }

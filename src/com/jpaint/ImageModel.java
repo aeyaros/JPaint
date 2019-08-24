@@ -32,7 +32,7 @@ class ImageModel {
     private void initializeModel(int w, int h) {
         pastStates = new ArrayDeque<>();
         undoneStates = new ArrayDeque<>();
-        startOverFromScratch(w,h);
+        startOverFromScratch(w,h, false);
     }
 
     /*====== STARTING OVER, AND SAVE STATUS ======*/
@@ -59,8 +59,8 @@ class ImageModel {
     }
 
     //if creating a new image
-    void startOverFromScratch(int w, int h) {
-        startOver(new Canvas(w,h,false));
+    void startOverFromScratch(int w, int h, boolean transparent) {
+        startOver(new Canvas(w,h,transparent));
 
         System.out.println("...from scratch");
     }
