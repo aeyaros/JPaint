@@ -180,29 +180,29 @@ void rotateOrtho(int option) {
 			for (int j = 0; j < height; j++) {
 				if (option == 0) newPixels.setRGB(j, (width - 1) - i, pixels.getRGB(i, j));
 				else newPixels.setRGB((height - 1) - j, i, pixels.getRGB(i, j));
-                    /* //normal
-                    [0][1][2][3][4]
-                    [5][6][7][8][9]
-                    [A][B][C][D][E]
+                /* //normal
+                [0][1][2][3][4]
+                [5][6][7][8][9]
+                [A][B][C][D][E]
 
-                    //rotate left
-                    //access width in reverse order
-                    //access height in normal order
-                    [4][9][E]
-                    [3][8][D]
-                    [2][7][C]
-                    [1][6][B]
-                    [0][5][A]
+                //rotate left
+                //access width in reverse order
+                //access height in normal order
+                [4][9][E]
+                [3][8][D]
+                [2][7][C]
+                [1][6][B]
+                [0][5][A]
 
-                    //rotate right
-                    //access width in normal order
-                    //access height in reverse order
-                    [A][5][0]
-                    [B][6][1]
-                    [C][7][2]
-                    [D][8][3]
-                    [E][9][4]
-                  */
+                //rotate right
+                //access width in normal order
+                //access height in reverse order
+                [A][5][0]
+                [B][6][1]
+                [C][7][2]
+                [D][8][3]
+                [E][9][4]
+              */
 			}
 		}
 	} else {

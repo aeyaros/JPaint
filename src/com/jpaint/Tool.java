@@ -143,13 +143,47 @@ void makeCircle(int origX, int origY, int color, int radius, int negativeRadius,
 	model.refreshView();
 }
 
-void makeRegularPolygon(int origX, int origY, int color, int sides, int radius, boolean blend, boolean useOverlay) {
-	if (sides < 3) return; //cant have a polygon with less than 3 sides
-	
+
+
+int[][] getPolyPoints(int origX, int origY, int color, int sides, int radius, boolean flip, boolean blend, boolean useOverlay) {
+	if (sides < 3) throw new IllegalArgumentException("Can't have a polygon with less than 3 sides");
+	int[] origin = {origX, origY};
+	int[][] points = new int[sides][2];
 	//start point for rotation
-	//origin x + radius
+	if(flip) {
+		points[0][0] = origin[0];
+		points[0][1] = origin[1] + radius;
+	} else {
+		points[0][0] = origin[0] + radius;
+		points[0][1] = origin[1];
+	}
 	
 	//then rotate about origin n times for 360/n degrees
+	double theta = 360.0d / sides;
+	for(int i = 1; i < sides; i++) {
+		points[i] = rotatePoint(origin, points[i-1], theta);
+	}
 	
+	return points;
 }
+
+private int[] rotatePoint(int[] pivot, int[] oldPoint, double theta) {
+	//subtract pivot point
+	int[] newPoint = {oldPoint[0] - pivot[0], oldPoint[1] - pivot[1]};
+	
+	double[] trig = { Math.cos(theta), Math.sin(theta) };
+	//calculate rotation, then add back pivot point
+	newPoint[0] = (int)((trig[0] * newPoint[0]) + (trig[1] * newPoint[0])) + pivot[0];
+	newPoint[1] = (int)((trig[1] * newPoint[1]) - (trig[0] * newPoint[0])) + pivot[1];
+	
+	return newPoint;
+}
+
+
+
+void setCursor() {
+
+}
+
+
 }
