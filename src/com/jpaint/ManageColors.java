@@ -60,20 +60,21 @@ class ManageColors {
         //set up panel for opacity slider
         opacitySlider = new JSlider(SwingConstants.HORIZONTAL,Color.MIN_VALUE,Color.MAX_VALUE,Color.MAX_VALUE);
 
-        opacityLabel = new JLabel("", SwingConstants.LEFT);
-        setOpacityLabel();
+        opacityLabel = new JLabel("", SwingConstants.CENTER);
+        opacityLabel.setHorizontalTextPosition(SwingConstants.CENTER);
+        opacityLabel.setVerticalTextPosition(SwingConstants.BOTTOM);
+        opacityLabel.setVerticalAlignment(SwingConstants.BOTTOM);
 
+        setOpacityLabel();
 
         //outer panel has box layout that respects widths
         //inner panel has borderlayout for positioning elements
         JPanel innerContainer = new JPanel(new BorderLayout());
-        innerContainer.add(opacityLabel, BorderLayout.EAST);
-        innerContainer.add(opacitySlider, BorderLayout.CENTER);
 
-        opacitySlider.setPreferredSize(new Dimension(
-                (int)Math.floor(WindowApplication.COLOR_BUTTON_SIZE*2.25),
-                WindowApplication.TOOL_BUTTON_SIZE)
-        );
+        innerContainer.add(opacityLabel, BorderLayout.NORTH);
+        innerContainer.add(opacitySlider, BorderLayout.SOUTH);
+        innerContainer.setBorder(null);
+        opacitySlider.setPreferredSize(new Dimension((int)Math.floor(WindowApplication.COLOR_BUTTON_SIZE*3.5), WindowApplication.TOOL_BUTTON_SIZE));
 
         //add action listener to slider to update opacity of current color
         opacitySlider.addChangeListener(e -> {
@@ -85,7 +86,7 @@ class ManageColors {
         //need to figure out a better way to format it before adding it
         //opacitySliderPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(),"Opacity"));
 
-        //opacitySliderPanel.add(innerContainer);
+        opacitySliderPanel.add(innerContainer);
 
         //keep track of the tools being used
         this.tools = tools;
@@ -203,7 +204,7 @@ class ManageColors {
     }
 
     private void setOpacityLabel() {
-        opacityLabel.setText(((opacitySlider.getValue() * 100)/255) + "%");
+        opacityLabel.setText("Opacity: " + ((opacitySlider.getValue() * 100)/255) + "%");
     }
 
     //take the selected colors and change their opacity

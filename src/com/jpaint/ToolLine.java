@@ -12,7 +12,6 @@ public class ToolLine extends Tool {
     private final int DEFALUT_WIDTH = 1;
     private boolean twoClickMode;//if we are drawing line using two clicks
     private boolean dragMode; //if we are dragging the line instead of two clicks
-    private boolean useOverlay; //true if we are previewing, false if drawing for real
     private int width;
     private int negativeWidth; //for optimization
     private JSlider widthSlider;
@@ -65,13 +64,12 @@ public class ToolLine extends Tool {
 
     //draw command used by draw function
     public void draw(int x, int y, int color) {
-        makeCircle(x,y,color,width, negativeWidth, false, useOverlay);
+        makeCircle(x,y,color,width, negativeWidth, false, true);
     }
 
     private void resetStates() {
         dragMode = false;
         twoClickMode = false;
-        useOverlay = true; //more often than not we are using overlay
     }
 
     private void resetPoints() {
@@ -91,7 +89,6 @@ public class ToolLine extends Tool {
     //when mouse is moved
     private void refreshLinePreview(int x1, int y1, int color) {
         model.clearOverlay();
-        if(!useOverlay) useOverlay = true;
         bresenham(x0,y0,x1,y1,color);
     }
 
@@ -100,9 +97,8 @@ public class ToolLine extends Tool {
         //we know we are drawing the line now, and so we are going to save the old state
         model.saveCurrentState();
         model.clearOverlay();
-        useOverlay = false;
         drawLine(endX,endY,color);
-        useOverlay = true;
+        model.mergeOverlay();
         model.refreshView();
     }
 

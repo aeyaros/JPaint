@@ -7,6 +7,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
+import java.awt.print.PageFormat;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.text.DecimalFormat;
 import java.util.Hashtable;
@@ -65,7 +69,7 @@ class WindowApplication {
 
         try { //I have to do this after setting the app title or it will revert to the class name
             UIManager.setLookAndFeel( UIManager.getSystemLookAndFeelClassName());
-            /* //UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName()); // */
+            //UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName()); // */
         } catch (Exception e) { e.printStackTrace(); }
         /* // JFrame.setDefaultLookAndFeelDecorated(true); // */
 
@@ -160,13 +164,13 @@ class WindowApplication {
         JPanel opacityPanel = new JPanel();
         BoxLayout opacityLayout = new BoxLayout(opacityPanel, BoxLayout.Y_AXIS);
         opacityPanel.setLayout(opacityLayout);
-        opacityPanel.setBorder(sidePanelBorder);
+        opacityPanel.setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE*3,THIN_EMPTY_BORDER_SIZE, 0,THIN_EMPTY_BORDER_SIZE));
         gridBagConstraints.gridy = 2;
         sidePanel.add(opacityPanel, gridBagConstraints);
 
         //selected colors panel
         JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
-        selectedColorsPanel.setBorder(sidePanelBorder);
+        selectedColorsPanel.setBorder(new EmptyBorder(0,THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE,THIN_EMPTY_BORDER_SIZE));
         gridBagConstraints.gridy = 3;
         sidePanel.add(selectedColorsPanel, gridBagConstraints);
 
