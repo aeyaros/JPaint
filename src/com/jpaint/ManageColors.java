@@ -53,16 +53,16 @@ ManageColors(
 	int halfMiddleWidth = 8; //half of the width of the middle button color selector
 	selectedColors[0] = new ColorButton(
 		  colors[0 % colors.length],
-		  WindowApplication.TOOL_BUTTON_SIZE - halfMiddleWidth,
-		  WindowApplication.COLOR_BUTTON_SIZE
+		  ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorButton.COLOR_PRESET_BUTTON_SIZE
 	);
 	selectedColors[1] = new ColorButton(colors[1 % colors.length],
-	                                    halfMiddleWidth + halfMiddleWidth, WindowApplication.COLOR_BUTTON_SIZE
+	                                    halfMiddleWidth + halfMiddleWidth, ColorButton.COLOR_PRESET_BUTTON_SIZE
 	);
 	selectedColors[2] = new ColorButton(
 		  colors[2 % colors.length],
-		  WindowApplication.TOOL_BUTTON_SIZE - halfMiddleWidth,
-		  WindowApplication.COLOR_BUTTON_SIZE
+		  ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorButton.COLOR_PRESET_BUTTON_SIZE
 	);
 	selectedColorsPanel.add(selectedColors[0], 0);
 	selectedColorsPanel.add(selectedColors[1], 1);
@@ -90,8 +90,8 @@ ManageColors(
 	innerContainer.add(opacitySlider, BorderLayout.SOUTH);
 	innerContainer.setBorder(null);
 	opacitySlider.setPreferredSize(new Dimension(
-		  (int) Math.floor(WindowApplication.COLOR_BUTTON_SIZE * 3.5),
-		  WindowApplication.TOOL_BUTTON_SIZE
+		  (int) Math.floor(ColorButton.COLOR_PRESET_BUTTON_SIZE * 3.5),
+		  ToolButton.TOOL_BUTTON_SIZE
 	));
 	
 	//add action listener to slider to update opacity of current color
@@ -115,7 +115,7 @@ ManageColors(
 	for (int i = 0; i < presetColors.length; i++) {
 		//create the button
 		presetColors[i] = new ColorButton(colors[i],
-		                                  WindowApplication.COLOR_BUTTON_SIZE, WindowApplication.COLOR_BUTTON_SIZE
+		                                  ColorButton.COLOR_PRESET_BUTTON_SIZE, ColorButton.COLOR_PRESET_BUTTON_SIZE
 		);
 		
 		//add event listener to the button

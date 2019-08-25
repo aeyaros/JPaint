@@ -17,11 +17,10 @@ import java.util.Hashtable;
 
 class WindowApplication {
 //parameters for certain UI sizes
-final static int TOOL_BUTTON_SIZE = 48;
-final static int COLOR_BUTTON_SIZE = 32;
+
+
 private final String APPLICATION_NAME = "JPaint";
 private final String NEW_DOCUMENT = "New Document";
-private final int TOOL_BUTTON_GAP = 4;
 private final int NUMBER_TOOL_COLUMNS = 2;
 private final int NUMBER_COLOR_COLUMNS = 3;
 private final int MINIMUM_WINDOW_WIDTH = 700;
@@ -179,7 +178,8 @@ void WindowSetup(int width, int height) {
 		  );
 	
 	//tools panel
-	JPanel toolsPanel = new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS, TOOL_BUTTON_GAP, TOOL_BUTTON_GAP));
+	JPanel toolsPanel =
+		  new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS, ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP));
 	toolsPanel.setBorder(sidePanelBorder);
 	gridBagConstraints.gridy = 0; //y - will be changed as I add components
 	sidePanel.add(toolsPanel, gridBagConstraints);

@@ -40,15 +40,20 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	upperCard.add(radiusPanel);
 	
 	//brush shapes
-	JPanel shapeButtons = new JPanel(new GridLayout(1, 0));
+	JPanel shapeButtons = new JPanel();
+	shapeButtons.setLayout(new BoxLayout(shapeButtons, BoxLayout.X_AXIS));
 	ButtonGroup shapeButtonGroup = new ButtonGroup();
-	JToggleButton circleButton = new JToggleButton("Circle", false);
-	JToggleButton triangleButton = new JToggleButton("Triangle", true);
-	JToggleButton squareButton = new JToggleButton("Square", true);
+	ToolButton circleButton = new ToolButton("icons/brush_tool_icons/brushcircle.png");
+	ToolButton triangleButton = new ToolButton("icons/brush_tool_icons/brushtriangle.png");
+	ToolButton squareButton = new ToolButton("icons/brush_tool_icons/brushsquare.png");
 	
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(circleButton);
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(triangleButton);
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(squareButton);
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	
 	shapeButtonGroup.add(circleButton);
 	shapeButtonGroup.add(triangleButton);

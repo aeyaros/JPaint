@@ -34,13 +34,16 @@ Tool(ImageModel model, String iconSource) {
 	upperCard = new JPanel();
 	
 	//button for toolbar
-	button = new JToggleButton();
-	button.setOpaque(true);
-	//button.setContentAreaFilled(false);
-	button.setBorderPainted(true);
-	button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
-	button.setSize(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE);
+	button = new ToolButton(iconSource);
 	
+	
+	//button = new JToggleButton();
+	//button.setOpaque(true);
+	//button.setBorderPainted(true);
+	//button.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+	//button.setSize(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE);
+	
+	/*
 	try { //get icon of button
 		Image image = ImageIO.read(getClass().getResource(iconSource));
 		image = image.getScaledInstance(WindowApplication.TOOL_BUTTON_SIZE, WindowApplication.TOOL_BUTTON_SIZE,
@@ -67,7 +70,8 @@ Tool(ImageModel model, String iconSource) {
 		System.err
 			  .println("Couldn't load icon for " + this.getClass().getName() + " button from location " + iconSource);
 	}
-	
+	*/
+	/*
 	button.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			//set border
@@ -84,6 +88,7 @@ Tool(ImageModel model, String iconSource) {
 			
 		}
 	});
+	*/
 }
 
 void updateColors(Color left, Color middle, Color right) {

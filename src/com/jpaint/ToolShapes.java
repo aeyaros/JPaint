@@ -5,12 +5,13 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.util.Hashtable;
 
 public class ToolShapes extends ToolLine {
 //values
 private final int SIDES_IN_A_CIRCLE = 64;
 private final int MINIMUM_POSSIBLE_NUMBER_OF_SIDES = 3;
-private final int MAX_ALLOWED_NUMBER_OF_SIDES = 8;
+private final int MAX_ALLOWED_NUMBER_OF_SIDES = 9; //really 8; at max number setting we will do a circle
 //colors
 private int strokeColor;
 private int fillColor;
@@ -29,9 +30,10 @@ ToolShapes(ImageModel model, String iconSource) {
 	
 	
 	//setting border mode/width
-	JPanel borderOptions = new JPanel(new GridLayout(1, 0));
+	JPanel borderOptions = new JPanel();
+	borderOptions.setLayout(new BoxLayout(borderOptions, BoxLayout.X_AXIS));
 	ButtonGroup borderOptionButtons = new ButtonGroup();
-	JToggleButton borderOnly = new JToggleButton("Border", true);
+	ToolButton borderOnly = new ToolButton("icons/shape_tool_icons/onlystroke.png"); //stroke only
 	borderOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(false);
@@ -44,7 +46,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	setFillEnabled(false);
 	setStrokeEnabled(true);
 	
-	JToggleButton borderWithFill = new JToggleButton("Border+Fill", false);
+	ToolButton borderWithFill = new ToolButton("icons/shape_tool_icons/strokeandfill.png"); //border + fill
 	borderWithFill.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -52,7 +54,7 @@ ToolShapes(ImageModel model, String iconSource) {
 			System.out.println("Border and fill");
 		}
 	});
-	JToggleButton fillOnly = new JToggleButton("Fill", false);
+	ToolButton fillOnly = new ToolButton("icons/shape_tool_icons/onlyfill.png"); //fill only
 	fillOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -61,10 +63,13 @@ ToolShapes(ImageModel model, String iconSource) {
 		}
 	});
 	
-	
+	borderOptions.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	borderOptions.add(borderOnly);
+	borderOptions.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	borderOptions.add(borderWithFill);
+	borderOptions.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	borderOptions.add(fillOnly);
+	borderOptions.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	
 	borderOptionButtons.add(borderOnly);
 	borderOptionButtons.add(borderWithFill);
@@ -89,6 +94,15 @@ ToolShapes(ImageModel model, String iconSource) {
 	sidesChangerSlider.setPaintTicks(true);
 	sidesChangerSlider.setPaintLabels(true);
 	sidesChangerSlider.setSnapToTicks(true);
+	
+	//labe max value with text "circle"
+	Hashtable<Integer, JLabel> sideLengthLabels = new Hashtable<>();
+	//add labels for numerical values
+	for (int i = MINIMUM_POSSIBLE_NUMBER_OF_SIDES; i < MAX_ALLOWED_NUMBER_OF_SIDES; i++)
+		sideLengthLabels.put(i, new JLabel(Integer.toString(i)));
+	sideLengthLabels.put(MAX_ALLOWED_NUMBER_OF_SIDES, new JLabel("    Circle"));
+	sidesChangerSlider.setLabelTable(sideLengthLabels);
+	//add listener
 	sidesChangerSlider.addChangeListener(e -> setNumberOfSides(sidesChangerSlider.getValue()));
 	JPanel sidesChangeerPanel = new JPanel();
 	sidesChangeerPanel.add(sidesChangerSlider);
@@ -138,25 +152,24 @@ private void setNumberOfSides(int n) {
 }
 
 private void drawShape(int originX, int originY, int currentX, int currentY, int type) {
-	//calculate radius based on current point
-	int w = currentX - originX;
-	int h = currentY - originY;
-	int radius = (int) Math.sqrt((w * w) + (h * h));
-	double offset = Math.atan2(h, w); //calculate angle offset, so first point matches current location of pointer
+	//calculate values based on current and past mouse positions
+	int w = currentX - originX; //relative x coordinate to originX
+	int h = currentY - originY; //relative y coordinate to originY
+	int radius = (int) Math.sqrt((w * w) + (h * h)); //distance between points
+	//calculate angle offset from horizontal line so first point of polygon matches current location of pointer
+	double offset = Math.atan2(h, w);
 	
-	if (type == 0) { //draw circle
-		//makeCircle(originX, originY, borderColor, radius,true);
+	if (type == MAX_ALLOWED_NUMBER_OF_SIDES) { //draw circle if slide is at this position
+		//draw a circle - use approximation with large number of sidess
 		makeRegularPolygon(originX, originY, SIDES_IN_A_CIRCLE, radius, offset, strokeColor, true);
-	} else if (type > 2) { //draw polygon
-		//then draw polygon
+	} else if (type >= MINIMUM_POSSIBLE_NUMBER_OF_SIDES && type < MAX_ALLOWED_NUMBER_OF_SIDES) {
+		//draw a polygon
 		makeRegularPolygon(originX, originY, type, radius, offset, strokeColor, true);
-	} else return; //else dont draw
+	} else return; //else dont draw because input value is too high or too low
 	
 	//fill in the shape; dont fill if radius is too small
-	System.out.println("lol");
 	if (shouldFill && radius > 1) {
 		fill(originX, originY, getFillColor(), true);
-		System.out.println("hiiii");
 	}
 }
 

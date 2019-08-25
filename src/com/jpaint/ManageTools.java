@@ -19,17 +19,17 @@ ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	//create tools
 	//add them to arraylist one by one, then copy to regular array to avoid magic numbers
 	ArrayList<Tool> newTools = new ArrayList<>();
-	newTools.add(new ToolSelect(theModel, "icons/select.png"));
+	newTools.add(new ToolSelect(theModel, "icons/sidebar_tool_icons/select.png"));
 	
-	toolColorPicker = new ToolColorPicker(theModel, "icons/colorpicker.png");
+	toolColorPicker = new ToolColorPicker(theModel, "icons/sidebar_tool_icons/colorpicker.png");
 	newTools.add(toolColorPicker); //later, add the color manager once it is declared
 	
-	newTools.add(new ToolPencil(theModel, "icons/pencil.png"));
-	newTools.add(new ToolPaintBrush(theModel, "icons/paintbrush.png"));
-	newTools.add(new ToolEraser(theModel, "icons/eraser.png"));
-	newTools.add(new ToolPaintBucket(theModel, "icons/paintbucket.png"));
-	newTools.add(new ToolLine(theModel, "icons/line.png"));
-	newTools.add(new ToolShapes(theModel, "icons/shapes.png"));
+	newTools.add(new ToolPencil(theModel, "icons/sidebar_tool_icons/pencil.png"));
+	newTools.add(new ToolPaintBrush(theModel, "icons/sidebar_tool_icons/paintbrush.png"));
+	newTools.add(new ToolEraser(theModel, "icons/sidebar_tool_icons/eraser.png"));
+	newTools.add(new ToolPaintBucket(theModel, "icons/sidebar_tool_icons/paintbucket.png"));
+	newTools.add(new ToolLine(theModel, "icons/sidebar_tool_icons/line.png"));
+	newTools.add(new ToolShapes(theModel, "icons/sidebar_tool_icons/shapes.png"));
 	//update colors of tools
 	
 	tools = new Tool[newTools.size()]; //use regular array for better performance
