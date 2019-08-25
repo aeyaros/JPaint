@@ -46,6 +46,6 @@ private int getEraserColor() {
 }
 
 @Override public void draw(int x, int y, int color) {
-	model.erasePixel(x,y,eraseToTransparent);
+	model.erasePixel(x, y, eraseToTransparent);
 }
 }

@@ -339,7 +339,8 @@ void WindowSetup(int width, int height) {
 			image = image.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
 		} catch (NullPointerException ignored) { }
 		JOptionPane.showMessageDialog(mainFrame, APPLICATION_NAME +
-		                                         " is a fun painting program inspired by Apple's MacPaint (from 1984)" +
+		                                         " is a fun painting program inspired by Apple's MacPaint (from " +
+		                                         "1984)" +
 		                                         " " +
 		                                         "\n" +
 		                                         "and old versions of Microsoft Paint. Created by Andrew Yaros in " +

@@ -257,7 +257,7 @@ int getPixel(int x, int y) {
 }
 
 int getOverlayPixel(int x, int y) {
-	if (isInBounds(x, y)) return currentState.getOverlayPixel(x,y);
+	if (isInBounds(x, y)) return currentState.getOverlayPixel(x, y);
 	else throw new IndexOutOfBoundsException();
 }
 

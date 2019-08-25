@@ -31,7 +31,7 @@ public void draw(int x, int y, int color) {
 public void toolClicked(MouseEvent e) {
 	System.out.println("clicked");
 	model.saveCurrentState();
-	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()),false);
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
 	model.refreshView();
 	
 }
@@ -40,7 +40,7 @@ public void toolClicked(MouseEvent e) {
 public void toolPressed(MouseEvent e) {
 	System.out.println("pressed");
 	model.saveCurrentState();
-	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()),false);
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
 	model.refreshView();
 }
 

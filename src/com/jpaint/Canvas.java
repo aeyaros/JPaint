@@ -148,11 +148,11 @@ BufferedImage getPixels() {
 }
 
 int getPixel(int x, int y) {
-	return pixels.getRGB(x,y);
+	return pixels.getRGB(x, y);
 }
 
 int getOverlayPixel(int x, int y) {
-	return overlay.getRGB(x,y);
+	return overlay.getRGB(x, y);
 }
 
 BufferedImage getOverlay() {

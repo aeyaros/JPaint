@@ -33,7 +33,7 @@ public void draw(int x, int y, int color) {
 }
 
 @Override public void drawBrush(int x, int y, int color) {
-	draw(x,y,color); //only draw one pixel at a time
+	draw(x, y, color); //only draw one pixel at a time
 }
 
 private void preventDrawing() {
@@ -75,8 +75,8 @@ public void toolDragged(MouseEvent e) {
 		//get color to draw with
 		int colorInt = getColorIntByButton(e.getButton());
 		
-		drawBrush(curX,curY,colorInt);
-		bresenham(oldX, oldY, curX, curY, colorInt,true); //draw line from past point to current point
+		drawBrush(curX, curY, colorInt);
+		bresenham(oldX, oldY, curX, curY, colorInt, true); //draw line from past point to current point
 		
 		model.refreshView(); //tell model to refresh view
 	}

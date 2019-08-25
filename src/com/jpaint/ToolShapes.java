@@ -7,12 +7,13 @@ public class ToolShapes extends ToolLine {
 ToolShapes(ImageModel model, String iconSource) {
 	super(model, iconSource);
 }
+
 private final int SIDES_IN_A_CIRCLE = 64;
 private int borderColor;
 private int fillColor;
 
 @Override public void draw(int x, int y, int color) {
-	model.setPixel(x,y,color,true);
+	model.setPixel(x, y, color, true);
 }
 
 @Override public void drawBrush(int x, int y, int color) {
@@ -23,16 +24,17 @@ private void drawShape(int originX, int originY, int currentX, int currentY, int
 	//calculate radius based on current point
 	int w = currentX - originX;
 	int h = currentY - originY;
-	int radius = (int)Math.sqrt((w * w) + (h * h));
+	int radius = (int) Math.sqrt((w * w) + (h * h));
 	double offset = Math.atan2(h, w); //calculate angle offset, so first point matches current location of pointer
-	//System.out.print("start " + originX + " " + originY + "  end " + currentX + " " + currentY + "   radius " + radius + "   type " + type + "    offset " + offset * Math.PI / 180d);
+	//System.out.print("start " + originX + " " + originY + "  end " + currentX + " " + currentY + "   radius " +
+	// radius + "   type " + type + "    offset " + offset * Math.PI / 180d);
 	
-	if(type == 0) { //draw circle
+	if (type == 0) { //draw circle
 		//makeCircle(originX, originY, borderColor, radius,true);
-		makeRegularPolygon(originX, originY,SIDES_IN_A_CIRCLE,radius,offset,borderColor,true);
-	} else if(type > 2) { //draw polygon
+		makeRegularPolygon(originX, originY, SIDES_IN_A_CIRCLE, radius, offset, borderColor, true);
+	} else if (type > 2) { //draw polygon
 		//then draw polygon
-		makeRegularPolygon(originX, originY,type,radius,offset,borderColor,true);
+		makeRegularPolygon(originX, originY, type, radius, offset, borderColor, true);
 		//int halfWidth = (int)Math.ceil((double)width/2d);
 		//for(int r = radius - halfWidth; r < radius + halfWidth; r++) {
 		//	makeRegularPolygon(originX, originY,type,r,offset,borderColor,false);
@@ -40,8 +42,8 @@ private void drawShape(int originX, int originY, int currentX, int currentY, int
 	} else return; //else dont draw
 	
 	//fill in the shape; dont fill if radius is too small
-	if(fill && radius > 1)
-		fill(originX,originY, fillColor,true);
+	if (fill && radius > 1)
+		fill(originX, originY, fillColor, true);
 	//System.out.print("\n");
 }
 

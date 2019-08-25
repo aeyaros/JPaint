@@ -129,7 +129,7 @@ void fill(int x, int y, int replacement, boolean useOverlay) {
 	
 	int target; //color to try and fill in
 	try { //color of spot clicked
-		if(useOverlay) target = model.getOverlayPixel(x,y);
+		if (useOverlay) target = model.getOverlayPixel(x, y);
 		else target = model.getPixel(x, y);
 	} catch (IndexOutOfBoundsException exc) {
 		System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
@@ -164,14 +164,26 @@ private class Node {
 	private int x;
 	private int y;
 	
-	Node(int X, int Y) { x = X; y = Y; } //new node
-	Node(Node n) { x = n.x(); y = n.y(); } //deep copy
+	Node(int X, int Y) {
+		x = X;
+		y = Y;
+	} //new node
+	
+	Node(Node n) {
+		x = n.x();
+		y = n.y();
+	} //deep copy
+	
 	int x() { return x; }
+	
 	int y() { return y; }
+	
 	int c(boolean useOverlay) { //get color of node
-		if(useOverlay) return model.getOverlayPixel(x, y);
+		if (useOverlay) return model.getOverlayPixel(x, y);
 		else return model.getPixel(x, y);
-	} void set(int c) { draw(x, y, c); } //set color of node
+	}
+	
+	void set(int c) { draw(x, y, c); } //set color of node
 	
 	Node get(int d) { //get a node by direction
 		switch (d) { //return node if it is in bounds, otherwise break and throw
@@ -189,19 +201,20 @@ private class Node {
 				else break;
 			default:
 				break;//if unrecognized char, throw exception anyway
-		} throw new IndexOutOfBoundsException(); //if here, out of bounds
+		}
+		throw new IndexOutOfBoundsException(); //if here, out of bounds
 	}
 }
 
 /* ====== GEOMETRIC DRAWING TOOLS ======
-* Draw a line, a circle, or a polygon. At each point on the line or curve,
-* we can use the draw function (draw a single pixel) or the drawbrush function
-* (to draw, at that point, a shape, such as a circle or triangle)
-*
-* So basically, if inside the drawBrush function, set useBrush to false
-* since in that function we are deciding what we want to draw
-* directly to the canvas at a given point
-*/
+ * Draw a line, a circle, or a polygon. At each point on the line or curve,
+ * we can use the draw function (draw a single pixel) or the drawbrush function
+ * (to draw, at that point, a shape, such as a circle or triangle)
+ *
+ * So basically, if inside the drawBrush function, set useBrush to false
+ * since in that function we are deciding what we want to draw
+ * directly to the canvas at a given point
+ */
 
 
 //source of algorithm:
@@ -236,11 +249,10 @@ void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush) {
 		}
 		
 		//then draw at that point
-		if(useBrush) drawBrush(x0,y0,color);
+		if (useBrush) drawBrush(x0, y0, color);
 		else draw(x0, y0, color);
 	}
 }
-
 
 
 //"brush" functions
@@ -248,7 +260,7 @@ void makeCircle(int origX, int origY, int color, int radius, boolean useBrush) {
 	for (int y = -radius; y <= radius; y++) {
 		for (int x = -radius; x <= radius; x++) {
 			if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-				if(useBrush) drawBrush(origX + x, origY + y, color);
+				if (useBrush) drawBrush(origX + x, origY + y, color);
 				else draw(origX + x, origY + y, color);
 		}
 	}
@@ -262,7 +274,8 @@ void makeRegularPolygon(int x, int y, int sides, int radius, double offset, int 
 		bresenham(points[i][0], points[i][1],
 		          points[(i + 1) % points.length][0],
 		          points[(i + 1) % points.length][1],
-		          color, useBrush);
+		          color, useBrush
+		         );
 	}
 	
 }
@@ -277,7 +290,8 @@ private int[][] getPolyPoints(int originX, int originY, int sides, int radius, d
 		currentAngle = (theta * i) + initialAngle;
 		points[i][0] = (int) (radius * Math.cos(currentAngle)) + originX;
 		points[i][1] = (int) (radius * Math.sin(currentAngle)) + originY;
-	} return points;
+	}
+	return points;
 }
 
 

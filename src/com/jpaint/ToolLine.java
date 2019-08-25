@@ -57,11 +57,11 @@ private void setWidth(int w) {
 
 //draw the line from the starting point to the current (ending) point
 private void drawLine(int endX, int endY, int color) {
-	bresenham(x0, y0, endX, endY, color,true);
+	bresenham(x0, y0, endX, endY, color, true);
 }
 
 @Override public void draw(int x, int y, int color) {
-	model.setPixel(x,y,color,true);
+	model.setPixel(x, y, color, true);
 }
 
 @Override public void drawBrush(int x, int y, int color) {
@@ -90,7 +90,7 @@ void startDrawing(int startX, int startY, int color, MouseEvent e) {
 //when mouse is moved
 void refreshPreview(int x1, int y1, int color) {
 	model.clearOverlay();
-	bresenham(x0, y0, x1, y1, color,true);
+	bresenham(x0, y0, x1, y1, color, true);
 }
 
 //on second click, or mouse release
@@ -133,7 +133,7 @@ public void toolClicked(MouseEvent e) {
 	if (!dragMode) {
 		if (!twoClickMode) { //first click
 			twoClickMode = true;
-			startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
+			startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()), e);
 		} else { //second click
 			//do stuff to finish line
 			finishDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()), e);
@@ -150,7 +150,7 @@ public void toolPressed(MouseEvent e) {
 	//start of drag if neither mode is enabled
 	if (!dragMode && !twoClickMode) {
 		dragMode = true; //set as drag mode
-		startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
+		startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()), e);
 	}
 }
 
@@ -160,7 +160,7 @@ public void toolReleased(MouseEvent e) {
 	//end of drag
 	if (dragMode && !twoClickMode) {
 		//finish the drag stuff
-		finishDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
+		finishDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()), e);
 		//then set drag as false
 		dragMode = false;
 	}
