@@ -230,9 +230,9 @@ void flip(int option) { //0 = horizontal, else vertical
 }
 
 //used directly by a menu
-void rotate(int option) { //0 = left, 1 = right, else 180
+void rotate(Canvas.Transform option) {
 	saveCurrentState();
-	currentState.rotateOrtho(option % 3);
+	currentState.rotateOrtho(option);
 	refreshView();
 }
 

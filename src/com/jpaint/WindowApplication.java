@@ -31,6 +31,7 @@ private JLabel sizeLabel;
 private ImageModel theModel;
 private ImageView theView;
 private ManageFiles manageFiles;
+
 WindowApplication() {
 }
 
@@ -80,8 +81,6 @@ void WindowSetup(int width, int height) {
 	
 	//image panel is inside a scroll pane
 	JScrollPane imageScrollPanel = new JScrollPane(imagePanel);
-	//imageScrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-	//imageScrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_ALWAYS);
 	imageScrollPanel.setBorder(null);
 	centerPanel.add(imageScrollPanel, BorderLayout.CENTER);
 	
@@ -147,7 +146,7 @@ void WindowSetup(int width, int height) {
 	//color presets panel
 	JPanel presetPanel = new JPanel(new GridLayout(0, NUMBER_COLOR_COLUMNS, 0, 0));
 	presetPanel.setBorder(sidePanelBorder);
-	gridBagConstraints.gridy = 1;
+	gridBagConstraints.gridy++;
 	sidePanel.add(presetPanel, gridBagConstraints);
 	
 	//opacity slider panel
@@ -156,14 +155,14 @@ void WindowSetup(int width, int height) {
 	opacityPanel.setLayout(opacityLayout);
 	opacityPanel
 		  .setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE * 3, THIN_EMPTY_BORDER_SIZE, 0, THIN_EMPTY_BORDER_SIZE));
-	gridBagConstraints.gridy = 2;
+	gridBagConstraints.gridy++;
 	sidePanel.add(opacityPanel, gridBagConstraints);
 	
 	//selected colors panel
 	JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
 	selectedColorsPanel
 		  .setBorder(new EmptyBorder(0, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE));
-	gridBagConstraints.gridy = 3;
+	gridBagConstraints.gridy++;
 	sidePanel.add(selectedColorsPanel, gridBagConstraints);
 	
 	//add empty padding at bottom of sidebar
@@ -294,15 +293,15 @@ void WindowSetup(int width, int height) {
 	menuItems.put(
 		  "rotateleft",
 		  new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L,
-		               e -> rotate(Transform.ROTATE_LEFT)
+		               e -> rotate(Canvas.Transform.ROTATE_LEFT)
 		  )
 	             );
 	menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R,
-	                                          e -> rotate(Transform.ROTATE_RIGHT)
+	                                          e -> rotate(Canvas.Transform.ROTATE_RIGHT)
 	));
 	menuItems.put(
 		  "rotate180",
-		  new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(Transform.ROTATE_180))
+		  new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(Canvas.Transform.ROTATE_180))
 	             );
 	
 	
@@ -383,26 +382,12 @@ private void flip(boolean horizontally) {
 	else theModel.flip(1);
 }
 
-private void rotate(Transform option) {
-	switch (option) {
-		case ROTATE_LEFT:
-			theModel.rotate(0);
-			break;//left
-		case ROTATE_RIGHT:
-			theModel.rotate(1);
-			break;//right
-		case ROTATE_180:
-			theModel.rotate(2);
-			break;//180
-		default:
-			break;
-	}
+private void rotate(Canvas.Transform option) {
+	theModel.rotate(option);
 }
 
 private void dummy() {
 } //temporary for menu listeners
 
-//enums
-enum Transform {ROTATE_LEFT, ROTATE_RIGHT, ROTATE_180}
 
 }

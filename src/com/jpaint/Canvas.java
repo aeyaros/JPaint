@@ -4,7 +4,7 @@ import java.awt.image.BufferedImage;
 
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
-/*====== CONSTRUCTORS ======*/
+
 static final int WHITE_INT = (new Color(Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE)).getARGB();
 static final int TRANSPARENT_INT =
 	  (new Color(Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE)).getARGB();
@@ -14,6 +14,7 @@ private int width;
 private int height;
 private int defaultColor; //either white or transparent
 
+/*====== CONSTRUCTORS ======*/
 //create a new canvas
 Canvas(int w, int h, boolean transparent) {
 	if (transparent) defaultColor = TRANSPARENT_INT;
@@ -170,13 +171,7 @@ int getHeight() {
 
 //overlay an image ontop of the canvas, with blending
 //assuming they are the same size
-void merge() { //BufferedImage top) {
-	//   int w = top.getWidth(); int h = top.getHeight();
-	//   if(w != this.getWidth() || h != this.getHeight()) {
-	//       throw new IllegalArgumentException("Cannot overlay canvases of different sizes");
-	//   }
-	
-	//BufferedImage output = new BufferedImage(w,h,BufferedImage.TYPE_INT_ARGB);
+void merge() {
 	for (int i = 0; i < width; i++)
 		for (int j = 0; j < height; j++)
 			this.pixels.setRGB(i, j, Color.alphaBlend(
@@ -186,13 +181,13 @@ void merge() { //BufferedImage top) {
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
-void rotateOrtho(int option) {
+void rotateOrtho(Transform option) {
 	BufferedImage newPixels;
-	if (option == 0 || option == 1) {
+	if (option == Transform.ROTATE_LEFT || option == Transform.ROTATE_RIGHT) {
 		newPixels = newBlankImage(height, width, defaultColor);
 		for (int i = 0; i < width; i++) {
 			for (int j = 0; j < height; j++) {
-				if (option == 0) newPixels.setRGB(j, (width - 1) - i, pixels.getRGB(i, j));
+				if (option == Transform.ROTATE_LEFT) newPixels.setRGB(j, (width - 1) - i, pixels.getRGB(i, j));
 				else newPixels.setRGB((height - 1) - j, i, pixels.getRGB(i, j));
                 /* //normal
                 [0][1][2][3][4]
@@ -228,7 +223,7 @@ void rotateOrtho(int option) {
 		}
 	}
 	pixels = newPixels;
-	if (option == 0 || option == 1) {
+	if (option == Transform.ROTATE_LEFT || option == Transform.ROTATE_RIGHT) {
 		System.out.println("old: " + width + " " + height);
 		int temp = width; //old width is new height
 		//noinspection SuspiciousNameCombination
@@ -237,42 +232,7 @@ void rotateOrtho(int option) {
 		System.out.println("new: " + width + " " + height);
 	}
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
-        /*
-        BufferedImageOp rotateLeft = new AffineTransformOp(AffineTransform.getRotateInstance((Math.PI) / 2, (double)
-        width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
-        BufferedImageOp rotate180 = new AffineTransformOp(AffineTransform.getRotateInstance(Math.PI, (double)width/2,
-         (double)height/2),AffineTransformOp.TYPE_BICUBIC);
-        BufferedImageOp rotateRight = new AffineTransformOp(AffineTransform.getRotateInstance((3 * Math.PI) / 2,
-        (double)width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);
-        BufferedImageOp selectedOp;
-
-//       BufferedImage newPixels;
-        if(option == 0 || option == 1) {
-            if(option == 0)  selectedOp = rotateLeft;
-            else selectedOp = rotateRight;
-            //noinspection SuspiciousNameCombination,SuspiciousNameCombination
-            //newPixels = new BufferedImage(height, width, BufferedImage.TYPE_INT_ARGB);
-        } else {
-            //newPixels = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
-            selectedOp = rotate180;
-        }
-
-        System.out.println(pixels.getWidth() + " " + pixels.getHeight());
-        BufferedImage newPixels = selectedOp.createCompatibleDestImage(pixels, pixels.getColorModel());
-        System.out.println(newPixels.getWidth() + " " + newPixels.getHeight());
-
-        newPixels = selectedOp.filter(pixels, newPixels);
-        pixels = newPixels;
-
-        if(option == 0 || option == 1) {
-            System.out.println("old: " + width +" " + height);
-            int newHeight = width; //old width is new height
-            width = height; //set width to old height
-            height = newHeight; //set height to new height
-            System.out.println("new: " + width +" " + height);
-        }
-       // pixels = newPixels;
-        */
+	
 }
 
 void flip(int option) {
@@ -285,5 +245,7 @@ void flip(int option) {
 	}
 	pixels = newPixels;
 }
+
+static enum Transform {ROTATE_LEFT, ROTATE_RIGHT, ROTATE_180}
 }
 
