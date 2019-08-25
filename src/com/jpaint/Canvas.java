@@ -246,6 +246,6 @@ void flip(int option) {
 	pixels = newPixels;
 }
 
-static enum Transform {ROTATE_LEFT, ROTATE_RIGHT, ROTATE_180}
+enum Transform {ROTATE_LEFT, ROTATE_RIGHT, ROTATE_180}
 }
 

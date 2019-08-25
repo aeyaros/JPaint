@@ -139,8 +139,9 @@ private int getFillColor() {
 
 //minimum of 3 sides
 private void setNumberOfSides(int n) {
-	if (n < MINIMUM_POSSIBLE_NUMBER_OF_SIDES) numberOfSides = MINIMUM_POSSIBLE_NUMBER_OF_SIDES;
-	else numberOfSides = n;
+	numberOfSides = n;
+	if (numberOfSides < MINIMUM_POSSIBLE_NUMBER_OF_SIDES)
+		numberOfSides = MINIMUM_POSSIBLE_NUMBER_OF_SIDES;
 }
 
 @Override public void draw(int x, int y, int color) {

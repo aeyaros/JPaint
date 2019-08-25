@@ -1,12 +1,7 @@
 package com.jpaint;
 
-import javax.imageio.ImageIO;
 import javax.swing.*;
-import javax.swing.border.EtchedBorder;
-import java.awt.*;
-import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
-import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
@@ -111,8 +106,7 @@ int getColorIntByButton(int mouseEventButtonCode) {
 int getAlternateColor(int currentMouseEventCode) {
 	switch (currentMouseEventCode) {
 		case MouseEvent.BUTTON2: //if middle
-			return colorsInts[0]; //use left
-		case MouseEvent.BUTTON3: //if right
+		case MouseEvent.BUTTON3: //or if right
 			return colorsInts[0]; //use left
 		default: //if left
 			return colorsInts[2]; //use right
@@ -288,11 +282,10 @@ void makeRegularPolygon(int x, int y, int sides, int radius, double offset, int 
 //get points of a regular polygon; lines will be drawn from point to point
 private int[][] getPolyPoints(int originX, int originY, int sides, int radius, double angleOffset) {
 	int[][] points = new int[sides][2];//holds return values
-	double initialAngle = angleOffset;
 	double theta = (2d * Math.PI) / (double) sides;
 	double currentAngle;
 	for (int i = 0; i < sides; i++) {
-		currentAngle = (theta * i) + initialAngle;
+		currentAngle = (theta * i) + angleOffset;
 		points[i][0] = (int) (radius * Math.cos(currentAngle)) + originX;
 		points[i][1] = (int) (radius * Math.sin(currentAngle)) + originY;
 	}

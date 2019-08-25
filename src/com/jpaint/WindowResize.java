@@ -73,12 +73,12 @@ WindowResize(JFrame mainFrame, ImageModel imageModel) {
 	this.setVisible(true);
 }
 
-void setFieldsToDefault() {
+private void setFieldsToDefault() {
 	widthField.setText(Integer.toString(theModel.getWidth()));
 	heightField.setText(Integer.toString(theModel.getHeight()));
 }
 
-void close() {
+private void close() {
 	try {
 		this.dispatchEvent(new WindowEvent(this, WindowEvent.WINDOW_CLOSING));
 	} catch (Exception e) {
@@ -86,7 +86,7 @@ void close() {
 	}
 }
 
-void apply() {
+private void apply() {
 	//check inputs
 	try {
 		int newW = Integer.parseInt(widthField.getText());

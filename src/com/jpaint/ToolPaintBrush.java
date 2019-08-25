@@ -20,7 +20,6 @@ boolean useOverlayForBrushFill;
 
 private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
 
-;
 private SelectedBrush selectedBrush;
 
 ToolPaintBrush(ImageModel model, String iconSource) {

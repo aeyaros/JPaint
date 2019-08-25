@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 
-public class ToolButton extends JToggleButton {
+class ToolButton extends JToggleButton {
 final static int TOOL_BUTTON_SIZE = 48;
 static final int TOOL_BUTTON_GAP = 4;
 
