@@ -28,7 +28,6 @@ ToolShapes(ImageModel model, String iconSource) {
 	upperCard.removeAll();
 	upperCard.setLayout(new GridLayout(1, 0));
 	
-	
 	//setting border mode/width
 	JPanel borderOptions = new JPanel();
 	borderOptions.setLayout(new BoxLayout(borderOptions, BoxLayout.X_AXIS));

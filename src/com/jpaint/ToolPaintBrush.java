@@ -27,14 +27,19 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	
 	//brush radius slider
 	radiusSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_RADIUS, MAX_RADIUS, DEFAULT_RADIUS);
-	radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
 	radiusSlider.addChangeListener(e -> setRadius(radiusSlider.getValue()));
-	radiusSlider.setMinimumSize(new Dimension(64, 24));
+	radiusSlider.setMinimumSize(new Dimension(96, 24));
 	radiusSlider.setPreferredSize(radiusSlider.getMinimumSize());
 	radiusSlider.setSize(radiusSlider.getMinimumSize());
 	radiusSlider.setMinorTickSpacing(1);
 	radiusSlider.setSnapToTicks(true);
 	radiusSlider.setPaintTicks(true);
+	
+	radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
+	radiusLabel.setPreferredSize(new Dimension(48, 24));
+	radiusLabel.setMinimumSize(radiusLabel.getPreferredSize());
+	radiusLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
+	
 	
 	JPanel radiusPanel = new JPanel();
 	radiusPanel.setLayout(new BoxLayout(radiusPanel, BoxLayout.X_AXIS));
@@ -105,11 +110,11 @@ private void setRadius(int r) {
 			makeCircle(x, y, color, radius, false);
 			break;
 		case TRIANGLE:
-			makeRegularPolygon(x, y, 3, radius, Math.PI / 2d, color, false);
+			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false);
 			fill(x, y, color, useOverlayForBrushFill);
 			break;
 		case SQUARE:
-			makeRegularPolygon(x, y, 4, radius, Math.PI / 2d, color, false);
+			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false);
 			fill(x, y, color, useOverlayForBrushFill);
 			break;
 		default:
@@ -119,5 +124,4 @@ private void setRadius(int r) {
 }
 
 private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
-
 }

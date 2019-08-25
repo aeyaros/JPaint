@@ -7,6 +7,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
 class ManageTools {
+private static int INITIAL_TOOL = 3;
 private Tool[] tools;
 private ControllerMouseStatic controllerMouseStatic;
 private ControllerMouseMotion controllerMouseMotion;
@@ -30,7 +31,6 @@ ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	newTools.add(new ToolPaintBucket(theModel, "icons/sidebar_tool_icons/paintbucket.png"));
 	newTools.add(new ToolLine(theModel, "icons/sidebar_tool_icons/line.png"));
 	newTools.add(new ToolShapes(theModel, "icons/sidebar_tool_icons/shapes.png"));
-	//update colors of tools
 	
 	tools = new Tool[newTools.size()]; //use regular array for better performance
 	for (int i = 0; i < tools.length; i++) tools[i] = newTools.get(i);
@@ -73,9 +73,9 @@ ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	}
 	
 	/*====== START WITH AN INITIAL TOOL SELECTED ======*/
-	setCurrentTool(3); //start with pencil
+	setCurrentTool(INITIAL_TOOL); //start with pencil
 	//still need to make it initially selected
-	tools[3].button.setSelected(true);
+	tools[INITIAL_TOOL].button.setSelected(true);
 }
 
 Tool[] getTools() {

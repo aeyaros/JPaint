@@ -29,7 +29,7 @@ public void draw(int x, int y, int color) {
 
 @Override
 public void toolClicked(MouseEvent e) {
-	System.out.println("clicked");
+	//System.out.println("clicked");
 	model.saveCurrentState();
 	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
 	model.refreshView();
@@ -38,41 +38,18 @@ public void toolClicked(MouseEvent e) {
 
 @Override
 public void toolPressed(MouseEvent e) {
-	System.out.println("pressed");
+	//System.out.println("pressed");
 	model.saveCurrentState();
 	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
 	model.refreshView();
 }
 
-@Override
-public void toolReleased(MouseEvent e) {
-}
-
-@Override
-public void toolDragged(MouseEvent e) {
-}
-
-@Override
-public void toolMoved(MouseEvent e) {
-}
-
-@Override
-public void toolEntered(MouseEvent e) {
-}
-
-@Override
-public void toolExited(MouseEvent e) {
-}
-
-@Override
-public void toolKeyPressed(KeyEvent e) {
-}
-
-@Override
-public void toolKeyReleased(KeyEvent e) {
-}
-
-@Override
-public void toolKeyTyped(KeyEvent e) {
-}
+@Override public void toolReleased(MouseEvent e) { }
+@Override public void toolDragged(MouseEvent e) { }
+@Override public void toolMoved(MouseEvent e) { }
+@Override public void toolEntered(MouseEvent e) { }
+@Override public void toolExited(MouseEvent e) { }
+@Override public void toolKeyPressed(KeyEvent e) { }
+@Override public void toolKeyReleased(KeyEvent e) { }
+@Override public void toolKeyTyped(KeyEvent e) { }
 }

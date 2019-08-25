@@ -13,6 +13,7 @@ class WindowColorPicker {
 private final int COLOR_LABEL_WIDTH = 128;
 private final int COLOR_LABEL_HEIGHT = 64;
 private final int SLIDER_BORDER = 12;
+private final Dimension colorSize = new Dimension(256, 480);
 //window elements
 private JFrame frame;
 private JLabel[] labels;
@@ -33,8 +34,8 @@ void close() {
 		colorButton.resetBorder();
 		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 	} catch (Exception e) {
-		System.out.println(
-			  "Color picker window close event sent even though window already closed. Ignore this message.");
+		//System.out.println(
+		//	  "Color picker window close event sent even though window already closed. Ignore this message.");
 	}
 }
 
@@ -58,7 +59,6 @@ void setColorPickerWindow(ColorButton colorButton, JFrame mainFrame, ManageColor
 	frame = new JFrame("Color Picker");
 	
 	//set dimensions
-	Dimension colorSize = new Dimension(256, 480);
 	frame.setResizable(false);
 	frame.setMinimumSize(colorSize);
 	frame.setMaximumSize(colorSize);

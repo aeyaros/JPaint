@@ -27,6 +27,7 @@ ImageModel(int w, int h, ImageView imageView) {
 
 //functionality shared by both constructors
 private void initializeModel(int w, int h) {
+	System.out.println("Initializing model");
 	pastStates = new ArrayDeque<>();
 	undoneStates = new ArrayDeque<>();
 	startOverFromScratch(w, h, false);
@@ -58,23 +59,13 @@ private void startOver(Canvas temp) {
 //if creating a new image
 void startOverFromScratch(int w, int h, boolean transparent) {
 	startOver(new Canvas(w, h, transparent));
-	
-	System.out.println("...from scratch");
 }
 
 //if opening an image
 void startOverFromImage(BufferedImage image) {
 	Canvas temp;
-	
-	try {
-		temp = new Canvas(image);
-	} catch (Exception e) {
-		throw new IllegalArgumentException();
-	}
-	
+	try { temp = new Canvas(image); } catch (Exception e) { throw new IllegalArgumentException(); }
 	startOver(temp);
-	
-	System.out.println("...from another file");
 }
 
 void setSaved() {
@@ -128,7 +119,7 @@ void saveCurrentState() {
 	//we just did a new action; we cant keep the old undone actions as we are starting a new branch
 	undoneStates.clear();
 	System.out.println("Saved current state");
-	printStates();
+	//printStates();
 }
 
 //update the current state (note: this is used for undo/redo)
@@ -168,7 +159,7 @@ void undo() {
 		updateCurrentState(pastStates.removeFirst()); //pop past state to current state
 		this.refreshView();
 		System.out.println("Undone");
-		printStates();
+		//printStates();
 	} //else cant undo (nothing can be popped from the previous state
 	else System.out.println("Can't undo");
 }
@@ -180,7 +171,7 @@ void redo() {
 		updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
 		this.refreshView();
 		System.out.println("Redone");
-		printStates();
+		//printStates();
 	} //else cant redo (nothing was previously undone
 	else System.out.println("Can't redo");
 }

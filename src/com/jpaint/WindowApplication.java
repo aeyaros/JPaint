@@ -41,10 +41,11 @@ WindowApplication() {
 }
 
 void WindowSetup(int width, int height) {
+	System.out.println("Loading application window...");
+	
 	//initial setup
 	mainFrame = new JFrame(APPLICATION_NAME);
 	mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	
 	
 	if (Main.IS_MAC) { //mac specific stuff
 		System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
@@ -316,16 +317,17 @@ void WindowSetup(int width, int height) {
 			ex.printStackTrace();
 		}
 		try {
-			image = image.getScaledInstance(64, 64, Image.SCALE_SMOOTH);
+			if (image != null) {
+				image = image.getScaledInstance(116, 116, java.awt.Image.SCALE_SMOOTH);
+			}
 		} catch (NullPointerException ignored) { }
 		JOptionPane.showMessageDialog(mainFrame, APPLICATION_NAME +
-		                                         " is a fun painting program inspired by Apple's MacPaint (from " +
-		                                         "1984)" +
-		                                         " " +
-		                                         "\n" +
-		                                         "and old versions of Microsoft Paint. Created by Andrew Yaros in " +
-		                                         "2019, \n" +
-		                                         "originally for the CS 338 (GUIs) class at Drexel University.",
+		                                         " is a fun painting program \n" +
+		                                         "inspired by Apple's MacPaint (from \n" +
+		                                         "1984) and old versions of Microsoft \n" +
+		                                         "Paint. Created by Andrew Yaros in \n" +
+		                                         "2019, originally for the CS 338 \n" +
+		                                         "(GUIs) class at Drexel University.",
 		                              "About " + APPLICATION_NAME, JOptionPane.INFORMATION_MESSAGE,
 		                              new ImageIcon(image)
 		                             );
@@ -339,17 +341,11 @@ void WindowSetup(int width, int height) {
 		@Override public void windowClosing(WindowEvent e) {
 			manageFiles.exit();
 		}
-		
 		@Override public void windowOpened(WindowEvent e) { }
-		
 		@Override public void windowClosed(WindowEvent e) {}
-		
 		@Override public void windowIconified(WindowEvent e) { }
-		
 		@Override public void windowDeiconified(WindowEvent e) { }
-		
 		@Override public void windowActivated(WindowEvent e) { }
-		
 		@Override public void windowDeactivated(WindowEvent e) {}
 	});
 	
@@ -357,6 +353,8 @@ void WindowSetup(int width, int height) {
 	mainFrame.pack();
 	mainFrame.setLocationRelativeTo(null); //center image
 	mainFrame.setVisible(true);
+	
+	System.out.println("Loaded.");
 }
 
 //undo/redo

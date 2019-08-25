@@ -28,10 +28,15 @@ ToolLine(ImageModel model, String iconSource) {
 	widthSlider.setMinorTickSpacing(1);
 	widthSlider.setSnapToTicks(true);
 	widthSlider.setPaintTicks(true);
-	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
 	widthSlider.addChangeListener(e -> setWidth(widthSlider.getValue()));
-	widthSlider.setPreferredSize(new Dimension(48, 24));
+	widthSlider.setPreferredSize(new Dimension(96, 24));
 	widthSlider.setMinimumSize(widthSlider.getPreferredSize());
+	
+	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
+	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
+	widthLabel.setPreferredSize(new Dimension(48, 24));
+	widthLabel.setMinimumSize(widthLabel.getPreferredSize());
+	widthLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
 	
 	JPanel widthPanel = new JPanel();
 	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));

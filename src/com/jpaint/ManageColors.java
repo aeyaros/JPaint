@@ -213,7 +213,7 @@ private class ColorButtonListener implements MouseListener, MouseMotionListener 
 			//open the window to edit the color
 			setUpColorPicker(colorButton);
 			
-			System.out.println("doubleclick");
+			//System.out.println("doubleclick");
 		} else { //if single click
 			//set the current button color based on which button is clicked
 			setButtonColor(colorButton.getColor(), e.getButton());

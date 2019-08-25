@@ -90,10 +90,6 @@ public void toolReleased(MouseEvent e) {
 	//System.out.println("End drag");
 }
 
-@Override
-public void toolExited(MouseEvent e) {
-}
-
 //if you click once it will draw a point
 @Override
 public void toolClicked(MouseEvent e) {
@@ -102,20 +98,9 @@ public void toolClicked(MouseEvent e) {
 	model.refreshView();
 }
 
-@Override
-public void toolMoved(MouseEvent e) {
-
-}
-
-@Override
-public void toolKeyPressed(KeyEvent e) {
-}
-
-@Override
-public void toolKeyReleased(KeyEvent e) {
-}
-
-@Override
-public void toolKeyTyped(KeyEvent e) {
-}
+@Override public void toolExited(MouseEvent e) { }
+@Override public void toolMoved(MouseEvent e) { }
+@Override public void toolKeyPressed(KeyEvent e) { }
+@Override public void toolKeyReleased(KeyEvent e) { }
+@Override public void toolKeyTyped(KeyEvent e) { }
 }
