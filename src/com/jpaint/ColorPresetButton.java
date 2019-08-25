@@ -7,14 +7,14 @@ import java.awt.image.BufferedImage;
 //ColorPreset: is used as a label to show a color
 //used as a button by the sidebar presets
 //used by the color picker as a larger label
-class ColorButton extends JLabel {
+class ColorPresetButton extends JLabel {
 final static int COLOR_PRESET_BUTTON_SIZE = 30;
 private Color color;
 private Color previousColor;
 private int width;
 private int height;
 
-ColorButton(Color color, int width, int height) {
+ColorPresetButton(Color color, int width, int height) {
 	super();
 	this.width = width;
 	this.height = height;

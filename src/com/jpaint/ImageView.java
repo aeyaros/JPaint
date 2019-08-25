@@ -13,11 +13,13 @@ private JLabel currentImage; //the main drawing
 private JLabel imageOverlay; //the overlay on top of the drawing
 private int width;
 private int height;
+private boolean isInView; //used so that drag events which go off screen don't show out of bound coordinates
 
 ImageView(int w, int h, JLabel coordinatesLabel, JLabel sizeLabel) {
 	super();
 	width = w;
 	height = h;
+	isInView = false;
 	//set some properties
 	this.setOpaque(true);
 	this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
@@ -47,31 +49,23 @@ ImageView(int w, int h, JLabel coordinatesLabel, JLabel sizeLabel) {
 		
 		@Override
 		public void mouseDragged(MouseEvent e) {
-			refreshCoordinates(e.getX(), e.getY());
+			if (isInView) refreshCoordinates(e.getX(), e.getY());
 		}
 	});
 	this.addMouseListener(new MouseListener() {
+		@Override public void mouseEntered(MouseEvent e) {
+			isInView = true;
+		}
+		
 		//when pointer leaves canvas, display nothing
 		@Override
 		public void mouseExited(MouseEvent e) {
+			isInView = false;
 			clearCoordinates();
 		}
-		
-		@Override
-		public void mouseClicked(MouseEvent e) {
-		}
-		
-		@Override
-		public void mousePressed(MouseEvent e) {
-		}
-		
-		@Override
-		public void mouseReleased(MouseEvent e) {
-		}
-		
-		@Override
-		public void mouseEntered(MouseEvent e) {
-		}
+		@Override public void mouseClicked(MouseEvent e) { }
+		@Override public void mousePressed(MouseEvent e) { }
+		@Override public void mouseReleased(MouseEvent e) { }
 	});
 }
 

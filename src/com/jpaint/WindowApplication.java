@@ -146,7 +146,8 @@ void WindowSetup(int width, int height) {
 	
 	//tools panel
 	JPanel toolsPanel =
-		  new JPanel(new GridLayout(0, NUMBER_TOOL_COLUMNS, ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP));
+		  new JPanel(
+				new GridLayout(0, NUMBER_TOOL_COLUMNS, ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP));
 	toolsPanel.setBorder(sidePanelBorder);
 	gridBagConstraints.gridy = 0; //y - will be changed as I add components
 	sidePanel.add(toolsPanel, gridBagConstraints);

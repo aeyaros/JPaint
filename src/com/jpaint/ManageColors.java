@@ -25,10 +25,10 @@ private final Color[] colors = {
 };
 
 //the currently selected colors
-private ColorButton[] selectedColors;
+private ColorPresetButton[] selectedColors;
 
 //the preset colors shown in the panels
-private ColorButton[] presetColors;
+private ColorPresetButton[] presetColors;
 
 //tools that use the colors
 private Tool[] tools;
@@ -47,40 +47,41 @@ private WindowColorPicker windowColorPicker;
 ManageColors(
 	  Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel
             ) {
-	selectedColors = new ColorButton[3];
+	selectedColors = new ColorPresetButton[3];
 	
 	//set current colors and add to the panel showing currently selected colors
 	int halfMiddleWidth = 8; //half of the width of the middle button color selector
-	selectedColors[0] = new ColorButton(
+	selectedColors[0] = new ColorPresetButton(
 		  colors[0 % colors.length],
-		  ColorButton.COLOR_PRESET_BUTTON_SIZE, //ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
-		  ColorButton.COLOR_PRESET_BUTTON_SIZE
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE, //ToolbarButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE
 	);
-	selectedColors[1] = new ColorButton(colors[1 % colors.length],
-	                                    halfMiddleWidth + halfMiddleWidth, ColorButton.COLOR_PRESET_BUTTON_SIZE
+	selectedColors[1] = new ColorPresetButton(colors[1 % colors.length],
+	                                          halfMiddleWidth + halfMiddleWidth,
+	                                          ColorPresetButton.COLOR_PRESET_BUTTON_SIZE
 	);
-	selectedColors[2] = new ColorButton(
+	selectedColors[2] = new ColorPresetButton(
 		  colors[2 % colors.length],
-		  ColorButton.COLOR_PRESET_BUTTON_SIZE,//ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
-		  ColorButton.COLOR_PRESET_BUTTON_SIZE
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE,//ToolbarButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE
 	);
 	
 	
 	JPanel leftButton = new JPanel();
 	leftButton.setBorder(BorderFactory.createEmptyBorder(
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 6
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 6
 	                                                    ));
 	leftButton.setLayout(new BoxLayout(leftButton, BoxLayout.X_AXIS));
 	
 	JPanel rightButton = new JPanel();
 	rightButton.setBorder(BorderFactory.createEmptyBorder(
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 6,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
-		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 6,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  ColorPresetButton.COLOR_PRESET_BUTTON_SIZE / 3
 	                                                     ));
 	rightButton.setLayout(new BoxLayout(rightButton, BoxLayout.X_AXIS));
 	
@@ -118,8 +119,8 @@ ManageColors(
 	innerContainer.add(opacitySlider, BorderLayout.SOUTH);
 	innerContainer.setBorder(null);
 	opacitySlider.setPreferredSize(new Dimension(
-		  (int) Math.floor(ColorButton.COLOR_PRESET_BUTTON_SIZE * 3.5),
-		  ToolButton.TOOL_BUTTON_SIZE
+		  (int) Math.floor(ColorPresetButton.COLOR_PRESET_BUTTON_SIZE * 3.5),
+		  ToolbarButton.TOOL_BUTTON_SIZE
 	));
 	
 	//add action listener to slider to update opacity of current color
@@ -138,12 +139,13 @@ ManageColors(
 	this.tools = tools;
 	
 	//build the list of color presets from input
-	presetColors = new ColorButton[colors.length];
+	presetColors = new ColorPresetButton[colors.length];
 	
 	for (int i = 0; i < presetColors.length; i++) {
 		//create the button
-		presetColors[i] = new ColorButton(colors[i],
-		                                  ColorButton.COLOR_PRESET_BUTTON_SIZE, ColorButton.COLOR_PRESET_BUTTON_SIZE
+		presetColors[i] = new ColorPresetButton(colors[i],
+		                                        ColorPresetButton.COLOR_PRESET_BUTTON_SIZE,
+		                                        ColorPresetButton.COLOR_PRESET_BUTTON_SIZE
 		);
 		
 		//add event listener to the button
@@ -158,7 +160,7 @@ ManageColors(
 	}
 	
 	//add listeners to selected colors too
-	for (ColorButton selectedColor : selectedColors) {
+	for (ColorPresetButton selectedColor : selectedColors) {
 		selectedColor.addMouseListener(new SelectButtonListener(selectedColor));
 		selectedColor.addMouseMotionListener(new SelectButtonListener(selectedColor));
 	}
@@ -185,8 +187,8 @@ void notifyTools() {
 }
 
 //given a mouse event, return the color button indicated by the mouse event
-//either left, middle, or right button returns corresponding ColorButton object
-private ColorButton accessButton(int buttonCode) {
+//either left, middle, or right button returns corresponding ColorPresetButton object
+private ColorPresetButton accessButton(int buttonCode) {
 	switch (buttonCode) {
 		case MouseEvent.BUTTON2:
 			//return selectedColors[1]; //no more right click
@@ -209,7 +211,7 @@ private void setOpacityLabel() {
 
 //take the selected colors and change their opacity
 private void setSelectedColorOpacity(int opacity) {
-	for (ColorButton cb : selectedColors) {
+	for (ColorPresetButton cb : selectedColors) {
 		Color c = new Color(cb.getColor());
 		c.setChannel(0, opacity);
 		cb.setColor(c);
@@ -217,7 +219,7 @@ private void setSelectedColorOpacity(int opacity) {
 	notifyTools(); //notify tools of the change
 }
 
-private void setUpColorPicker(ColorButton colorToChange) {
+private void setUpColorPicker(ColorPresetButton colorToChange) {
 	windowColorPicker.close(); //either window is open, closed already
 	//in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
 	windowColorPicker.setColorPickerWindow(colorToChange, mainFrame, this);
@@ -227,10 +229,10 @@ private void setUpColorPicker(ColorButton colorToChange) {
 // so I can use it to set the mouse controllers
 //used for clicking the preset color buttons
 private class ColorButtonListener implements MouseListener, MouseMotionListener {
-	ColorButton colorButton;
+	ColorPresetButton colorPresetButton;
 	
-	ColorButtonListener(ColorButton colorButton) {
-		this.colorButton = colorButton;
+	ColorButtonListener(ColorPresetButton colorPresetButton) {
+		this.colorPresetButton = colorPresetButton;
 	}
 	
 	@Override
@@ -239,12 +241,12 @@ private class ColorButtonListener implements MouseListener, MouseMotionListener 
 			//double click; restore previous color to the corresponding button
 			setButtonColor(accessButton(e.getButton()).getPreviousColor(), e.getButton());
 			//open the window to edit the color
-			setUpColorPicker(colorButton);
+			setUpColorPicker(colorPresetButton);
 			
 			//System.out.println("doubleclick");
 		} else { //if single click
 			//set the current button color based on which button is clicked
-			setButtonColor(colorButton.getColor(), e.getButton());
+			setButtonColor(colorPresetButton.getColor(), e.getButton());
 			
 			//System.out.println("singleclick");
 		}
@@ -279,13 +281,13 @@ private class ColorButtonListener implements MouseListener, MouseMotionListener 
 }
 
 private class SelectButtonListener extends ColorButtonListener {
-	SelectButtonListener(ColorButton colorButton) {
-		super(colorButton);
+	SelectButtonListener(ColorPresetButton colorPresetButton) {
+		super(colorPresetButton);
 	}
 	
 	@Override
 	public void mouseClicked(MouseEvent e) {
-		if (e.getClickCount() > 1) setUpColorPicker(colorButton);
+		if (e.getClickCount() > 1) setUpColorPicker(colorPresetButton);
 	}
 	
 	@Override

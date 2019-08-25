@@ -8,8 +8,8 @@ public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
 private final int MAX_RADIUS = 24;
-ToolButton triangleButton;
-ToolButton squareButton;
+ToolbarButton triangleButton;
+ToolbarButton squareButton;
 //this is here so eraser has ability to not use overlay when using the triangle or square brushes
 boolean useOverlayForBrushFill;
 private int radius;
@@ -57,7 +57,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	JPanel shapeButtons = new JPanel();
 	shapeButtons.setLayout(new BoxLayout(shapeButtons, BoxLayout.X_AXIS));
 	ButtonGroup shapeButtonGroup = new ButtonGroup();
-	ToolButton circleButton = new ToolButton("icons/brush_tool_icons/brushcircle.png");
+	ToolbarButton circleButton = new ToolbarButton("icons/brush_tool_icons/brushcircle.png");
 	circleButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.CIRCLE;
@@ -65,14 +65,14 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 		}
 	});
 	
-	triangleButton = new ToolButton("icons/brush_tool_icons/brushtriangle.png");
+	triangleButton = new ToolbarButton("icons/brush_tool_icons/brushtriangle.png");
 	triangleButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.TRIANGLE;
 			System.out.println("Triangle brush");
 		}
 	});
-	squareButton = new ToolButton("icons/brush_tool_icons/brushsquare.png");
+	squareButton = new ToolbarButton("icons/brush_tool_icons/brushsquare.png");
 	squareButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.SQUARE;
@@ -80,13 +80,13 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 		}
 	});
 	
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(circleButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(triangleButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(squareButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
 	
 	shapeButtonGroup.add(circleButton);
 	shapeButtonGroup.add(triangleButton);

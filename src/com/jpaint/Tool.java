@@ -28,7 +28,7 @@ Tool(ImageModel model, String iconSource) {
 	upperCard = new JPanel();
 	
 	//button for toolbar
-	button = new ToolButton(iconSource);
+	button = new ToolbarButton(iconSource);
 }
 
 void updateColors(Color left, Color middle, Color right) {

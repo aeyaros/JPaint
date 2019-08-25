@@ -135,20 +135,9 @@ public void toolExited(MouseEvent e) {
 	clearStatus();
 }
 
-@Override
-public void draw(int x, int y, int color) { }
-
+@Override public void draw(int x, int y, int color) { }
 @Override public void drawBrush(int x, int y, int color) { }
-
-@Override
-public void toolKeyPressed(KeyEvent e) {
-}
-
-@Override
-public void toolKeyReleased(KeyEvent e) {
-}
-
-@Override
-public void toolKeyTyped(KeyEvent e) {
-}
+@Override public void toolKeyPressed(KeyEvent e) { }
+@Override public void toolKeyReleased(KeyEvent e) { }
+@Override public void toolKeyTyped(KeyEvent e) { }
 }

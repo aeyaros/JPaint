@@ -15,6 +15,7 @@ private ControllerKey controllerKey;
 private JPanel topPanel;
 private CardLayout topLayout;
 private ToolColorPicker toolColorPicker;
+private ImageView imageView;
 
 ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	//create tools
@@ -42,9 +43,39 @@ ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	controllerMouseMotion = new ControllerMouseMotion(tools);
 	theView.addMouseMotionListener(controllerMouseMotion);
 	
+	/*
+	theView.getInputMap().put(KeyStroke.getKeyStroke("SPACE"),
+	                            "doSomething");
+	theView.getActionMap().put(
+		  "doSomething",
+		  new AbstractAction() {
+			  @Override public void actionPerformed(ActionEvent e) {
+			  	System.out.println("TEST lol");
+			  }
+		  });
+	*/
+	/*
 	controllerKey = new ControllerKey(tools);
-	toolsPanel.addKeyListener(controllerKey);
+	theView.addKeyListener(controllerKey);
 	
+	//ensure imageview is in focus so key events are received
+	imageView = theView; //so listener can see it
+	imageView.setFocusable(true);
+	imageView.setFocusTraversalKeysEnabled(false);
+	theView.addMouseListener(new MouseListener() {
+		@Override public void mouseEntered(MouseEvent e) {
+			System.out.println("imageView in focus");
+			System.out.println(imageView.isFocusable());
+			imageView.requestFocusInWindow();
+			System.out.println(imageView.isFocusable());
+			
+		}
+		@Override public void mouseClicked(MouseEvent e) { }
+		@Override public void mousePressed(MouseEvent e) { }
+		@Override public void mouseReleased(MouseEvent e) { }
+		@Override public void mouseExited(MouseEvent e) { }
+	});
+	*/
 	
 	//set up top panel for tool-specific controls
 	topPanel = new JPanel();
