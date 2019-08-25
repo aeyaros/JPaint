@@ -65,6 +65,7 @@ void startOverFromScratch(int w, int h, boolean transparent) {
 //if opening an image
 void startOverFromImage(BufferedImage image) {
 	Canvas temp;
+	
 	try {
 		temp = new Canvas(image);
 	} catch (Exception e) {

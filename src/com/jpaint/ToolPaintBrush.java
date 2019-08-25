@@ -40,6 +40,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	radiusSlider.setSize(radiusSlider.getMinimumSize());
 	radiusSlider.setMinorTickSpacing(1);
 	radiusSlider.setSnapToTicks(true);
+	radiusSlider.setPaintTicks(true);
 	
 	JPanel radiusPanel = new JPanel();
 	radiusPanel.setLayout(new BoxLayout(radiusPanel, BoxLayout.X_AXIS));

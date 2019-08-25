@@ -28,6 +28,7 @@ ToolLine(ImageModel model, String iconSource) {
 	widthSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_WIDTH, MAX_WIDTH, DEFAULT_WIDTH);
 	widthSlider.setMinorTickSpacing(1);
 	widthSlider.setSnapToTicks(true);
+	widthSlider.setPaintTicks(true);
 	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
 	widthSlider.addChangeListener(e -> setWidth(widthSlider.getValue()));
 	widthSlider.setPreferredSize(new Dimension(48, 24));

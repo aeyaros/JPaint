@@ -36,7 +36,7 @@ Canvas(Canvas oldCanvas) {
 			pixels.setRGB(i, j, oldCanvas.pixels.getRGB(i, j));
 		}
 	}
-	overlay = newBlankImage(pixels.getWidth(), pixels.getHeight(), TRANSPARENT_INT);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 //canvas from a bufferedImage
@@ -45,6 +45,7 @@ Canvas(BufferedImage sourceImage) {
 	width = sourceImage.getWidth();
 	height = sourceImage.getHeight();
 	pixels = sourceImage;
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 //used for generating tiled backgrounds for translucent color
