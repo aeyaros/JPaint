@@ -7,6 +7,11 @@ private boolean eraseToTransparent;
 
 ToolEraser(ImageModel model, String iconSource) {
 	super(model, iconSource);
+	//set this to false to override the paintbrush setting
+	useOverlayForBrushFill = false; //when erasing with square or triangle brushes, write directly to canvas
+	//issue with fill algorithm, so need to disable buttons
+	triangleButton.setEnabled(false);
+	squareButton.setEnabled(false);
 	
 	JRadioButton eraseWhite = new JRadioButton("White");
 	eraseWhite.setSelected(true);
@@ -37,15 +42,8 @@ private void setEraseToTransparent(boolean eraseToTransparent) {
 	this.eraseToTransparent = eraseToTransparent;
 }
 
-//change how the eraser erases
-private int getEraserColor() {
-	int value;
-	if (eraseToTransparent) value = Color.MIN_VALUE; //erase to transparent
-	else value = Color.MAX_VALUE; //erase to white
-	return new Color(value, value, value, value).getARGB();
-}
-
 @Override public void draw(int x, int y, int color) {
 	model.erasePixel(x, y, eraseToTransparent);
 }
+
 }

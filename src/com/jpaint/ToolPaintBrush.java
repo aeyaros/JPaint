@@ -2,6 +2,7 @@ package com.jpaint;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
 
 public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
@@ -11,8 +12,20 @@ private int radius;
 private JLabel radiusLabel;
 private JSlider radiusSlider;
 
+ToolButton triangleButton;
+ToolButton squareButton;
+
+//this is here so eraser has ability to not use overlay when using the triangle or square brushes
+boolean useOverlayForBrushFill;
+
+private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
+
+;
+private SelectedBrush selectedBrush;
+
 ToolPaintBrush(ImageModel model, String iconSource) {
 	super(model, iconSource);
+	useOverlayForBrushFill = true; //set to true for paintbrush
 	
 	//set up upper card
 	upperCard.removeAll();
@@ -39,13 +52,33 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	
 	upperCard.add(radiusPanel);
 	
+	
 	//brush shapes
 	JPanel shapeButtons = new JPanel();
 	shapeButtons.setLayout(new BoxLayout(shapeButtons, BoxLayout.X_AXIS));
 	ButtonGroup shapeButtonGroup = new ButtonGroup();
 	ToolButton circleButton = new ToolButton("icons/brush_tool_icons/brushcircle.png");
-	ToolButton triangleButton = new ToolButton("icons/brush_tool_icons/brushtriangle.png");
-	ToolButton squareButton = new ToolButton("icons/brush_tool_icons/brushsquare.png");
+	circleButton.addItemListener(e -> {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			selectedBrush = SelectedBrush.CIRCLE;
+			System.out.println("Circle brush");
+		}
+	});
+	
+	triangleButton = new ToolButton("icons/brush_tool_icons/brushtriangle.png");
+	triangleButton.addItemListener(e -> {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			selectedBrush = SelectedBrush.TRIANGLE;
+			System.out.println("Triangle brush");
+		}
+	});
+	squareButton = new ToolButton("icons/brush_tool_icons/brushsquare.png");
+	squareButton.addItemListener(e -> {
+		if (e.getStateChange() == ItemEvent.SELECTED) {
+			selectedBrush = SelectedBrush.SQUARE;
+			System.out.println("Square brush");
+		}
+	});
 	
 	shapeButtons.add(Box.createRigidArea(new Dimension(ToolButton.TOOL_BUTTON_GAP, ToolButton.TOOL_BUTTON_GAP)));
 	shapeButtons.add(circleButton);
@@ -59,6 +92,10 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	shapeButtonGroup.add(triangleButton);
 	shapeButtonGroup.add(squareButton);
 	
+	//initially, brush is circle
+	selectedBrush = SelectedBrush.CIRCLE;
+	circleButton.setSelected(true);
+	
 	upperCard.add(shapeButtons);
 }
 
@@ -68,7 +105,19 @@ private void setRadius(int r) {
 }
 
 @Override public void drawBrush(int x, int y, int color) {
-	makeCircle(x, y, color, radius, false);
+	switch (selectedBrush) {
+		case CIRCLE:
+			makeCircle(x, y, color, radius, false); break;
+		case TRIANGLE:
+			makeRegularPolygon(x, y, 3, radius, Math.PI / 2d, color, false);
+			fill(x, y, color, useOverlayForBrushFill); break;
+		case SQUARE:
+			makeRegularPolygon(x, y, 4, radius, Math.PI / 2d, color, false);
+			fill(x, y, color, useOverlayForBrushFill); break;
+		default:
+			break;
+	}
+	
 }
 
 }
