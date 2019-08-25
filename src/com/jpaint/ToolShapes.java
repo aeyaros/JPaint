@@ -16,7 +16,7 @@ private int fillColor;
 }
 
 @Override public void drawBrush(int x, int y, int color) {
-	draw(x,y,color);
+	makeCircle(x, y, color, width, false);
 }
 
 private void drawShape(int originX, int originY, int currentX, int currentY, int type, boolean fill) {

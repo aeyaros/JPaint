@@ -194,15 +194,17 @@ private void printStates() {
 /*====== EDITING CANVAS ======*/
 
 void erasePixel(int x, int y, boolean transparent) {
-	if(transparent) currentState.setPixelWithoutBlending(x,y, Canvas.TRANSPARENT_INT,false);
-	else currentState.setPixelWithoutBlending(x,y, Canvas.WHITE_INT,false);
+	if (isInBounds(x, y)) {
+		if (transparent) currentState.setPixelWithoutBlending(x, y, Canvas.TRANSPARENT_INT);
+		else currentState.setPixelWithoutBlending(x, y, Canvas.WHITE_INT);
+	}
 }
 
 void setPixel(int x, int y, int argb, boolean useOverlay) {
-	if(useOverlay)  currentState.setPixelWithoutBlending(x, y, argb, true);
-	else currentState.setPixel(x, y, argb, false);
-	//if (blend) currentState.setPixel(x, y, argb, useOverlay);
-	//else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
+	if (isInBounds(x, y)) { //important; throwing tons of exceptions is time consuming
+		if (useOverlay) currentState.setOverlayPixelWithoutBlending(x, y, argb);
+		else currentState.setPixel(x, y, argb);
+	}
 }
 
 /* FUNCTIONS USED BY MENUS */

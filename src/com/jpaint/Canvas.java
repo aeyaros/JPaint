@@ -93,20 +93,25 @@ void clearOverlay() {
 }
 
 /*====== MODIFIERS ======*/
-void setPixel(int x, int y, int color, boolean useOverlay) {
-	try {
-		if (useOverlay) overlay.setRGB(x, y, Color.alphaBlend(color, overlay.getRGB(x, y)));
-		else pixels.setRGB(x, y, Color.alphaBlend(color, pixels.getRGB(x, y)));
-	} catch (Exception ignored) {
-	}
+//set a pixel on the main canvas
+void setPixel(int x, int y, int color) {
+	try { pixels.setRGB(x, y, Color.alphaBlend(color, pixels.getRGB(x, y))); } catch (Exception ignored) { }
 }
 
-void setPixelWithoutBlending(int x, int y, int exactColor, boolean useOverlay) {
-	try {
-		if (useOverlay) overlay.setRGB(x, y, exactColor);
-		else pixels.setRGB(x, y, exactColor);
-	} catch (Exception ignored) {
-	}
+//set overlay pixel without blending; primary method for overlays
+//this is the most used method
+void setOverlayPixelWithoutBlending(int x, int y, int exactColor) {
+	try { overlay.setRGB(x, y, exactColor); } catch (Exception ignored) { }
+}
+
+//set a pixel on the main canvas without blending, used by erasers
+void setPixelWithoutBlending(int x, int y, int exactColor) {
+	try { pixels.setRGB(x, y, exactColor); } catch (Exception ignored) { }
+}
+
+//set a pixel on the overlay with blending
+void setOverlayPixel(int x, int y, int color) {
+	try { overlay.setRGB(x, y, Color.alphaBlend(color, overlay.getRGB(x, y))); } catch (Exception ignored) { }
 }
 
 //currently resizes by adding or removing from origin
