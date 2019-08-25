@@ -5,6 +5,7 @@ import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.image.BufferedImage;
 import java.io.File;
+import java.io.IOException;
 
 import static com.jpaint.WindowApplication.APPLICATION_NAME;
 import static com.jpaint.WindowApplication.NEW_DOCUMENT;
@@ -153,6 +154,17 @@ void saveas() {
 	}
 }
 
+File getAFile() throws IOException {
+	// retrieve image
+	BufferedImage imageToSave = theModel.getImage();
+	
+	File newFile = new File("./.temp.png");
+	
+	ImageIO.write(imageToSave, "png", newFile);
+	
+	return newFile;
+}
+
 private void writeImageToFile(File outputfile) {
 	try {
 		// retrieve image
@@ -192,6 +204,8 @@ void setTitle(String documentTitle) {
 
 
 void exit() {
+	File printedFile = new File("./.temp.png");
+	if (printedFile.exists()) printedFile.delete();
 	if (askToSave()) System.exit(0);
 }
 

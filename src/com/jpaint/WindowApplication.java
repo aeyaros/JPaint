@@ -1,6 +1,8 @@
 package com.jpaint;
 
 import javax.imageio.ImageIO;
+import javax.print.attribute.HashPrintRequestAttributeSet;
+import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
@@ -8,6 +10,9 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.util.Hashtable;
 
@@ -360,34 +365,38 @@ void WindowSetup(int width, int height) {
 }
 
 //undo/redo
-private void undo() {
-	theModel.undo();
-}
+private void undo() { theModel.undo(); }
 
-private void redo() {
-	theModel.redo();
-}
+private void redo() { theModel.redo(); }
 
-//not done yet
+//cross platform print dialog based on java example
 private void print() {
-	//PrinterJob newPrintJob = PrinterJob.getPrinterJob();
+	PrinterJob printJob = PrinterJob.getPrinterJob();
+	printJob.setPrintable((graphics, pageFormat, pageIndex) -> {
+		if (pageIndex != 0) { return Printable.NO_SUCH_PAGE; }
+		graphics.drawImage(theModel.getImage(), 0, 0, theModel.getWidth(), theModel.getHeight(), null);
+		return Printable.PAGE_EXISTS;
+	});
+	PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
+	printJob.pageDialog(attributeSet);
+	boolean isOK = printJob.printDialog(attributeSet);
+	if (isOK) try { printJob.print(attributeSet); } catch (PrinterException e) { e.printStackTrace(); }
 }
 
-private void resize() {
-	new WindowResize(mainFrame, theModel);
-}
+//resize (crop) image
+private void resize() { new WindowResize(mainFrame, theModel); }
 
+//flip image
 private void flip(boolean horizontally) {
 	if (horizontally) theModel.flip(0);
 	else theModel.flip(1);
 }
 
-private void rotate(Canvas.Transform option) {
-	theModel.rotate(option);
-}
+//rotate image
+private void rotate(Canvas.Transform option) { theModel.rotate(option); }
 
-private void dummy() {
-} //temporary for menu listeners
+//temp
+private void dummy() { } //temporary for menu listeners
 
 
 }
