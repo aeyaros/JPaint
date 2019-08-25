@@ -128,11 +128,14 @@ void fill(int x, int y, int replacement, boolean useOverlay) {
 	if (!model.isInBounds(x, y)) return; //cancel if point out of bounds of canvas
 	
 	int target; //color to try and fill in
-	try { target = model.getPixel(x, y); //color of spot clicked
+	try { //color of spot clicked
+		if(useOverlay) target = model.getOverlayPixel(x,y);
+		else target = model.getPixel(x, y);
 	} catch (IndexOutOfBoundsException exc) {
 		System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
 		//exc.printStackTrace();
-		return; }
+		return;
+	}
 	
 	if (target == replacement) return; //return if target = replacement
 	

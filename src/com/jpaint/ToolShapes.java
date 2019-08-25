@@ -29,10 +29,10 @@ private void drawShape(int originX, int originY, int currentX, int currentY, int
 	
 	if(type == 0) { //draw circle
 		//makeCircle(originX, originY, borderColor, radius,true);
-		makeRegularPolygon(originX, originY,SIDES_IN_A_CIRCLE,radius,offset,borderColor,false);
+		makeRegularPolygon(originX, originY,SIDES_IN_A_CIRCLE,radius,offset,borderColor,true);
 	} else if(type > 2) { //draw polygon
 		//then draw polygon
-		makeRegularPolygon(originX, originY,type,radius,offset,borderColor,false);
+		makeRegularPolygon(originX, originY,type,radius,offset,borderColor,true);
 		//int halfWidth = (int)Math.ceil((double)width/2d);
 		//for(int r = radius - halfWidth; r < radius + halfWidth; r++) {
 		//	makeRegularPolygon(originX, originY,type,r,offset,borderColor,false);
