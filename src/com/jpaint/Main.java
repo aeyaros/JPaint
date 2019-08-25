@@ -8,7 +8,7 @@ package com.jpaint;
 
 class Main {
 final static int DEFAULT_WINDOW_WIDTH = 640;
-final static int DEFAULT_WINDOW_HEIGHT = 480;
+final static int DEFAULT_WINDOW_HEIGHT = 360;
 static boolean IS_MAC;
 
 public static void main(String[] args) {

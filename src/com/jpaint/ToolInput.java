@@ -26,5 +26,8 @@ void draw(int x, int y, int color);
 
 //determine how many pixels to set
 void drawBrush(int x, int y, int color);
+
 }
+
+
 

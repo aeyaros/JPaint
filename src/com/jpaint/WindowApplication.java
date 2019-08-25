@@ -20,13 +20,15 @@ class WindowApplication {
 //parameters for certain UI sizes
 static final String APPLICATION_NAME = "JPaint";
 static final String NEW_DOCUMENT = "New Document";
+static final int WINDOW_CHROME_SIZE = 8;
+private final int MINIMUM_WINDOW_WIDTH = 700;
+private final int MINIMUM_WINDOW_HEIGHT = 480;
 private final int NUMBER_TOOL_COLUMNS = 2;
 private final int NUMBER_COLOR_COLUMNS = 3;
-private final int MINIMUM_WINDOW_WIDTH = 700;
-private final int MINIMUM_WINDOW_HEIGHT = 560;
 private final int THIN_EMPTY_BORDER_SIZE = 6;
-private final int WINDOW_CHROME_SIZE = 8;
+
 //colors
+static final Color TOOL_PRESSED_BG_COLOR = new Color(255, 128, 128, 128);
 private final Color PAGE_BACKGROUND_COLOR = new Color(255, 180, 180, 200);
 //windows
 private JFrame mainFrame;
@@ -161,8 +163,8 @@ void WindowSetup(int width, int height) {
 	opacityPanel.setLayout(opacityLayout);
 	opacityPanel
 		  .setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE * 3, THIN_EMPTY_BORDER_SIZE, 0, THIN_EMPTY_BORDER_SIZE));
-	gridBagConstraints.gridy++;
-	sidePanel.add(opacityPanel, gridBagConstraints);
+	//gridBagConstraints.gridy++;
+	//sidePanel.add(opacityPanel, gridBagConstraints);
 	
 	//selected colors panel
 	JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
@@ -204,8 +206,8 @@ void WindowSetup(int width, int height) {
 	JMenu editMenu = new JMenu("Edit");
 	menuBar.add(editMenu);
 	
-	JMenu transformMenu = new JMenu("Transform");
-	menuBar.add(transformMenu);
+	JMenu imageMenu = new JMenu("Image");
+	menuBar.add(imageMenu);
 	
 	JMenu helpMenu = new JMenu("Help");
 	menuBar.add(helpMenu);
@@ -287,25 +289,25 @@ void WindowSetup(int width, int height) {
 	                                    e -> dummy()
 	));
 	
-	//transform menu
-	menuItems.put("resize", new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
-	transformMenu.addSeparator();
+	//image menu
+	menuItems.put("resize", new MenuItem("Resize", imageMenu, KeyEvent.VK_R, e -> resize()));
+	imageMenu.addSeparator();
 	
-	menuItems.put("fliph", new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H,
+	menuItems.put("fliph", new MenuItem("Flip Image Horizontally", imageMenu, KeyEvent.VK_H,
 	                                    e -> flip(true)
 	));
-	menuItems.put("flipv", new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V,
+	menuItems.put("flipv", new MenuItem("Flip Image Vertically", imageMenu, KeyEvent.VK_V,
 	                                    e -> flip(false)
 	));
-	transformMenu.addSeparator();
+	imageMenu.addSeparator();
 	
-	menuItems.put("rotateleft", new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L,
+	menuItems.put("rotateleft", new MenuItem("Rotate Left 90\u00B0", imageMenu, KeyEvent.VK_L,
 	                                         e -> rotate(Canvas.Transform.ROTATE_LEFT)
 	));
-	menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R,
+	menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", imageMenu, KeyEvent.VK_R,
 	                                          e -> rotate(Canvas.Transform.ROTATE_RIGHT)
 	));
-	menuItems.put("rotate180", new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U,
+	menuItems.put("rotate180", new MenuItem("Rotate 180\u00B0", imageMenu, KeyEvent.VK_U,
 	                                        e -> rotate(Canvas.Transform.ROTATE_180)
 	));
 	

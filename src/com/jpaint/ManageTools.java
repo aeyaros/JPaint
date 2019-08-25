@@ -48,6 +48,8 @@ ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	
 	//set up top panel for tool-specific controls
 	topPanel = new JPanel();
+	topPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, WindowApplication.WINDOW_CHROME_SIZE, 0));
+	
 	topLayout = new CardLayout();
 	topPanel.setLayout(topLayout);
 	

@@ -53,7 +53,7 @@ ManageColors(
 	int halfMiddleWidth = 8; //half of the width of the middle button color selector
 	selectedColors[0] = new ColorButton(
 		  colors[0 % colors.length],
-		  ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorButton.COLOR_PRESET_BUTTON_SIZE, //ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
 		  ColorButton.COLOR_PRESET_BUTTON_SIZE
 	);
 	selectedColors[1] = new ColorButton(colors[1 % colors.length],
@@ -61,12 +61,40 @@ ManageColors(
 	);
 	selectedColors[2] = new ColorButton(
 		  colors[2 % colors.length],
-		  ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
+		  ColorButton.COLOR_PRESET_BUTTON_SIZE,//ToolButton.TOOL_BUTTON_SIZE - halfMiddleWidth,
 		  ColorButton.COLOR_PRESET_BUTTON_SIZE
 	);
-	selectedColorsPanel.add(selectedColors[0], 0);
-	selectedColorsPanel.add(selectedColors[1], 1);
-	selectedColorsPanel.add(selectedColors[2], 2);
+	
+	
+	JPanel leftButton = new JPanel();
+	leftButton.setBorder(BorderFactory.createEmptyBorder(
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 6
+	                                                    ));
+	leftButton.setLayout(new BoxLayout(leftButton, BoxLayout.X_AXIS));
+	
+	JPanel rightButton = new JPanel();
+	rightButton.setBorder(BorderFactory.createEmptyBorder(
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 6,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3,
+		  com.jpaint.ColorButton.COLOR_PRESET_BUTTON_SIZE / 3
+	                                                     ));
+	rightButton.setLayout(new BoxLayout(rightButton, BoxLayout.X_AXIS));
+	
+	leftButton.add(selectedColors[0]);
+	rightButton.add(selectedColors[2]); //index was 2
+	
+	
+	selectedColorsPanel.add(leftButton, 0);
+	//selectedColorsPanel.add(selectedColors[1], 1);
+	selectedColorsPanel.add(rightButton, 1); //index was 2
+	
+	selectedColorsPanel.setBorder(BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.LOWERED));
+	selectedColorsPanel.setBackground(new Color(255, 220, 220, 220).getAWT());
+	selectedColorsPanel.setOpaque(true);
 	
 	//set up panel for opacity slider
 	opacitySlider = new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE, Color.MAX_VALUE);
@@ -161,7 +189,7 @@ void notifyTools() {
 private ColorButton accessButton(int buttonCode) {
 	switch (buttonCode) {
 		case MouseEvent.BUTTON2:
-			return selectedColors[1];
+			//return selectedColors[1]; //no more right click
 		case MouseEvent.BUTTON3:
 			return selectedColors[2];
 		default:

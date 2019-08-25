@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 //used as a button by the sidebar presets
 //used by the color picker as a larger label
 class ColorButton extends JLabel {
-final static int COLOR_PRESET_BUTTON_SIZE = 32;
+final static int COLOR_PRESET_BUTTON_SIZE = 30;
 private Color color;
 private Color previousColor;
 private int width;

@@ -2,6 +2,7 @@ package com.jpaint;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.border.BevelBorder;
 import javax.swing.border.EtchedBorder;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -15,7 +16,8 @@ ToolButton(String iconSource) {
 	super();
 	this.setOpaque(true);
 	this.setBorderPainted(true);
-	this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+	//this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+	this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 	this.setSize(ToolButton.TOOL_BUTTON_SIZE, ToolButton.TOOL_BUTTON_SIZE);
 	this.setPreferredSize(this.getSize());
 	this.setMaximumSize(this.getSize());
@@ -40,7 +42,7 @@ ToolButton(String iconSource) {
 		}
 		this.setSelectedIcon(new ImageIcon(
 			  selectedImage.getScaledInstance(
-					ToolButton.TOOL_BUTTON_SIZE, ToolButton.TOOL_BUTTON_SIZE, Image.SCALE_SMOOTH)));
+				    ToolButton.TOOL_BUTTON_SIZE, ToolButton.TOOL_BUTTON_SIZE, Image.SCALE_REPLICATE)));
 	} catch (Exception e) {
 		e.printStackTrace();
 		System.err.println("Couldn't load icon from " + iconSource);
@@ -48,15 +50,17 @@ ToolButton(String iconSource) {
 	
 	this.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
+			//this.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED));
 			//set border
-			this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlLtHighlight,
+			this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.LOWERED, SystemColor.controlHighlight,
 			                                                SystemColor.controlShadow
 			                                               ));
 			//set background
-			this.setBackground(SystemColor.controlHighlight);
+			this.setBackground(WindowApplication.TOOL_PRESSED_BG_COLOR.getAWT());
 		} else if (e.getStateChange() == ItemEvent.DESELECTED) {
 			//set border
-			this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+			//this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
+			this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 			//set background
 			this.setBackground(SystemColor.window);
 		}
