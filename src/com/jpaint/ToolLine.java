@@ -12,8 +12,8 @@ private final int MAX_WIDTH = 11;
 private final int DEFAULT_WIDTH = 1;
 private boolean twoClickMode;//if we are drawing line using two clicks
 private boolean dragMode; //if we are dragging the line instead of two clicks
-private JSlider widthSlider;
-private JLabel widthLabel;
+JSlider widthSlider;
+JLabel widthLabel;
 int width;
 
 //current original point
@@ -26,8 +26,12 @@ ToolLine(ImageModel model, String iconSource) {
 	upperCard.setLayout(new GridLayout(1, 0));
 	
 	widthSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_WIDTH, MAX_WIDTH, DEFAULT_WIDTH);
+	widthSlider.setMinorTickSpacing(1);
+	widthSlider.setSnapToTicks(true);
 	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
 	widthSlider.addChangeListener(e -> setWidth(widthSlider.getValue()));
+	widthSlider.setPreferredSize(new Dimension(48, 24));
+	widthSlider.setMinimumSize(widthSlider.getPreferredSize());
 	
 	JPanel widthPanel = new JPanel();
 	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
@@ -35,6 +39,7 @@ ToolLine(ImageModel model, String iconSource) {
 	
 	widthPanel.add(widthLabel);
 	widthPanel.add(widthSlider);
+	
 	upperCard.add(widthPanel);
 	
 	setWidth(DEFAULT_WIDTH);

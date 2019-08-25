@@ -70,6 +70,10 @@ ManageColors(
 	
 	//set up panel for opacity slider
 	opacitySlider = new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE, Color.MAX_VALUE);
+	opacitySlider.setMajorTickSpacing(85);
+	opacitySlider.setMinorTickSpacing(17);
+	opacitySlider.setPaintTicks(true);
+	opacitySlider.setPaintLabels(false);
 	
 	opacityLabel = new JLabel("", SwingConstants.CENTER);
 	opacityLabel.setHorizontalTextPosition(SwingConstants.CENTER);

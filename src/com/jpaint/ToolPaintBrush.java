@@ -18,9 +18,15 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	upperCard.removeAll();
 	upperCard.setLayout(new GridLayout(1, 0));
 	
+	//brush radius slider
 	radiusSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_RADIUS, MAX_RADIUS, DEFAULT_RADIUS);
 	radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
 	radiusSlider.addChangeListener(e -> setRadius(radiusSlider.getValue()));
+	radiusSlider.setMinimumSize(new Dimension(64, 24));
+	radiusSlider.setPreferredSize(radiusSlider.getMinimumSize());
+	radiusSlider.setSize(radiusSlider.getMinimumSize());
+	radiusSlider.setMinorTickSpacing(1);
+	radiusSlider.setSnapToTicks(true);
 	
 	JPanel radiusPanel = new JPanel();
 	radiusPanel.setLayout(new BoxLayout(radiusPanel, BoxLayout.X_AXIS));
@@ -28,9 +34,27 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	
 	radiusPanel.add(radiusLabel);
 	radiusPanel.add(radiusSlider);
-	upperCard.add(radiusPanel);
 	
 	setRadius(DEFAULT_RADIUS);
+	
+	upperCard.add(radiusPanel);
+	
+	//brush shapes
+	JPanel shapeButtons = new JPanel(new GridLayout(1, 0));
+	ButtonGroup shapeButtonGroup = new ButtonGroup();
+	JToggleButton circleButton = new JToggleButton("Circle", false);
+	JToggleButton triangleButton = new JToggleButton("Triangle", true);
+	JToggleButton squareButton = new JToggleButton("Square", true);
+	
+	shapeButtons.add(circleButton);
+	shapeButtons.add(triangleButton);
+	shapeButtons.add(squareButton);
+	
+	shapeButtonGroup.add(circleButton);
+	shapeButtonGroup.add(triangleButton);
+	shapeButtonGroup.add(squareButton);
+	
+	upperCard.add(shapeButtons);
 }
 
 private void setRadius(int r) {
