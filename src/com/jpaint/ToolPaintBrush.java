@@ -8,18 +8,13 @@ public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
 private final int MAX_RADIUS = 24;
+ToolButton triangleButton;
+ToolButton squareButton;
+//this is here so eraser has ability to not use overlay when using the triangle or square brushes
+boolean useOverlayForBrushFill;
 private int radius;
 private JLabel radiusLabel;
 private JSlider radiusSlider;
-
-ToolButton triangleButton;
-ToolButton squareButton;
-
-//this is here so eraser has ability to not use overlay when using the triangle or square brushes
-boolean useOverlayForBrushFill;
-
-private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
-
 private SelectedBrush selectedBrush;
 
 ToolPaintBrush(ImageModel model, String iconSource) {
@@ -107,17 +102,22 @@ private void setRadius(int r) {
 @Override public void drawBrush(int x, int y, int color) {
 	switch (selectedBrush) {
 		case CIRCLE:
-			makeCircle(x, y, color, radius, false); break;
+			makeCircle(x, y, color, radius, false);
+			break;
 		case TRIANGLE:
 			makeRegularPolygon(x, y, 3, radius, Math.PI / 2d, color, false);
-			fill(x, y, color, useOverlayForBrushFill); break;
+			fill(x, y, color, useOverlayForBrushFill);
+			break;
 		case SQUARE:
 			makeRegularPolygon(x, y, 4, radius, Math.PI / 2d, color, false);
-			fill(x, y, color, useOverlayForBrushFill); break;
+			fill(x, y, color, useOverlayForBrushFill);
+			break;
 		default:
 			break;
 	}
 	
 }
+
+private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
 
 }

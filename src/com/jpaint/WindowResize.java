@@ -6,8 +6,8 @@ import java.awt.event.WindowEvent;
 import java.text.DecimalFormat;
 
 class WindowResize extends JDialog {
-private ImageModel theModel;
 private final int MAX_INTEGER_DIGITS = 5; //not sure if I can handle 100,000 pixels :/
+private ImageModel theModel;
 private JTextField widthField;
 private JTextField heightField;
 private int MAX_RESIZE = (int) Math.pow(10, MAX_INTEGER_DIGITS);

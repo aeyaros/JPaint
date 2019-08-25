@@ -10,15 +10,14 @@ public class ToolLine extends Tool {
 private final int MIN_WIDTH = 0; //technically width is 2n+1
 private final int MAX_WIDTH = 11;
 private final int DEFAULT_WIDTH = 1;
-private boolean twoClickMode;//if we are drawing line using two clicks
-private boolean dragMode; //if we are dragging the line instead of two clicks
 JSlider widthSlider;
 JLabel widthLabel;
 int width;
-
 //current original point
 int x0;
 int y0;
+private boolean twoClickMode;//if we are drawing line using two clicks
+private boolean dragMode; //if we are dragging the line instead of two clicks
 
 
 ToolLine(ImageModel model, String iconSource) {

@@ -56,7 +56,7 @@ void WindowSetup(int width, int height) {
 	
 	try { //I have to do this after setting the app title or it will revert to the class name
 		UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-		//UIManager.setLookAndFeel( UIManager.getCrossPlatformLookAndFeelClassName()); // */
+		//UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName());
 	} catch (Exception e) {
 		e.printStackTrace();
 	}
@@ -82,7 +82,7 @@ void WindowSetup(int width, int height) {
 	
 	//image panel: a container which is inside a panel with scrollbars
 	JPanel imagePanel = new JPanel();
-	imagePanel.setBackground(java.awt.Color.gray);
+	imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
 	
 	//image panel is inside a scroll pane
 	JScrollPane imageScrollPanel = new JScrollPane(imagePanel);
@@ -223,6 +223,7 @@ void WindowSetup(int width, int height) {
 	menuItems.put("new", new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N,
 	                                  e -> manageFiles.newFile(false)
 	));
+	
 	menuItems.put(
 		  "newtrans",
 		  new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T,
@@ -231,21 +232,15 @@ void WindowSetup(int width, int height) {
 	             );
 	fileMenu.addSeparator();
 	
-	menuItems.put(
-		  "open",
-		  new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O, e -> manageFiles.openFile())
-	             );
-	menuItems.put(
-		  "save",
-		  new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,
-		               e -> manageFiles.save()
-		  )
-	             );
-	menuItems.put(
-		  "saveas",
-		  new MenuItem(
-				"Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A, e -> manageFiles.saveas())
-	             );
+	menuItems.put("open", new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,
+	                                   e -> manageFiles.openFile()
+	));
+	menuItems.put("save", new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,
+	                                   e -> manageFiles.save()
+	));
+	menuItems.put("saveas", new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,
+	                                     e -> manageFiles.saveas()
+	));
 	fileMenu.addSeparator();
 	
 	menuItems
@@ -255,60 +250,63 @@ void WindowSetup(int width, int height) {
 	fileMenu.addSeparator();
 	
 	if (Main.IS_MAC)
-		menuItems.put(
-			  "close",
-			  new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W, e -> manageFiles.exit())
-		             );
+		menuItems.put("close", new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,
+		                                    e -> manageFiles.exit()
+		));
 	else
-		menuItems.put(
-			  "exit",
-			  new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E, e -> manageFiles.exit())
-		             );
+		menuItems.put("exit", new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,
+		                                   e -> manageFiles.exit()
+		));
 	
 	//edit menu
-	menuItems.put("undo", new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z, e -> undo()));
+	menuItems.put("undo", new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z,
+	                                   e -> undo()
+	));
+	
 	MenuItem redoItem; //shortcut changes depending on platform
 	if (Main.IS_MAC)
 		redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z, e -> redo());
 	else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y, e -> redo());
 	menuItems.put("redo", redoItem);
+	
 	editMenu.addSeparator();
 	
-	menuItems.put(
-		  "selectall",
-		  new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A, e -> dummy())
-	             );
+	menuItems.put("selectall", new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A,
+	                                        e -> dummy()
+	));
 	editMenu.addSeparator();
 	
-	menuItems.put("cut", new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X, e -> dummy()));
-	menuItems.put("copy", new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C, e -> dummy()));
-	menuItems
-		  .put("paste", new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V,
-		                             e -> dummy()
-		  ));
+	menuItems.put("cut", new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X,
+	                                  e -> dummy()
+	));
+	menuItems.put("copy", new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C,
+	                                   e -> dummy()
+	));
+	menuItems.put("paste", new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V,
+	                                    e -> dummy()
+	));
 	
 	//transform menu
 	menuItems.put("resize", new MenuItem("Resize", transformMenu, KeyEvent.VK_R, e -> resize()));
 	transformMenu.addSeparator();
 	
-	menuItems.put("fliph", new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H, e -> flip(true)));
-	menuItems.put("flipv", new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V, e -> flip(false)));
+	menuItems.put("fliph", new MenuItem("Flip Image Horizontally", transformMenu, KeyEvent.VK_H,
+	                                    e -> flip(true)
+	));
+	menuItems.put("flipv", new MenuItem("Flip Image Vertically", transformMenu, KeyEvent.VK_V,
+	                                    e -> flip(false)
+	));
 	transformMenu.addSeparator();
 	
-	menuItems.put(
-		  "rotateleft",
-		  new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L,
-		               e -> rotate(Canvas.Transform.ROTATE_LEFT)
-		  )
-	             );
+	menuItems.put("rotateleft", new MenuItem("Rotate Left 90\u00B0", transformMenu, KeyEvent.VK_L,
+	                                         e -> rotate(Canvas.Transform.ROTATE_LEFT)
+	));
 	menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", transformMenu, KeyEvent.VK_R,
 	                                          e -> rotate(Canvas.Transform.ROTATE_RIGHT)
 	));
-	menuItems.put(
-		  "rotate180",
-		  new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U, e -> rotate(Canvas.Transform.ROTATE_180))
-	             );
-	
+	menuItems.put("rotate180", new MenuItem("Rotate 180\u00B0", transformMenu, KeyEvent.VK_U,
+	                                        e -> rotate(Canvas.Transform.ROTATE_180)
+	));
 	
 	menuItems.put("about", new MenuItem("About " + APPLICATION_NAME, helpMenu, KeyEvent.VK_U, e -> {
 		Image image = null;
@@ -332,9 +330,6 @@ void WindowSetup(int width, int height) {
 		                              new ImageIcon(image)
 		                             );
 	}));
-	
-	/*====== COLOR SCHEME ======*/
-	imagePanel.setBackground(PAGE_BACKGROUND_COLOR.getAWT());
 	
 	/*====== SET TITLE ======*/
 	manageFiles.setTitle(NEW_DOCUMENT);
@@ -397,6 +392,4 @@ private void rotate(Canvas.Transform option) { theModel.rotate(option); }
 
 //temp
 private void dummy() { } //temporary for menu listeners
-
-
 }
