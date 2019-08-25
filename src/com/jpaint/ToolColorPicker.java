@@ -47,7 +47,7 @@ void addColorManager(ManageColors manageColors) {
 }
 
 private Color getColorAtPixel(int x, int y) {
-	return new Color(model.getColorAtPixel(x, y).getARGB());
+	return new Color(model.getPixel(x, y));
 }
 
 private void updateStatus(int x, int y) {
@@ -136,8 +136,9 @@ public void toolExited(MouseEvent e) {
 }
 
 @Override
-public void draw(int x, int y, int color) {
-}
+public void draw(int x, int y, int color) { }
+
+@Override public void drawBrush(int x, int y, int color) { }
 
 @Override
 public void toolKeyPressed(KeyEvent e) {

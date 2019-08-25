@@ -45,8 +45,7 @@ private int getEraserColor() {
 	return new Color(value, value, value, value).getARGB();
 }
 
-@Override
-public void draw(int x, int y, int color) {
-	makeCircle(x, y, getEraserColor(), radius, negativeRadius, false, false);
+@Override public void draw(int x, int y, int color) {
+	model.erasePixel(x,y,eraseToTransparent);
 }
 }

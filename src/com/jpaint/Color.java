@@ -140,11 +140,11 @@ java.awt.Color getAWT() { //argb -> rgba
 }
 
 //print out the values of the color to console
-    /*void print() {
-        for (short channel : channels) {
-            System.out.print(channel + " ");
-        } System.out.print("\n");
-    }*/
+void print() {
+    for (short channel : channels) {
+        System.out.print(channel + " ");
+    } System.out.print("\n");
+}
 
 /*====== ALPHA BLENDING ======*/
 

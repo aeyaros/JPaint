@@ -103,9 +103,21 @@ int getColorIntByButton(int mouseEventButtonCode) {
 	}
 }
 
+int getAlternateColor(int currentMouseEventCode) {
+	switch (currentMouseEventCode) {
+		case MouseEvent.BUTTON2: //if middle
+			return colorsInts[0]; //use left
+		case MouseEvent.BUTTON3: //if right
+			return colorsInts[0]; //use left
+		default: //if left
+			return colorsInts[2]; //use right
+	}
+}
+
 /*====== DRAWING TOOLS ======*/
 
-void fill(int x, int y, int buttonCode) {
+//fill an area with a replacement color
+void fill(int x, int y, int replacement, boolean useOverlay) {
 	//Implementing a Flood-fill algorithm from Wikipedia
 	//https://en.wikipedia.org/wiki/Flood_fill
 	
@@ -116,67 +128,60 @@ void fill(int x, int y, int buttonCode) {
 	if (!model.isInBounds(x, y)) return; //cancel if point out of bounds of canvas
 	
 	int target; //color to try and fill in
-	
-	try {
-		target = model.getColorAtPixel(x, y).getARGB(); //color of spot clicked
+	try { target = model.getPixel(x, y); //color of spot clicked
 	} catch (IndexOutOfBoundsException exc) {
 		System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
 		//exc.printStackTrace();
-		return;
-	}
+		return; }
 	
-	int replacement = getColorIntByButton(buttonCode); //color selected by user
-	
-	//no need to save state unless there's actually something for us to do
 	if (target == replacement) return; //return if target = replacement
-	
-	//if we made it here, then we can do the fill; save state
-	model.saveCurrentState();
 	
 	draw(x, y, target); //draw at coordinate
 	ArrayDeque<Node> nodes = new ArrayDeque<>(); //create empty queue
 	nodes.addLast(new Node(x, y)); //add initial node to queue
 	
-	while (nodes.size() > 0) { //while queue not empty
+	while (!nodes.isEmpty()) { //while queue not empty
 		Node n = new Node(
 			  nodes.removeFirst());//pop n from queue
 		//if color to north, south, east, or west of n is target color,
 		//then set that node to replacement and add it to the queue
-		char[] dirs = {'N', 'S', 'E', 'W'};
-		for (char dir: dirs) {
+		for (int i = 0; i < 4; i++) {
 			try {
-				if (n.get(dir).c() == target) {
-					n.get(dir).set(replacement);
-					nodes.addLast(n.get(dir));
+				if (n.get(i).c(useOverlay) == target) {
+					n.get(i).set(replacement);
+					nodes.addLast(n.get(i));
 				}
 			} catch (IndexOutOfBoundsException ignored) { }
 		}
 	} //loop until queue empty again
-	model.refreshView();
 }
 
 //Node object for flood algorithm
 private class Node {
-	int x;
-	int y;
+	private int x;
+	private int y;
 	
 	Node(int X, int Y) { x = X; y = Y; } //new node
-	Node(Node n) { x = n.x; y = n.y; } //deep copy
-	int c() { return model.getColorAtPixel(x, y).getARGB(); } //get color of node
-	void set(int c) { draw(x, y, c); } //set color of node
+	Node(Node n) { x = n.x(); y = n.y(); } //deep copy
+	int x() { return x; }
+	int y() { return y; }
+	int c(boolean useOverlay) { //get color of node
+		if(useOverlay) return model.getOverlayPixel(x, y);
+		else return model.getPixel(x, y);
+	} void set(int c) { draw(x, y, c); } //set color of node
 	
-	Node get(char c) { //get a node by direction character
-		switch (c) { //return node if it is in bounds, otherwise break and throw
-			case 'N':
+	Node get(int d) { //get a node by direction
+		switch (d) { //return node if it is in bounds, otherwise break and throw
+			case 0: //NORTH
 				if (y + 1 < highY) return new Node(x, y + 1);
 				else break;
-			case 'S':
+			case 1: //SOUTH
 				if (y - 1 >= lowY) return new Node(x, y - 1);
 				else break;
-			case 'E':
+			case 2: //EAST
 				if (x - 1 >= lowX) return new Node(x - 1, y);
 				else break;
-			case 'W':
+			case 3: //WEST
 				if (x + 1 < highX) return new Node(x + 1, y);
 				else break;
 			default:
@@ -185,13 +190,24 @@ private class Node {
 	}
 }
 
+/* ====== GEOMETRIC DRAWING TOOLS ======
+* Draw a line, a circle, or a polygon. At each point on the line or curve,
+* we can use the draw function (draw a single pixel) or the drawbrush function
+* (to draw, at that point, a shape, such as a circle or triangle)
+*
+* So basically, if inside the drawBrush function, set useBrush to false
+* since in that function we are deciding what we want to draw
+* directly to the canvas at a given point
+*/
+
+
 //source of algorithm:
 //https://en.wikipedia.org/wiki/Bresenham%27s_line_algorithm
 //version that accounts for x and y error; a Java implementation
 //only a limited amount of mouse events are actually captured
 //this results in a row of dots on the canvas
 //this is solved by drawing a line from the current dot to the previous dot
-void bresenham(int x0, int y0, int x1, int y1, int color) {
+void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush) {
 	int dx = Math.abs(x1 - x0);
 	int sx = -1;
 	if (x0 < x1) sx = 1;
@@ -217,38 +233,41 @@ void bresenham(int x0, int y0, int x1, int y1, int color) {
 		}
 		
 		//then draw at that point
-		draw(x0, y0, color);
+		if(useBrush) drawBrush(x0,y0,color);
+		else draw(x0, y0, color);
 	}
 }
 
-void makeCircle(int origX, int origY, int color, int radius, int negativeRadius, boolean blend, boolean useOverlay) {
-	for (int y = negativeRadius; y <= radius; y++) {
-		for (int x = negativeRadius; x <= radius; x++) {
+
+
+//"brush" functions
+void makeCircle(int origX, int origY, int color, int radius, boolean useBrush) {
+	for (int y = -radius; y <= radius; y++) {
+		for (int x = -radius; x <= radius; x++) {
 			if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-				model.setPixel(origX + x, origY + y, color, blend, useOverlay);
+				if(useBrush) drawBrush(origX + x, origY + y, color);
+				else draw(origX + x, origY + y, color);
 		}
 	}
 	model.refreshView();
 }
 
-void generateTriangle() {
-	int[][] points = getPolyPoints(200, 200, 5, 10, -90);
+void makeRegularPolygon(int x, int y, int sides, int radius, double offset, int color, boolean useBrush) {
+	int[][] points = getPolyPoints(x, y, sides, radius, offset);
+	//draw several lines, using either a brush or not
 	for (int i = 0; i < points.length; i++) {
-		bresenham(
-			  points[i][0],
-			  points[i][1],
-			  points[(i + 1) % points.length][0],
-			  points[(i + 1) % points.length][1],
-			  new Color(255, 0, 0, 0).getARGB()
-		         );
-		System.out.println("---" + points[i][0] + " " + points[i][1]);
+		bresenham(points[i][0], points[i][1],
+		          points[(i + 1) % points.length][0],
+		          points[(i + 1) % points.length][1],
+		          color, useBrush);
 	}
 	
 }
 
-private int[][] getPolyPoints(int originX, int originY, int sides, int radius, int angleOffset) {
+//get points of a regular polygon; lines will be drawn from point to point
+private int[][] getPolyPoints(int originX, int originY, int sides, int radius, double angleOffset) {
 	int[][] points = new int[sides][2];//holds return values
-	double initialAngle = angleOffset * Math.PI / 180d;
+	double initialAngle = angleOffset;
 	double theta = (2d * Math.PI) / (double) sides;
 	double currentAngle;
 	for (int i = 0; i < sides; i++) {

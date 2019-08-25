@@ -20,22 +20,28 @@ ToolPaintBucket(ImageModel model, String iconSource) {
 
 @Override
 public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, true, false);
+	model.setPixel(x, y, color, false);
 }
 
+@Override public void drawBrush(int x, int y, int color) {
 
+}
 
 @Override
 public void toolClicked(MouseEvent e) {
 	System.out.println("clicked");
-	fill(e.getX(), e.getY(), e.getButton());
+	model.saveCurrentState();
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()),false);
+	model.refreshView();
 	
 }
 
 @Override
 public void toolPressed(MouseEvent e) {
 	System.out.println("pressed");
-	fill(e.getX(), e.getY(), e.getButton());
+	model.saveCurrentState();
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()),false);
+	model.refreshView();
 }
 
 @Override

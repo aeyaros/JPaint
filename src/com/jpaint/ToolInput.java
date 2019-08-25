@@ -28,6 +28,10 @@ void toolEntered(MouseEvent e);
 
 void toolExited(MouseEvent e);
 
-//function used for line drawing tool
+//how to set the pixel
 void draw(int x, int y, int color);
+
+//determine how many pixels to set
+void drawBrush(int x, int y, int color);
 }
+

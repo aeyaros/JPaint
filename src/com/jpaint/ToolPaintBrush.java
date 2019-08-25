@@ -7,8 +7,7 @@ public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
 private final int MAX_RADIUS = 24;
-int radius;
-int negativeRadius; //just radius * -1, for slightly less operations in certain functions
+private int radius;
 private JLabel radiusLabel;
 private JSlider radiusSlider;
 
@@ -36,13 +35,11 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 
 private void setRadius(int r) {
 	radius = r;
-	negativeRadius = -r;
 	radiusLabel.setText(Double.toString((radius * 2 + 1) / 2d));
 }
 
-public void draw(int x, int y, int color) {
-	makeCircle(x, y, color, radius, negativeRadius, false, true);
+@Override public void drawBrush(int x, int y, int color) {
+	makeCircle(x, y, color, radius, false);
 }
-
 
 }

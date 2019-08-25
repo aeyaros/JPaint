@@ -12,14 +12,13 @@ private final int MAX_WIDTH = 11;
 private final int DEFAULT_WIDTH = 1;
 private boolean twoClickMode;//if we are drawing line using two clicks
 private boolean dragMode; //if we are dragging the line instead of two clicks
-private int width;
-private int negativeWidth; //for optimization
 private JSlider widthSlider;
 private JLabel widthLabel;
+int width;
 
 //current original point
-private int x0;
-private int y0;
+int x0;
+int y0;
 
 
 ToolLine(ImageModel model, String iconSource) {
@@ -32,7 +31,7 @@ ToolLine(ImageModel model, String iconSource) {
 	
 	JPanel widthPanel = new JPanel();
 	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
-	widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Line Width"));
+	widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Stroke Width"));
 	
 	widthPanel.add(widthLabel);
 	widthPanel.add(widthSlider);
@@ -46,25 +45,27 @@ ToolLine(ImageModel model, String iconSource) {
 	//cancel the operation if we select a different tool
 	button.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.DESELECTED) {
-			cancelLineDrawing();
+			cancelDrawing();
 		}
 	});
 }
 
 private void setWidth(int w) {
 	width = w;
-	negativeWidth = -w;
 	widthLabel.setText(Integer.toString(width * 2 + 1)); //because radius
 }
 
 //draw the line from the starting point to the current (ending) point
 private void drawLine(int endX, int endY, int color) {
-	bresenham(x0, y0, endX, endY, color);
+	bresenham(x0, y0, endX, endY, color,true);
 }
 
-//draw command used by draw function
-public void draw(int x, int y, int color) {
-	makeCircle(x, y, color, width, negativeWidth, false, true);
+@Override public void draw(int x, int y, int color) {
+	model.setPixel(x,y,color,true);
+}
+
+@Override public void drawBrush(int x, int y, int color) {
+	makeCircle(x, y, color, width, false);
 }
 
 private void resetStates() {
@@ -78,22 +79,22 @@ private void resetPoints() {
 }
 
 //on first click or mousedown
-private void startLineDrawing(int startX, int startY, int color) {
+void startDrawing(int startX, int startY, int color, MouseEvent e) {
 	//dont save state until we know the line is getting drawn
 	//get current points
 	x0 = startX;
 	y0 = startY;
-	refreshLinePreview(x0, y0, color);
+	refreshPreview(x0, y0, color);
 }
 
 //when mouse is moved
-private void refreshLinePreview(int x1, int y1, int color) {
+void refreshPreview(int x1, int y1, int color) {
 	model.clearOverlay();
-	bresenham(x0, y0, x1, y1, color);
+	bresenham(x0, y0, x1, y1, color,true);
 }
 
 //on second click, or mouse release
-private void finishLineDrawing(int endX, int endY, int color) {
+void finishDrawing(int endX, int endY, int color, MouseEvent e) {
 	//we know we are drawing the line now, and so we are going to save the old state
 	model.saveCurrentState();
 	model.clearOverlay();
@@ -103,7 +104,7 @@ private void finishLineDrawing(int endX, int endY, int color) {
 }
 
 //cancel the drawing
-private void cancelLineDrawing() {
+private void cancelDrawing() {
 	resetStates();
 	resetPoints();
 	model.clearOverlay();
@@ -114,15 +115,15 @@ private void cancelLineDrawing() {
 @Override
 public void toolMoved(MouseEvent e) {
 	//if the current tool isn't selected, then we should cancel; doesn't work
-	if (!this.button.isSelected()) cancelLineDrawing();
+	if (!this.button.isSelected()) cancelDrawing();
 	
-	else if (twoClickMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	else if (twoClickMode) refreshPreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 //refresh preview if we are doing drag mode
 @Override
 public void toolDragged(MouseEvent e) {
-	if (dragMode) refreshLinePreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	if (dragMode) refreshPreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 //handle mouseclicks for two click mode
@@ -132,10 +133,10 @@ public void toolClicked(MouseEvent e) {
 	if (!dragMode) {
 		if (!twoClickMode) { //first click
 			twoClickMode = true;
-			startLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+			startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
 		} else { //second click
 			//do stuff to finish line
-			finishLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+			finishDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()), e);
 			twoClickMode = false;
 		}
 	}
@@ -149,7 +150,7 @@ public void toolPressed(MouseEvent e) {
 	//start of drag if neither mode is enabled
 	if (!dragMode && !twoClickMode) {
 		dragMode = true; //set as drag mode
-		startLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+		startDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
 	}
 }
 
@@ -159,7 +160,7 @@ public void toolReleased(MouseEvent e) {
 	//end of drag
 	if (dragMode && !twoClickMode) {
 		//finish the drag stuff
-		finishLineDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+		finishDrawing(e.getX(), e.getY(), getColorIntByButton(e.getButton()),e);
 		//then set drag as false
 		dragMode = false;
 	}
@@ -184,7 +185,7 @@ public void toolKeyPressed(KeyEvent e) {
 	    e.getExtendedKeyCode() == KeyEvent.VK_STOP ||
 	    e.getExtendedKeyCode() == KeyEvent.VK_END
 	) {
-		cancelLineDrawing();
+		cancelDrawing();
 	}
 }
 

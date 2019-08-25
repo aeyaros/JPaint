@@ -5,8 +5,8 @@ import java.awt.image.BufferedImage;
 //Canvas: part of the model: contains an argb-integer image
 class Canvas {
 /*====== CONSTRUCTORS ======*/
-private final int whiteInt = (new Color(Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE)).getARGB();
-private final int transparentInt =
+static final int WHITE_INT = (new Color(Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE, Color.MAX_VALUE)).getARGB();
+static final int TRANSPARENT_INT =
 	  (new Color(Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE)).getARGB();
 private BufferedImage pixels;
 private BufferedImage overlay;
@@ -16,18 +16,18 @@ private int defaultColor; //either white or transparent
 
 //create a new canvas
 Canvas(int w, int h, boolean transparent) {
-	if (transparent) defaultColor = transparentInt;
-	else defaultColor = whiteInt;
+	if (transparent) defaultColor = TRANSPARENT_INT;
+	else defaultColor = WHITE_INT;
 	
 	width = w;
 	height = h;
 	pixels = newBlankImage(w, h, defaultColor);
-	overlay = newBlankImage(w, h, transparentInt);
+	overlay = newBlankImage(w, h, TRANSPARENT_INT);
 }
 
 //deep copy constructor
 Canvas(Canvas oldCanvas) {
-	defaultColor = transparentInt;
+	defaultColor = TRANSPARENT_INT;
 	width = oldCanvas.getWidth();
 	height = oldCanvas.getHeight();
 	pixels = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
@@ -36,12 +36,12 @@ Canvas(Canvas oldCanvas) {
 			pixels.setRGB(i, j, oldCanvas.pixels.getRGB(i, j));
 		}
 	}
-	overlay = newBlankImage(pixels.getWidth(), pixels.getHeight(), transparentInt);
+	overlay = newBlankImage(pixels.getWidth(), pixels.getHeight(), TRANSPARENT_INT);
 }
 
 //canvas from a bufferedImage
 Canvas(BufferedImage sourceImage) {
-	defaultColor = transparentInt;
+	defaultColor = TRANSPARENT_INT;
 	width = sourceImage.getWidth();
 	height = sourceImage.getHeight();
 	pixels = sourceImage;
@@ -89,7 +89,7 @@ void clearAll() {
 }
 
 void clearOverlay() {
-	overlay = newBlankImage(width, height, transparentInt);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 /*====== MODIFIERS ======*/
@@ -134,12 +134,20 @@ void resize(int newX, int newY) {
 	pixels = newPixels;
 	width = newX;
 	height = newY;
-	overlay = newBlankImage(width, height, transparentInt);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 /*====== ACCESSORS ======*/
 BufferedImage getPixels() {
 	return pixels;
+}
+
+int getPixel(int x, int y) {
+	return pixels.getRGB(x,y);
+}
+
+int getOverlayPixel(int x, int y) {
+	return overlay.getRGB(x,y);
 }
 
 BufferedImage getOverlay() {
@@ -169,7 +177,7 @@ void merge() { //BufferedImage top) {
 				  overlay.getRGB(i, j),
 				  this.pixels.getRGB(i, j)
 			                                         ));
-	overlay = newBlankImage(width, height, transparentInt);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 void rotateOrtho(int option) {
@@ -222,7 +230,7 @@ void rotateOrtho(int option) {
 		height = temp; //set height to new height
 		System.out.println("new: " + width + " " + height);
 	}
-	overlay = newBlankImage(width, height, transparentInt);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
         /*
         BufferedImageOp rotateLeft = new AffineTransformOp(AffineTransform.getRotateInstance((Math.PI) / 2, (double)
         width/2, (double)height/2),AffineTransformOp.TYPE_BICUBIC);

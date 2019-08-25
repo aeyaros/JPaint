@@ -193,9 +193,16 @@ private void printStates() {
 
 /*====== EDITING CANVAS ======*/
 
-void setPixel(int x, int y, int argb, boolean blend, boolean useOverlay) {
-	if (blend) currentState.setPixel(x, y, argb, useOverlay);
-	else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
+void erasePixel(int x, int y, boolean transparent) {
+	if(transparent) currentState.setPixelWithoutBlending(x,y, Canvas.TRANSPARENT_INT,false);
+	else currentState.setPixelWithoutBlending(x,y, Canvas.WHITE_INT,false);
+}
+
+void setPixel(int x, int y, int argb, boolean useOverlay) {
+	if(useOverlay)  currentState.setPixelWithoutBlending(x, y, argb, true);
+	else currentState.setPixel(x, y, argb, false);
+	//if (blend) currentState.setPixel(x, y, argb, useOverlay);
+	//else currentState.setPixelWithoutBlending(x, y, argb, useOverlay);
 }
 
 /* FUNCTIONS USED BY MENUS */
@@ -242,8 +249,13 @@ boolean isInBounds(int x, int y) {
 	return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
 }
 
-Color getColorAtPixel(int x, int y) {
-	if (isInBounds(x, y)) return new Color(currentState.getPixels().getRGB(x, y));
+int getPixel(int x, int y) {
+	if (isInBounds(x, y)) return currentState.getPixel(x, y);
+	else throw new IndexOutOfBoundsException();
+}
+
+int getOverlayPixel(int x, int y) {
+	if (isInBounds(x, y)) return currentState.getOverlayPixel(x,y);
 	else throw new IndexOutOfBoundsException();
 }
 

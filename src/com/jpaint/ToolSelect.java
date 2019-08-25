@@ -57,6 +57,10 @@ public void draw(int x, int y, int color) {
 
 }
 
+@Override public void drawBrush(int x, int y, int color) {
+
+}
+
 @Override
 public void toolKeyPressed(KeyEvent e) {
 

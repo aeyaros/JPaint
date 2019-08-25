@@ -29,7 +29,11 @@ private boolean canDraw() {
 
 
 public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, false, true); //draw at the point
+	model.setPixel(x, y, color, true); //draw at the point
+}
+
+@Override public void drawBrush(int x, int y, int color) {
+	draw(x,y,color); //only draw one pixel at a time
 }
 
 private void preventDrawing() {
@@ -71,8 +75,8 @@ public void toolDragged(MouseEvent e) {
 		//get color to draw with
 		int colorInt = getColorIntByButton(e.getButton());
 		
-		draw(curX, curY, colorInt);
-		bresenham(oldX, oldY, curX, curY, colorInt); //draw line from past point to current point
+		drawBrush(curX,curY,colorInt);
+		bresenham(oldX, oldY, curX, curY, colorInt,true); //draw line from past point to current point
 		
 		model.refreshView(); //tell model to refresh view
 	}
@@ -94,7 +98,7 @@ public void toolExited(MouseEvent e) {
 @Override
 public void toolClicked(MouseEvent e) {
 	model.saveCurrentState();
-	draw(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	drawBrush(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 	model.refreshView();
 }
 
