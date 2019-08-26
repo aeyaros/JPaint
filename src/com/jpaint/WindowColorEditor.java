@@ -9,7 +9,7 @@ import java.awt.*;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
-class WindowColorPicker {
+class WindowColorEditor {
 private final int COLOR_LABEL_WIDTH = 128;
 private final int COLOR_LABEL_HEIGHT = 64;
 private final int SLIDER_BORDER = 12;
@@ -25,7 +25,7 @@ private ColorPresetButton colorPresetButton;
 private ManageColors manageColors;
 
 //when initially created, we dont use it
-WindowColorPicker() {
+WindowColorEditor() {
 	close();
 }
 
@@ -56,7 +56,7 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	                                                                 SystemColor.controlHighlight
 	                                                                ));
 	
-	frame = new JFrame("Color Picker");
+	frame = new JFrame("Color Editor");
 	
 	//set dimensions
 	frame.setResizable(false);

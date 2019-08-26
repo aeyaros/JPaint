@@ -42,7 +42,7 @@ private JLabel opacityLabel;
 private JFrame mainFrame;
 
 //the color picker window
-private WindowColorPicker windowColorPicker;
+private WindowColorEditor windowColorEditor;
 
 ManageColors(
 	  Tool[] tools, JFrame mainFrame, JPanel presetPanel, JPanel selectedColorsPanel, JPanel opacitySliderPanel
@@ -169,7 +169,7 @@ ManageColors(
 	this.mainFrame = mainFrame;
 	
 	//instantiate color picker
-	this.windowColorPicker = new WindowColorPicker();
+	this.windowColorEditor = new WindowColorEditor();
 	
 	//notify tools of color changes
 	notifyTools();
@@ -220,9 +220,9 @@ private void setSelectedColorOpacity(int opacity) {
 }
 
 private void setUpColorPicker(ColorPresetButton colorToChange) {
-	windowColorPicker.close(); //either window is open, closed already
+	windowColorEditor.close(); //either window is open, closed already
 	//in the color manager constructor, this is instantiated without a color (and therefore immediately closed)
-	windowColorPicker.setColorPickerWindow(colorToChange, mainFrame, this);
+	windowColorEditor.setColorPickerWindow(colorToChange, mainFrame, this);
 }
 
 //allows me to pass an index value through the action listener
