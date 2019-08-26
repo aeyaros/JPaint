@@ -19,7 +19,7 @@ import java.util.Hashtable;
 class WindowApplication {
 //parameters for certain UI sizes
 static final String APPLICATION_NAME = "JPaint";
-static final String NEW_DOCUMENT = "New Document";
+static final String NEW_DOCUMENT = "Untitled";
 static final int WINDOW_CHROME_SIZE = 8;
 private final int MINIMUM_WINDOW_WIDTH = 700;
 private final int MINIMUM_WINDOW_HEIGHT = 480;
