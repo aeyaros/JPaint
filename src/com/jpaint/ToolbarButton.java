@@ -29,20 +29,22 @@ ToolbarButton(String iconSource) {
 		                               );
 		this.setIcon(new ImageIcon(image));
 		this.setBackground(SystemColor.window);
-		//get the same image for the selected state, but invert the colors
-		BufferedImage selectedImage = ImageIO.read(getClass().getResource(iconSource));
-		for (int i = 0; i < selectedImage.getWidth(); i++) {
-			for (int j = 0; j < selectedImage.getHeight(); j++) {
-				Color c = new Color(selectedImage.getRGB(i, j));
-				for (int k = 1; k < 4; k++) {
-					c.setChannel(k, 255 - c.getChannel(k));
+		if (Main.IS_MAC) {
+			//get the same image for the selected state, but invert the colors
+			BufferedImage selectedImage = ImageIO.read(getClass().getResource(iconSource));
+			for (int i = 0; i < selectedImage.getWidth(); i++) {
+				for (int j = 0; j < selectedImage.getHeight(); j++) {
+					Color c = new Color(selectedImage.getRGB(i, j));
+					for (int k = 1; k < 4; k++) {
+						c.setChannel(k, 255 - c.getChannel(k));
+					}
+					selectedImage.setRGB(i, j, c.getARGB());
 				}
-				selectedImage.setRGB(i, j, c.getARGB());
 			}
+			this.setSelectedIcon(new ImageIcon(
+				  selectedImage.getScaledInstance(
+						ToolbarButton.TOOL_BUTTON_SIZE, ToolbarButton.TOOL_BUTTON_SIZE, Image.SCALE_REPLICATE)));
 		}
-		this.setSelectedIcon(new ImageIcon(
-			  selectedImage.getScaledInstance(
-				    ToolbarButton.TOOL_BUTTON_SIZE, ToolbarButton.TOOL_BUTTON_SIZE, Image.SCALE_REPLICATE)));
 	} catch (Exception e) {
 		e.printStackTrace();
 		System.err.println("Couldn't load icon from " + iconSource);
