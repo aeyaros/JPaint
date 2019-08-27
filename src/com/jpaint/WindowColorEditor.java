@@ -70,33 +70,6 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	frame.getContentPane().add(mainPanel);
 	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 	
-	/*
-	
-	//labels above the colors that say "original" and "new"
-	JPanel colorLabelText = new JPanel(new GridLayout(1,2));
-	colorLabelText.setBorder(BorderFactory.createEmptyBorder(0,0,4,0));
-	
-	//label that says "original"
-	//using card layouts with a single card because they are centering the text properly :/
-	JPanel originalColorTitlePanel = new JPanel();
-	JLabel originalColorTitleLabel = new JLabel("Original");
-	originalColorTitleLabel.setBorder(null);
-	originalColorTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	originalColorTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
-	originalColorTitlePanel.add(originalColorTitleLabel);
-	colorLabelText.add(originalColorTitlePanel);
-	
-	//label that says "new"
-	JPanel newColorTitlePanel = new JPanel();
-	JLabel newColorTitleLabel = new JLabel("New");
-	newColorTitleLabel.setBorder(null);
-	newColorTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-	newColorTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
-	newColorTitlePanel.add(newColorTitleLabel);
-	colorLabelText.add(newColorTitlePanel);
-	*/
-	
-	
 	//labels containing the colors themselves - two colors next to each other
 	JPanel colorLabels = new JPanel(new GridLayout(1, 2));
 	
