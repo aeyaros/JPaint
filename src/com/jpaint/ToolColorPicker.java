@@ -58,7 +58,7 @@ private void updateStatus(int x, int y) {
 			for (int i = 0; i < ARGB.length; i++) {
 				ARGB[i].setBackground(c.getAWT());
 				//invert color of text if color is too dark
-				if (isDarkColor(c)) ARGB[i].setForeground(java.awt.Color.white);
+				if (Color.isDarkColor(c)) ARGB[i].setForeground(java.awt.Color.white);
 				else ARGB[i].setForeground(java.awt.Color.black);
 				ARGB[i].setText(labelPrefixes[i] + c.getChannel(i));
 			}
@@ -70,16 +70,6 @@ private void updateStatus(int x, int y) {
 			e.printStackTrace();
 		}
 	}
-}
-
-//WC3 Brightness formula: ((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
-private boolean isDarkColor(Color c) {
-	//if low opacity, then it's a light color
-	if (c.getChannel(0) < 128) return false;
-	double r = c.getChannel(1) / Color.MAX_VALUE_FLOAT;
-	double g = c.getChannel(2) / Color.MAX_VALUE_FLOAT;
-	double b = c.getChannel(3) / Color.MAX_VALUE_FLOAT;
-	return ((((r * 299d) + (g * 587d) + (b * 114d)) / 1000.0d) < 0.4);
 }
 
 private void setColor(int x, int y, int buttonCode) {

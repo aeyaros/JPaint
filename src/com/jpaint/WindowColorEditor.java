@@ -2,7 +2,6 @@ package com.jpaint;
 
 import javax.swing.*;
 import javax.swing.border.BevelBorder;
-import javax.swing.border.EmptyBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
@@ -12,17 +11,19 @@ import java.awt.event.WindowFocusListener;
 class WindowColorEditor {
 private final int COLOR_LABEL_WIDTH = 128;
 private final int COLOR_LABEL_HEIGHT = 64;
-private final int SLIDER_BORDER = 12;
-private final Dimension colorSize = new Dimension(256, 480);
+private final int BORDER_THICKNESS = 12;
+private final Dimension colorSize = new Dimension(256, 470);
 //window elements
 private JFrame frame;
 private JLabel[] labels;
 private JSlider[] sliders;
 private ColorPresetButton colorLabel;
 //color stuff
-private Color colorToChange;
+private Color colorBeingChanged;
 private ColorPresetButton colorPresetButton;
 private ManageColors manageColors;
+private JLabel originalColorText;
+private JLabel newColorText;
 
 //when initially created, we dont use it
 WindowColorEditor() {
@@ -40,7 +41,7 @@ void close() {
 }
 
 private void save() {
-	colorPresetButton.setColor(colorToChange);
+	colorPresetButton.setColor(colorBeingChanged);
 	manageColors.notifyTools();
 	close();
 }
@@ -50,7 +51,7 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	
 	this.colorPresetButton = colorPresetButton; //not used until saving
 	this.manageColors = manageColors; //not used until saving
-	colorToChange = new Color(colorPresetButton.getColor()); //store a copy of the original color
+	colorBeingChanged = new Color(colorPresetButton.getColor()); //store a copy of the original color
 	
 	this.colorPresetButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, SystemColor.controlHighlight,
 	                                                                 SystemColor.controlHighlight
@@ -60,7 +61,6 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	
 	//set dimensions
 	frame.setResizable(false);
-	frame.setMinimumSize(colorSize);
 	frame.setMaximumSize(colorSize);
 	frame.setPreferredSize(colorSize);
 	frame.setSize(colorSize);
@@ -68,60 +68,82 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	//base panel containing layout
 	JPanel mainPanel = new JPanel();
 	frame.getContentPane().add(mainPanel);
-	
 	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 	
-	JPanel originalColorLabels = new JPanel();
-	JPanel newColorLabels = new JPanel();
+	/*
 	
-	BoxLayout oc = new BoxLayout(originalColorLabels, BoxLayout.Y_AXIS);
-	BoxLayout nc = new BoxLayout(newColorLabels, BoxLayout.Y_AXIS);
-	originalColorLabels.setLayout(oc);
-	newColorLabels.setLayout(nc);
+	//labels above the colors that say "original" and "new"
+	JPanel colorLabelText = new JPanel(new GridLayout(1,2));
+	colorLabelText.setBorder(BorderFactory.createEmptyBorder(0,0,4,0));
 	
-	JLabel originalLabelText = new JLabel("Original", SwingConstants.CENTER);
-	originalColorLabels.add(originalLabelText);
+	//label that says "original"
+	//using card layouts with a single card because they are centering the text properly :/
+	JPanel originalColorTitlePanel = new JPanel();
+	JLabel originalColorTitleLabel = new JLabel("Original");
+	originalColorTitleLabel.setBorder(null);
+	originalColorTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	originalColorTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
+	originalColorTitlePanel.add(originalColorTitleLabel);
+	colorLabelText.add(originalColorTitlePanel);
+	
+	//label that says "new"
+	JPanel newColorTitlePanel = new JPanel();
+	JLabel newColorTitleLabel = new JLabel("New");
+	newColorTitleLabel.setBorder(null);
+	newColorTitleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+	newColorTitleLabel.setVerticalAlignment(SwingConstants.CENTER);
+	newColorTitlePanel.add(newColorTitleLabel);
+	colorLabelText.add(newColorTitlePanel);
+	*/
+	
+	
+	//labels containing the colors themselves - two colors next to each other
+	JPanel colorLabels = new JPanel(new GridLayout(1, 2));
 	
 	//label to show original color, is never changed once set
-	ColorPresetButton oldColorPresetButtonLabel =
+	ColorPresetButton originalColorLabel =
 		  new ColorPresetButton(colorPresetButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
-	oldColorPresetButtonLabel.setBorder(null);
-	originalColorLabels.add(oldColorPresetButtonLabel);
-	setColorPane(oldColorPresetButtonLabel);
+	originalColorLabel.setBorder(null);
+	colorLabels.add(originalColorLabel);
+	setColorPane(originalColorLabel);
+	originalColorText = new JLabel("OldColor");
+	originalColorLabel.add(originalColorText);
+	setColorLabelTextColor(originalColorText, colorPresetButton.getColor());
 	
-	//stuff for new color that is being set by user
-	JLabel newLabelText = new JLabel("New", SwingConstants.CENTER);
-	newColorLabels.add(newLabelText);
-	
-	//add label to show new color color, changes when user uses controls on the window
+	//label to show new color color, changes when user uses controls on the window
 	colorLabel = new ColorPresetButton(colorPresetButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
 	colorLabel.setBorder(null);
-	newColorLabels.add(colorLabel);
+	colorLabels.add(colorLabel);
 	setColorPane(colorLabel);
+	newColorText = new JLabel("New color");
+	colorLabel.add(newColorText);
+	setColorLabelTextColor(newColorText, colorPresetButton.getColor());
 	
-	//panel containing both colors
-	JPanel colorPanel = new JPanel(new GridLayout(1, 2));
-	colorPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, SLIDER_BORDER, 0));
+	//panel containing both titles and colors
+	JPanel colorPanel = new JPanel();
+	colorPanel.setLayout(new BoxLayout(colorPanel, BoxLayout.Y_AXIS));
+	colorPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 12, 0));
+	//colorPanel.add(colorLabelText); //titles
+	colorPanel.add(colorLabels); //colors
 	
-	colorPanel.add(originalColorLabels);
-	colorPanel.add(newColorLabels);
-	
-	mainPanel.add(colorPanel);
+	mainPanel.add(colorPanel); //add to main
 	
 	
+	//panels containing slider controls
 	JPanel[] sliderPanels = new JPanel[4];
 	sliders = new JSlider[sliderPanels.length];
 	labels = new JLabel[sliderPanels.length];
 	
 	for (int i = 0; i < sliderPanels.length; i++) {
 		
-		labels[i] = new JLabel(Integer.toString(colorToChange.getChannel(i)), SwingConstants.RIGHT);
+		labels[i] = new JLabel(Integer.toString(colorBeingChanged.getChannel(i)), SwingConstants.RIGHT);
 		labels[i].setPreferredSize(new Dimension(48, 24));
 		labels[i].setMinimumSize(labels[i].getPreferredSize());
 		labels[i].setBorder(BorderFactory.createEmptyBorder(0, 12, 0, 12));
 		
 		sliders[i] =
-			  new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE, colorToChange.getChannel(i));
+			  new JSlider(SwingConstants.HORIZONTAL, Color.MIN_VALUE, Color.MAX_VALUE,
+			              colorBeingChanged.getChannel(i));
 		sliders[i].addChangeListener(new sliderListener(i));
 		
 		sliders[i].setMajorTickSpacing(85);
@@ -134,7 +156,8 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 		sliderPanels[i].add(sliders[i]);
 		sliderPanels[i].add(labels[i]);
 		sliderPanels[i].setBorder(
-			  BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), Color.getChannelString(i)));
+			  BorderFactory
+					.createTitledBorder(BorderFactory.createEtchedBorder(), "Adjust " + Color.getChannelString(i)));
 	}
 	
 	//add sliders; red first
@@ -147,7 +170,6 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	
 	JButton applyButton = new JButton("Apply");
 	JButton cancelButton = new JButton("Cancel");
-	buttons.setBorder(new EmptyBorder(17, 0, 12, 0));
 	
 	applyButton.addActionListener(e -> save());
 	cancelButton.addActionListener(e -> close());
@@ -155,8 +177,9 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	buttons.add(applyButton);
 	buttons.add(cancelButton);
 	mainPanel.add(buttons);
-	buttons.setBorder(BorderFactory.createEmptyBorder(12, 0, 12, 0));
-	mainPanel.setBorder(BorderFactory.createEmptyBorder(12, 12, 12, 12));
+	buttons.setBorder(BorderFactory.createEmptyBorder(17, 0, 12, 0));
+	mainPanel.setBorder(BorderFactory.createEmptyBorder(
+		  BORDER_THICKNESS, BORDER_THICKNESS, BORDER_THICKNESS, BORDER_THICKNESS));
 	
 	frame.setAlwaysOnTop(true);
 	
@@ -181,13 +204,20 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 }
 
 private void updateChannel(int i) {
-	colorToChange.setChannel(i, sliders[i].getValue());
-	labels[i].setText(Integer.toString(colorToChange.getChannel(i)));
+	colorBeingChanged.setChannel(i, sliders[i].getValue());
+	labels[i].setText(Integer.toString(colorBeingChanged.getChannel(i)));
 	setColorPane(colorLabel);
+	//update color of text so it contrasts with the color
+	setColorLabelTextColor(newColorText, colorBeingChanged);
 }
 
 private void setColorPane(ColorPresetButton pane) {
-	pane.setColor(colorToChange);
+	pane.setColor(colorBeingChanged);
+}
+
+private void setColorLabelTextColor(JLabel text, Color backgroundColor) {
+	if (Color.isDarkColor(backgroundColor)) text.setForeground(java.awt.Color.white);
+	else text.setForeground(java.awt.Color.black);
 }
 
 private class sliderListener implements ChangeListener {

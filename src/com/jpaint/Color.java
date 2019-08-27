@@ -3,7 +3,7 @@ package com.jpaint;
 //Color: used for storing color information (aside from the image array itself, which is argb-ints)
 class Color {
 static final int MAX_VALUE = 255;
-static final float MAX_VALUE_FLOAT = 255.0f;
+private static final float MAX_VALUE_FLOAT = 255.0f;
 static final int MIN_VALUE = 0;
 private static final String[] channelNames = {"Opacity", "Red", "Green", "Blue"};
 private static final int NUMBER_OF_VALUES = 256;
@@ -159,5 +159,14 @@ void setChannel(int channelIndex, int newValue) {
 	channels[channelIndex % channels.length] = (short) (newValue % NUMBER_OF_VALUES);
 }
 
+//WC3 Brightness formula: ((Red value X 299) + (Green value X 587) + (Blue value X 114)) / 1000
+static boolean isDarkColor(Color c) {
+	//if low opacity, then it's a light color
+	if (c.getChannel(0) < 128) return false;
+	double r = c.getChannel(1) / Color.MAX_VALUE_FLOAT;
+	double g = c.getChannel(2) / Color.MAX_VALUE_FLOAT;
+	double b = c.getChannel(3) / Color.MAX_VALUE_FLOAT;
+	return ((((r * 299d) + (g * 587d) + (b * 114d)) / 1000.0d) < 0.4);
+}
 
 }
