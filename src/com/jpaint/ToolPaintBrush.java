@@ -8,6 +8,7 @@ public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
 private final int MAX_RADIUS = 24;
+protected JPanel mainPanel;
 ToolbarButton triangleButton;
 ToolbarButton squareButton;
 int radius;
@@ -21,6 +22,10 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	//set up upper card
 	upperCard.removeAll();
 	upperCard.setLayout(new GridLayout(1, 0));
+	
+	//panel holding everything
+	mainPanel = new JPanel();
+	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
 	
 	//brush radius slider
 	radiusSlider = new JSlider(SwingConstants.HORIZONTAL, MIN_RADIUS, MAX_RADIUS, DEFAULT_RADIUS);
@@ -47,7 +52,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	
 	setRadius(DEFAULT_RADIUS);
 	
-	upperCard.add(radiusPanel);
+	mainPanel.add(radiusPanel);
 	
 	
 	//brush shapes
@@ -94,7 +99,8 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	selectedBrush = SelectedBrush.CIRCLE;
 	circleButton.setSelected(true);
 	
-	upperCard.add(shapeButtons);
+	mainPanel.add(shapeButtons);
+	upperCard.add(mainPanel);
 }
 
 @Override void onButtonSelect() {

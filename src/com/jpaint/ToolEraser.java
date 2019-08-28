@@ -31,7 +31,7 @@ ToolEraser(ImageModel model, String iconSource) {
 	eraserButtonPanel.add(eraseWhite);
 	eraserButtonPanel.add(eraseTrans);
 	
-	upperCard.add(eraserButtonPanel);
+	mainPanel.add(eraserButtonPanel);
 	
 	//set up as a normal eraser
 	setEraseToTransparent(false);
