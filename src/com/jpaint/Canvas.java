@@ -90,6 +90,17 @@ private BufferedImage newBlankImage(int w, int h, int baseColor) {
 	return newImage;
 }
 
+//when saving state, dont keep overlays
+void nullifyOverlays() {
+	this.cursorOverlay = null;
+	this.overlay = null;
+}
+
+void reinitializeOverlays() {
+	this.overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	this.cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
+}
+
 void clearAll() {
 	pixels = newBlankImage(width, height, defaultColor);
 	clearOverlay();

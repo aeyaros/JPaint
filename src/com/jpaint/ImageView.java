@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
@@ -95,8 +96,13 @@ void refresh(ImageIcon baseIcon, ImageIcon overlayIcon) {
 	}
 }
 
-//refresh the cursor
-void refreshCursor(ImageIcon cursorOverlayIcon) {
+//set the Java/Swing cursor
+void updateSwingCursor(Cursor cursor) {
+	this.setCursor(cursor);
+}
+
+//refresh the canvas cursor
+void refreshCanvasCursor(ImageIcon cursorOverlayIcon) {
 	cursorOverlay.setIcon(cursorOverlayIcon);
 }
 

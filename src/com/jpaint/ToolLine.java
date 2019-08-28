@@ -59,6 +59,9 @@ ToolLine(ImageModel model, String iconSource) {
 		}
 	});
 }
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getBlankCursor());
+}
 
 private void setWidth(int w) {
 	width = w;
@@ -78,9 +81,9 @@ private void drawLine(int endX, int endY, int color, Canvas.DrawMode drawMode) {
 	makeCircle(x, y, color, width, false, drawMode);
 }
 @Override public void drawCursor(int x, int y, int color) {
-	model.clearCursor();
+	model.clearCanvasCursor();
 	drawBrush(x, y, color, Canvas.DrawMode.USE_CURSOR);
-	model.refreshCursor();
+	model.refreshCanvasCursor();
 }
 
 private void resetStates() {
@@ -192,8 +195,8 @@ public void toolEntered(MouseEvent e) {
 
 @Override
 public void toolExited(MouseEvent e) {
-	model.clearCursor();
-	model.refreshCursor();
+	model.clearCanvasCursor();
+	model.refreshCanvasCursor();
 }
 
 //if a user presses escape, then cancel line drawing

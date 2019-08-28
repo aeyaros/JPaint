@@ -1,7 +1,10 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
+import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
 //Tool: This is a tool button - subclasses contain specific tool functionality
@@ -29,7 +32,31 @@ Tool(ImageModel model, String iconSource) {
 	
 	//button for toolbar
 	button = new ToolbarButton(iconSource);
+	
+	button.addItemListener(e -> {
+		if (e.getStateChange() == ItemEvent.SELECTED) onButtonSelect();
+	});
+	
 }
+abstract void onButtonSelect();
+
+Cursor getDefaultCursor() {
+	return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
+}
+Cursor getBlankCursor() {
+	return Toolkit.getDefaultToolkit().createCustomCursor(
+		  new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
+}
+
+//how to set the pixel
+abstract void draw(int x, int y, int color, Canvas.DrawMode drawMode);
+
+//determine how many pixels to set
+abstract void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode);
+
+//draw the cursor
+abstract void drawCursor(int x, int y, int color);
+
 
 void updateColors(Color left, Color middle, Color right) {
 	colorsInts[0] = left.getARGB();

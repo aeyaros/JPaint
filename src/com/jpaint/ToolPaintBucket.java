@@ -17,6 +17,9 @@ ToolPaintBucket(ImageModel model, String iconSource) {
 	infoText.setVerticalAlignment(SwingConstants.CENTER);
 	upperCard.add(infoText, 0);
 }
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getDefaultCursor());
+}
 
 @Override
 public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {

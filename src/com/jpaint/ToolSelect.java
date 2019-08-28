@@ -52,6 +52,9 @@ ToolSelect(ImageModel model, String iconSource) {
 	start = new int[2];
 	end = new int[2];
 }
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getDefaultCursor());
+}
 
 //is a coordinate within the seletion bounds
 boolean inSelectionBounds(int[] currentPosition) {
@@ -84,11 +87,11 @@ void clearSelection() {
 	currentState = SelectionState.NOTHING_SELECTED;
 }
 
-void clearSelectionBox() {
+private void clearSelectionBox() {
 	//remove selection box
 }
 
-void drawSelectionBox(int[] currentPosition) {
+private void drawSelectionBox(int[] currentPosition) {
 	clearSelectionBox(); //clear a current selection box
 	//then draw
 }
@@ -157,9 +160,9 @@ public void toolReleased(MouseEvent e) {
 			int currentX = e.getX();
 			int currentY = e.getY();
 			//
-			if (currentX != start[0] && currentY != start[1]) {
+			//if (currentX != start[0] && currentY != start[1]) {
 			
-			}
+			//}
 			break;
 		case SOMETHING_SELECTED:
 			break;

@@ -69,6 +69,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 			System.out.println("Triangle brush");
 		}
 	});
+	
 	squareButton = new ToolbarButton("icons/brush_tool_icons/brushsquare.png");
 	squareButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -96,6 +97,9 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	upperCard.add(shapeButtons);
 }
 
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getBlankCursor());
+}
 private void setRadius(int r) {
 	radius = r;
 	radiusLabel.setText(Double.toString((radius * 2 + 1) / 2d));
@@ -107,11 +111,11 @@ private void setRadius(int r) {
 			makeCircle(x, y, color, radius, false, drawMode);
 			break;
 		case TRIANGLE:
-			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false, drawMode);
+			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2.0d, color, false, drawMode);
 			fill(x, y, color, drawMode);
 			break;
 		case SQUARE:
-			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false, drawMode);
+			makeRegularPolygon(x, y, 4, radius, Math.PI / 4.0d, color, false, drawMode);
 			fill(x, y, color, drawMode);
 			break;
 		default:

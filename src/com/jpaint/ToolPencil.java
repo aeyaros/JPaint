@@ -22,6 +22,9 @@ ToolPencil(ImageModel model, String iconSource) {
 	pastY = -1;
 	pastX = -1;
 }
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getDefaultCursor());
+}
 
 private boolean canDraw() {
 	return (pastY != -1 && pastX != -1);
@@ -37,9 +40,9 @@ public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
 }
 
 @Override public void drawCursor(int x, int y, int color) {
-	model.clearCursor();
+	model.clearCanvasCursor();
 	drawBrush(x, y, color, Canvas.DrawMode.USE_CURSOR);
-	model.refreshCursor();
+	model.refreshCanvasCursor();
 }
 
 private void preventDrawing() {
@@ -116,8 +119,8 @@ public void toolEntered(MouseEvent e) {
 }
 
 @Override public void toolExited(MouseEvent e) {
-	model.clearCursor();
-	model.refreshCursor();
+	model.clearCanvasCursor();
+	model.refreshCanvasCursor();
 }
 
 @Override public void toolKeyPressed(KeyEvent e) { }

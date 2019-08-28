@@ -41,6 +41,9 @@ ToolColorPicker(ImageModel model, String iconSource) {
 	}
 	clearStatus();
 }
+@Override void onButtonSelect() {
+	model.updateSwingCursor(getDefaultCursor());
+}
 
 void addColorManager(ManageColors manageColors) {
 	this.manageColors = manageColors;
@@ -92,14 +95,14 @@ private void clearStatus() {
 public void toolDragged(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
 	setColor(e.getX(), e.getY(), e.getButton());
-	model.clearCursor();
+	model.clearCanvasCursor();
 	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
 public void toolMoved(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
-	model.clearCursor();
+	model.clearCanvasCursor();
 	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
@@ -122,14 +125,14 @@ public void toolReleased(MouseEvent e) {
 @Override
 public void toolEntered(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
-	model.clearCursor();
+	model.clearCanvasCursor();
 	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
 public void toolExited(MouseEvent e) {
 	clearStatus();
-	model.clearCursor();
+	model.clearCanvasCursor();
 }
 @Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
 

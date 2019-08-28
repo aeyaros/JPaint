@@ -1,6 +1,7 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
 
@@ -99,12 +100,16 @@ void refreshView() {
 }
 
 
-void clearCursor() {
+void clearCanvasCursor() {
 	currentState.clearCursor();
 }
-void refreshCursor() {
-	imageView.refreshCursor(new ImageIcon(currentState.getCursorOverlay()));
+void refreshCanvasCursor() {
+	imageView.refreshCanvasCursor(new ImageIcon(currentState.getCursorOverlay()));
 }
+void updateSwingCursor(Cursor cursor) {
+	imageView.updateSwingCursor(cursor);
+}
+
 
 //used for saving state
 BufferedImage getImage() {
@@ -147,7 +152,11 @@ private boolean canRedo() {
 
 //add to past states - this happens if we take any action to change the canvas, or if we redo
 private void addToPastStates(Canvas canvas) {
-	pastStates.addFirst(new Canvas(canvas)); //push state to deque
+	//nullify overlays so hopefully java will get rid of them?
+	Canvas canvasToSave = new Canvas(canvas);
+	canvasToSave.nullifyOverlays();
+	
+	pastStates.addFirst(canvasToSave); //push state to deque
 	isUntouched = false; //the image is no longer untouched, because we have done something
 	System.out.println("Model is not untouched anymore");
 	if (pastStates.size() > MAX_REDO) pastStates.removeLast(); //remove excess states to prevent overflow
@@ -155,7 +164,11 @@ private void addToPastStates(Canvas canvas) {
 
 //add a state to undone states when undoing
 private void addToUndoneStates(Canvas canvas) {
-	undoneStates.addFirst(new Canvas(canvas)); //push state to deque
+	//nullify overlays so hopefully java will get rid of them?
+	Canvas canvasToSave = new Canvas(canvas);
+	canvasToSave.nullifyOverlays();
+	
+	undoneStates.addFirst(canvasToSave); //push state to deque
 	isUntouched = false;
 	if (undoneStates.size() > MAX_UNDO) undoneStates.removeLast(); //remove excess states to prevent overflow
 }
@@ -165,6 +178,7 @@ void undo() {
 	if (this.canUndo()) { //if we can undo
 		addToUndoneStates(currentState); //push current state to beginning of undone states
 		updateCurrentState(pastStates.removeFirst()); //pop past state to current state
+		currentState.reinitializeOverlays(); //IMPORTANT
 		this.refreshView();
 		System.out.println("Undone");
 		//printStates();
@@ -177,6 +191,7 @@ void redo() {
 	if (this.canRedo()) { //if we can redo
 		addToPastStates(currentState); //push current state to past states
 		updateCurrentState(undoneStates.removeFirst()); //pop undone state to current state
+		currentState.reinitializeOverlays(); //IMPORTANT
 		this.refreshView();
 		System.out.println("Redone");
 		//printStates();
