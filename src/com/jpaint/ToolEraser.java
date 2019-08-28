@@ -4,6 +4,7 @@ import javax.swing.*;
 
 public class ToolEraser extends ToolPaintBrush {
 private boolean eraseToTransparent;
+private final int ERASER_COLOR = new Color(255, 0, 0, 0).getARGB();
 
 ToolEraser(ImageModel model, String iconSource) {
 	super(model, iconSource);
@@ -40,31 +41,19 @@ private void setEraseToTransparent(boolean eraseToTransparent) {
 	this.eraseToTransparent = eraseToTransparent;
 }
 
-//@Override public void drawCursor(int x, int y, int color) { }
-
+//eraser is unusual; it gets to draw to main without any alpha blending,
+// and uses its own function for setting pixels
+// it draws the cursor just like the paintbrush though, so we need this if statement
 @Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
-	model.erasePixel(x, y, eraseToTransparent);
-	//eraser is unusual; it gets to draw to main without any alpha blending,
-	// and uses its own function for setting pixels
+	if (drawMode == Canvas.DrawMode.USE_CURSOR) model.setPixel(x, y, color, drawMode);
+	else model.erasePixel(x, y, eraseToTransparent);
 }
 
-@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
-	switch (selectedBrush) {
-		case CIRCLE:
-			makeCircle(x, y, color, radius, false, Canvas.DrawMode.USE_MAIN);
-			break;
-		case TRIANGLE:
-			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false, Canvas.DrawMode.USE_MAIN);
-			fill(x, y, color, drawMode);
-			break;
-		case SQUARE:
-			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false, Canvas.DrawMode.USE_MAIN);
-			fill(x, y, color, drawMode);
-			break;
-		default:
-			break;
-	}
-	
+
+@Override public void drawCursor(int x, int y, int color) {
+	model.clearCanvasCursor();
+	drawBrush(x, y, ERASER_COLOR, Canvas.DrawMode.USE_CURSOR);
+	model.refreshCanvasCursor();
 }
 
 }
