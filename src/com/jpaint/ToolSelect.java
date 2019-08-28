@@ -53,7 +53,7 @@ ToolSelect(ImageModel model, String iconSource) {
 	end = new int[2];
 }
 @Override void onButtonSelect() {
-	model.updateSwingCursor(getDefaultCursor());
+	model.updateSwingCursor(getCrossHairCursor());
 }
 
 //is a coordinate within the seletion bounds
