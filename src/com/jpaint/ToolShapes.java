@@ -95,6 +95,8 @@ ToolShapes(ImageModel model, String iconSource) {
 	widthPanel.add(widthSlider);
 	mainPanel.add(widthPanel);
 	
+	mainPanel.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	
 	
 	//set number of sides
 	sidesChangerSlider = new JSlider(SwingConstants.HORIZONTAL, MINIMUM_POSSIBLE_NUMBER_OF_SIDES,
@@ -117,7 +119,13 @@ ToolShapes(ImageModel model, String iconSource) {
 	//add listener
 	sidesChangerSlider.addChangeListener(e -> setNumberOfSides(sidesChangerSlider.getValue()));
 	JPanel sidesChangerPanel = new JPanel();
-	mainPanel.add(sidesChangerSlider);
+	sidesChangerPanel.setLayout(new BoxLayout(sidesChangerPanel, BoxLayout.X_AXIS));
+	sidesChangerPanel.setBorder(BorderFactory.createEtchedBorder());
+	JLabel sidesLabel = new JLabel("Sides:");
+	sidesLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
+	sidesChangerPanel.add(sidesLabel);
+	sidesChangerPanel.add(sidesChangerSlider);
+	mainPanel.add(sidesChangerPanel);
 	
 	
 	upperCard.add(mainPanel);

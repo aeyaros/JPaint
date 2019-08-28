@@ -34,9 +34,9 @@ ToolLine(ImageModel model, String iconSource) {
 	
 	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
 	widthLabel = new JLabel(Integer.toString(widthSlider.getValue()), SwingConstants.CENTER);
-	widthLabel.setPreferredSize(new Dimension(48, 24));
+	widthLabel.setPreferredSize(new Dimension(32, 24));
 	widthLabel.setMinimumSize(widthLabel.getPreferredSize());
-	widthLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
+	widthLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
 	
 	JPanel widthPanel = new JPanel();
 	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
