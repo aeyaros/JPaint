@@ -66,16 +66,21 @@ private void setWidth(int w) {
 }
 
 //draw the line from the starting point to the current (ending) point
-private void drawLine(int endX, int endY, int color) {
-	bresenham(x0, y0, endX, endY, color, true);
+private void drawLine(int endX, int endY, int color, Canvas.DrawMode drawMode) {
+	bresenham(x0, y0, endX, endY, color, true, drawMode);
 }
 
-@Override public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, true);
+@Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
+	model.setPixel(x, y, color, drawMode);
 }
 
-@Override public void drawBrush(int x, int y, int color) {
-	makeCircle(x, y, color, width, false);
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+	makeCircle(x, y, color, width, false, drawMode);
+}
+@Override public void drawCursor(int x, int y, int color) {
+	model.clearCursor();
+	drawBrush(x, y, color, Canvas.DrawMode.USE_CURSOR);
+	model.refreshCursor();
 }
 
 private void resetStates() {
@@ -100,7 +105,7 @@ void startDrawing(int startX, int startY, int color, MouseEvent e) {
 //when mouse is moved
 void refreshPreview(int x1, int y1, int color) {
 	model.clearOverlay();
-	bresenham(x0, y0, x1, y1, color, true);
+	bresenham(x0, y0, x1, y1, color, true, Canvas.DrawMode.USE_OVERLAY);
 }
 
 //on second click, or mouse release
@@ -108,7 +113,7 @@ void finishDrawing(int endX, int endY, int color, MouseEvent e) {
 	//we know we are drawing the line now, and so we are going to save the old state
 	model.saveCurrentState();
 	model.clearOverlay();
-	drawLine(endX, endY, color);
+	drawLine(endX, endY, color, Canvas.DrawMode.USE_OVERLAY);
 	model.mergeOverlay();
 	model.refreshView();
 }
@@ -128,12 +133,16 @@ public void toolMoved(MouseEvent e) {
 	if (!this.button.isSelected()) cancelDrawing();
 	
 	else if (twoClickMode) refreshPreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 //refresh preview if we are doing drag mode
 @Override
 public void toolDragged(MouseEvent e) {
 	if (dragMode) refreshPreview(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 //handle mouseclicks for two click mode
@@ -178,10 +187,13 @@ public void toolReleased(MouseEvent e) {
 
 @Override
 public void toolEntered(MouseEvent e) {
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
 public void toolExited(MouseEvent e) {
+	model.clearCursor();
+	model.refreshCursor();
 }
 
 //if a user presses escape, then cancel line drawing

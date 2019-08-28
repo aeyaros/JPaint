@@ -11,6 +11,7 @@ private JLabel coordinatesLabel;
 private JLabel sizeLabel;
 private JLabel currentImage; //the main drawing
 private JLabel imageOverlay; //the overlay on top of the drawing
+private JLabel cursorOverlay; //the cursor being displayed
 private int width;
 private int height;
 private boolean isInView; //used so that drag events which go off screen don't show out of bound coordinates
@@ -31,14 +32,18 @@ ImageView(int w, int h, JLabel coordinatesLabel, JLabel sizeLabel) {
 	//initialize labels for canvases
 	currentImage = new JLabel();
 	imageOverlay = new JLabel();
+	cursorOverlay = new JLabel();
 	
 	//update tileBG icon, and size label
 	updateSize(w, h);
 	
 	//set up canvases
 	currentImage.setLayout(new BoxLayout(currentImage, BoxLayout.X_AXIS));
+	imageOverlay.setLayout(new BoxLayout(imageOverlay, BoxLayout.X_AXIS));
+	
 	this.add(currentImage);
 	currentImage.add(imageOverlay);
+	imageOverlay.add(cursorOverlay);
 	
 	//show mouse coordinates in a view
 	this.addMouseMotionListener(new MouseMotionListener() {
@@ -88,6 +93,11 @@ void refresh(ImageIcon baseIcon, ImageIcon overlayIcon) {
 	if (baseIcon.getIconWidth() != width || baseIcon.getIconHeight() != height) {
 		updateSize(baseIcon.getIconWidth(), baseIcon.getIconHeight());
 	}
+}
+
+//refresh the cursor
+void refreshCursor(ImageIcon cursorOverlayIcon) {
+	cursorOverlay.setIcon(cursorOverlayIcon);
 }
 
 private void refreshCoordinates(int x, int y) {

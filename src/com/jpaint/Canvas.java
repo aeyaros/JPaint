@@ -10,6 +10,8 @@ static final int TRANSPARENT_INT =
 	  (new Color(Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE, Color.MIN_VALUE)).getARGB();
 private BufferedImage pixels;
 private BufferedImage overlay;
+private BufferedImage cursorOverlay;
+
 private int width;
 private int height;
 private int defaultColor; //either white or transparent
@@ -22,8 +24,9 @@ Canvas(int w, int h, boolean transparent) {
 	
 	width = w;
 	height = h;
-	pixels = newBlankImage(w, h, defaultColor);
-	overlay = newBlankImage(w, h, TRANSPARENT_INT);
+	pixels = newBlankImage(width, height, defaultColor);
+	overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 //deep copy constructor
@@ -38,6 +41,7 @@ Canvas(Canvas oldCanvas) {
 		}
 	}
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 //canvas from a bufferedImage
@@ -47,6 +51,7 @@ Canvas(BufferedImage sourceImage) {
 	height = sourceImage.getHeight();
 	pixels = sourceImage;
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 //used for generating tiled backgrounds for translucent color
@@ -94,6 +99,11 @@ void clearOverlay() {
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
+void clearCursor() {
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
+	
+}
+
 /*====== MODIFIERS ======*/
 //set a pixel on the main canvas
 void setPixel(int x, int y, int color) {
@@ -114,6 +124,10 @@ void setPixelWithoutBlending(int x, int y, int exactColor) {
 //set a pixel on the overlay with blending
 void setOverlayPixel(int x, int y, int color) {
 	try { overlay.setRGB(x, y, Color.alphaBlend(color, overlay.getRGB(x, y))); } catch (Exception ignored) { }
+}
+
+void setCursorPixel(int x, int y, int color) {
+	try { cursorOverlay.setRGB(x, y, color); } catch (Exception ignored) { }
 }
 
 //currently resizes by adding or removing from origin
@@ -142,6 +156,8 @@ void resize(int newX, int newY) {
 	width = newX;
 	height = newY;
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
+	
 }
 
 /*====== ACCESSORS ======*/
@@ -157,8 +173,16 @@ int getOverlayPixel(int x, int y) {
 	return overlay.getRGB(x, y);
 }
 
+int getCursorPixel(int x, int y) {
+	return cursorOverlay.getRGB(x, y);
+}
+
+
 BufferedImage getOverlay() {
 	return overlay;
+}
+BufferedImage getCursorOverlay() {
+	return cursorOverlay;
 }
 
 int getWidth() {
@@ -179,6 +203,7 @@ void merge() {
 				  this.pixels.getRGB(i, j)
 			                                         ));
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 void rotateOrtho(Transform option) {
@@ -232,7 +257,7 @@ void rotateOrtho(Transform option) {
 		System.out.println("new: " + width + " " + height);
 	}
 	overlay = newBlankImage(width, height, TRANSPARENT_INT);
-	
+	cursorOverlay = newBlankImage(width, height, TRANSPARENT_INT);
 }
 
 void flip(int option) {
@@ -247,5 +272,7 @@ void flip(int option) {
 }
 
 enum Transform {ROTATE_LEFT, ROTATE_RIGHT, ROTATE_180}
+
+enum DrawMode {USE_MAIN, USE_OVERLAY, USE_CURSOR}
 }
 

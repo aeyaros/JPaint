@@ -8,8 +8,8 @@ import java.awt.event.MouseEvent;
 public class ToolSelect extends Tool {
 private JButton deselectButton;
 //current selection coordinates
-private int start[];
-private int end[];
+private int[] start;
+private int[] end;
 
 private enum SelectionState {
 	NOTHING_SELECTED,
@@ -172,8 +172,11 @@ public void toolReleased(MouseEvent e) {
 @Override public void toolExited(MouseEvent e) { }
 @Override public void toolMoved(MouseEvent e) { }
 @Override public void toolClicked(MouseEvent e) { }
-@Override public void draw(int x, int y, int color) { }
-@Override public void drawBrush(int x, int y, int color) { }
+@Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) { }
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) { }
+@Override public void drawCursor(int x, int y, int color) {
+
+}
 @Override public void toolKeyPressed(KeyEvent e) { }
 @Override public void toolKeyReleased(KeyEvent e) { }
 @Override public void toolKeyTyped(KeyEvent e) { }

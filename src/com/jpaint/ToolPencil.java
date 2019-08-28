@@ -28,12 +28,18 @@ private boolean canDraw() {
 }
 
 
-public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, true); //draw at the point
+public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
+	model.setPixel(x, y, color, drawMode); //draw at the point
 }
 
-@Override public void drawBrush(int x, int y, int color) {
-	draw(x, y, color); //only draw one pixel at a time
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+	draw(x, y, color, drawMode); //only draw one pixel at a time
+}
+
+@Override public void drawCursor(int x, int y, int color) {
+	model.clearCursor();
+	drawBrush(x, y, color, Canvas.DrawMode.USE_CURSOR);
+	model.refreshCursor();
 }
 
 private void preventDrawing() {
@@ -51,9 +57,6 @@ public void toolPressed(MouseEvent e) {
 	//System.out.println("Start drag");
 }
 
-@Override
-public void toolEntered(MouseEvent e) {
-}
 
 //during drag, draw points and lines
 //*************************************************
@@ -75,11 +78,15 @@ public void toolDragged(MouseEvent e) {
 		//get color to draw with
 		int colorInt = getColorIntByButton(e.getButton());
 		
-		drawBrush(curX, curY, colorInt);
-		bresenham(oldX, oldY, curX, curY, colorInt, true); //draw line from past point to current point
+		drawBrush(curX, curY, colorInt, Canvas.DrawMode.USE_OVERLAY);
+		bresenham(
+			  oldX, oldY, curX, curY, colorInt, true,
+			  Canvas.DrawMode.USE_OVERLAY
+		         ); //draw line from past point to current point
 		
 		model.refreshView(); //tell model to refresh view
 	}
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 //at end of drag, prevent drawing again
@@ -94,12 +101,25 @@ public void toolReleased(MouseEvent e) {
 @Override
 public void toolClicked(MouseEvent e) {
 	model.saveCurrentState();
-	drawBrush(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+	drawBrush(e.getX(), e.getY(), getColorIntByButton(e.getButton()), Canvas.DrawMode.USE_OVERLAY);
 	model.refreshView();
 }
 
-@Override public void toolExited(MouseEvent e) { }
-@Override public void toolMoved(MouseEvent e) { }
+@Override
+public void toolEntered(MouseEvent e) {
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+}
+
+
+@Override public void toolMoved(MouseEvent e) {
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
+}
+
+@Override public void toolExited(MouseEvent e) {
+	model.clearCursor();
+	model.refreshCursor();
+}
+
 @Override public void toolKeyPressed(KeyEvent e) { }
 @Override public void toolKeyReleased(KeyEvent e) { }
 @Override public void toolKeyTyped(KeyEvent e) { }

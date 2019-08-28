@@ -144,12 +144,12 @@ private void setNumberOfSides(int n) {
 		numberOfSides = MINIMUM_POSSIBLE_NUMBER_OF_SIDES;
 }
 
-@Override public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, true);
+@Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
+	model.setPixel(x, y, color, drawMode);
 }
 
-@Override public void drawBrush(int x, int y, int color) {
-	makeCircle(x, y, color, getStrokeWidth(), false);
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+	makeCircle(x, y, color, getStrokeWidth(), false, drawMode);
 }
 
 private void drawShape(int originX, int originY, int currentX, int currentY, int type) {
@@ -162,15 +162,16 @@ private void drawShape(int originX, int originY, int currentX, int currentY, int
 	
 	if (type == MAX_ALLOWED_NUMBER_OF_SIDES) { //draw circle if slide is at this position
 		//draw a circle - use approximation with large number of sidess
-		makeRegularPolygon(originX, originY, SIDES_IN_A_CIRCLE, radius, offset, strokeColor, true);
+		makeRegularPolygon(
+			  originX, originY, SIDES_IN_A_CIRCLE, radius, offset, strokeColor, true, Canvas.DrawMode.USE_OVERLAY);
 	} else if (type >= MINIMUM_POSSIBLE_NUMBER_OF_SIDES && type < MAX_ALLOWED_NUMBER_OF_SIDES) {
 		//draw a polygon
-		makeRegularPolygon(originX, originY, type, radius, offset, strokeColor, true);
+		makeRegularPolygon(originX, originY, type, radius, offset, strokeColor, true, Canvas.DrawMode.USE_OVERLAY);
 	} else return; //else dont draw because input value is too high or too low
 	
 	//fill in the shape; dont fill if radius is too small
 	if (shouldFill && radius > 1) {
-		fill(originX, originY, getFillColor(), true);
+		fill(originX, originY, getFillColor(), Canvas.DrawMode.USE_OVERLAY);
 	}
 }
 

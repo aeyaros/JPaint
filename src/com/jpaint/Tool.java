@@ -61,7 +61,7 @@ int getAlternateColor(int currentMouseEventCode) {
 /*====== DRAWING TOOLS ======*/
 
 //fill an area with a replacement color
-void fill(int x, int y, int replacement, boolean useOverlay) {
+void fill(int x, int y, int replacement, Canvas.DrawMode drawMode) {
 	//Implementing a Flood-fill algorithm from Wikipedia
 	//https://en.wikipedia.org/wiki/Flood_fill
 	
@@ -73,17 +73,16 @@ void fill(int x, int y, int replacement, boolean useOverlay) {
 	
 	int target; //color to try and fill in
 	try { //color of spot clicked
-		if (useOverlay) target = model.getOverlayPixel(x, y);
-		else target = model.getPixel(x, y);
-	} catch (IndexOutOfBoundsException exc) {
+		target = model.getPixel(x, y, drawMode); //check the canvas we are drawing on
+	} catch (IndexOutOfBoundsException e) {
 		System.err.println("Tried to access out of bounds pixel when filling w/ paint bucket");
-		//exc.printStackTrace();
+		//e.printStackTrace();
 		return;
 	}
 	
 	if (target == replacement) return; //return if target = replacement
 	
-	draw(x, y, target); //draw at coordinate
+	draw(x, y, target, drawMode); //draw at coordinate
 	ArrayDeque<Node> nodes = new ArrayDeque<>(); //create empty queue
 	nodes.addLast(new Node(x, y)); //add initial node to queue
 	
@@ -94,8 +93,8 @@ void fill(int x, int y, int replacement, boolean useOverlay) {
 		//then set that node to replacement and add it to the queue
 		for (int i = 0; i < 4; i++) {
 			try {
-				if (n.get(i).c(useOverlay) == target) {
-					n.get(i).set(replacement);
+				if (n.get(i).c(drawMode) == target) {
+					n.get(i).set(replacement, drawMode);
 					nodes.addLast(n.get(i));
 				}
 			} catch (IndexOutOfBoundsException ignored) { }
@@ -109,7 +108,7 @@ void fill(int x, int y, int replacement, boolean useOverlay) {
 //only a limited amount of mouse events are actually captured
 //this results in a row of dots on the canvas
 //this is solved by drawing a line from the current dot to the previous dot
-void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush) {
+void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush, Canvas.DrawMode drawMode) {
 	int dx = Math.abs(x1 - x0);
 	int sx = -1;
 	if (x0 < x1) sx = 1;
@@ -135,8 +134,8 @@ void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush) {
 		}
 		
 		//then draw at that point
-		if (useBrush) drawBrush(x0, y0, color);
-		else draw(x0, y0, color);
+		if (useBrush) drawBrush(x0, y0, color, drawMode);
+		else draw(x0, y0, color, drawMode);
 	}
 }
 
@@ -151,25 +150,27 @@ void bresenham(int x0, int y0, int x1, int y1, int color, boolean useBrush) {
  */
 
 //"brush" functions
-void makeCircle(int origX, int origY, int color, int radius, boolean useBrush) {
+void makeCircle(int origX, int origY, int color, int radius, boolean useBrush, Canvas.DrawMode drawMode) {
 	for (int y = -radius; y <= radius; y++) {
 		for (int x = -radius; x <= radius; x++) {
 			if (x * x + y * y <= radius * radius) //draw if inside bounds of circle
-				if (useBrush) drawBrush(origX + x, origY + y, color);
-				else draw(origX + x, origY + y, color);
+				if (useBrush) drawBrush(origX + x, origY + y, color, drawMode);
+				else draw(origX + x, origY + y, color, drawMode);
 		}
 	}
 	model.refreshView();
 }
 
-void makeRegularPolygon(int x, int y, int sides, int radius, double offset, int color, boolean useBrush) {
+void makeRegularPolygon(
+	  int x, int y, int sides, int radius, double offset, int color, boolean useBrush, Canvas.DrawMode drawMode
+                       ) {
 	int[][] points = getPolyPoints(x, y, sides, radius, offset);
 	//draw several lines, using either a brush or not
 	for (int i = 0; i < points.length; i++) {
 		bresenham(points[i][0], points[i][1],
 		          points[(i + 1) % points.length][0],
 		          points[(i + 1) % points.length][1],
-		          color, useBrush
+		          color, useBrush, drawMode
 		         );
 	}
 	
@@ -186,10 +187,6 @@ private int[][] getPolyPoints(int originX, int originY, int sides, int radius, d
 		points[i][1] = (int) (radius * Math.sin(currentAngle)) + originY;
 	}
 	return points;
-}
-
-void setCursor() {
-
 }
 
 //Node object for flood algorithm
@@ -211,12 +208,9 @@ private class Node {
 	
 	int y() { return y; }
 	
-	int c(boolean useOverlay) { //get color of node
-		if (useOverlay) return model.getOverlayPixel(x, y);
-		else return model.getPixel(x, y);
-	}
+	int c(Canvas.DrawMode dm) { return model.getPixel(x, y, dm); } //get color of node
 	
-	void set(int c) { draw(x, y, c); } //set color of node
+	void set(int c, Canvas.DrawMode dm) { draw(x, y, c, dm); } //set color of node
 	
 	Node get(int d) { //get a node by direction
 		switch (d) { //return node if it is in bounds, otherwise break and throw

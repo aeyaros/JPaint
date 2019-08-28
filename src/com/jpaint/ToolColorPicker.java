@@ -47,7 +47,7 @@ void addColorManager(ManageColors manageColors) {
 }
 
 private Color getColorAtPixel(int x, int y) {
-	return new Color(model.getPixel(x, y));
+	return new Color(model.getPixel(x, y, Canvas.DrawMode.USE_MAIN));
 }
 
 private void updateStatus(int x, int y) {
@@ -92,11 +92,15 @@ private void clearStatus() {
 public void toolDragged(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
 	setColor(e.getX(), e.getY(), e.getButton());
+	model.clearCursor();
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
 public void toolMoved(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
+	model.clearCursor();
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
@@ -118,15 +122,25 @@ public void toolReleased(MouseEvent e) {
 @Override
 public void toolEntered(MouseEvent e) {
 	updateStatus(e.getX(), e.getY());
+	model.clearCursor();
+	drawCursor(e.getX(), e.getY(), getColorIntByButton(e.getButton()));
 }
 
 @Override
 public void toolExited(MouseEvent e) {
 	clearStatus();
+	model.clearCursor();
+}
+@Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
+
+}
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+
+}
+@Override public void drawCursor(int x, int y, int color) {
+	///////////////////////////todo: this method...
 }
 
-@Override public void draw(int x, int y, int color) { }
-@Override public void drawBrush(int x, int y, int color) { }
 @Override public void toolKeyPressed(KeyEvent e) { }
 @Override public void toolKeyReleased(KeyEvent e) { }
 @Override public void toolKeyTyped(KeyEvent e) { }

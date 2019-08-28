@@ -98,6 +98,14 @@ void refreshView() {
 	                 );
 }
 
+
+void clearCursor() {
+	currentState.clearCursor();
+}
+void refreshCursor() {
+	imageView.refreshCursor(new ImageIcon(currentState.getCursorOverlay()));
+}
+
 //used for saving state
 BufferedImage getImage() {
 	return currentState.getPixels();
@@ -192,12 +200,19 @@ void erasePixel(int x, int y, boolean transparent) {
 	}
 }
 
-void setPixel(int x, int y, int argb, boolean useOverlay) {
+void setPixel(int x, int y, int argb, Canvas.DrawMode drawMode) {
 	if (isInBounds(x, y)) { //important; throwing tons of exceptions is time consuming
-		if (useOverlay) currentState.setOverlayPixelWithoutBlending(x, y, argb);
-		else currentState.setPixel(x, y, argb);
+		switch (drawMode) {
+			case USE_MAIN:
+				currentState.setPixel(x, y, argb); break;
+			case USE_OVERLAY:
+				currentState.setOverlayPixelWithoutBlending(x, y, argb); break;
+			case USE_CURSOR:
+				currentState.setCursorPixel(x, y, argb); break;
+		}
 	}
 }
+
 
 /* FUNCTIONS USED BY MENUS */
 
@@ -243,16 +258,20 @@ boolean isInBounds(int x, int y) {
 	return (x >= 0 && y >= 0 && x < currentState.getWidth() && y < currentState.getHeight());
 }
 
-int getPixel(int x, int y) {
-	if (isInBounds(x, y)) return currentState.getPixel(x, y);
-	else throw new IndexOutOfBoundsException();
+int getPixel(int x, int y, Canvas.DrawMode drawMode) {
+	if (isInBounds(x, y)) {
+		switch (drawMode) {
+			case USE_MAIN:
+				return currentState.getPixel(x, y);
+			case USE_OVERLAY:
+				return currentState.getOverlayPixel(x, y);
+			case USE_CURSOR:
+				return currentState.getCursorPixel(x, y);
+			default:
+				throw new IllegalArgumentException("DrawMode enum improperly specified");
+		}
+	} else throw new IndexOutOfBoundsException();
 }
-
-int getOverlayPixel(int x, int y) {
-	if (isInBounds(x, y)) return currentState.getOverlayPixel(x, y);
-	else throw new IndexOutOfBoundsException();
-}
-
 
 /* TEMPORARY OVERLAY */
 

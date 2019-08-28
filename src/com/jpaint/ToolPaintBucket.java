@@ -19,11 +19,14 @@ ToolPaintBucket(ImageModel model, String iconSource) {
 }
 
 @Override
-public void draw(int x, int y, int color) {
-	model.setPixel(x, y, color, false);
+public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
+	model.setPixel(x, y, color, Canvas.DrawMode.USE_MAIN);
 }
 
-@Override public void drawBrush(int x, int y, int color) {
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+	model.setPixel(x, y, color, Canvas.DrawMode.USE_MAIN);
+}
+@Override public void drawCursor(int x, int y, int color) {
 
 }
 
@@ -31,7 +34,7 @@ public void draw(int x, int y, int color) {
 public void toolClicked(MouseEvent e) {
 	//System.out.println("clicked");
 	model.saveCurrentState();
-	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), Canvas.DrawMode.USE_MAIN);
 	model.refreshView();
 	
 }
@@ -40,7 +43,7 @@ public void toolClicked(MouseEvent e) {
 public void toolPressed(MouseEvent e) {
 	//System.out.println("pressed");
 	model.saveCurrentState();
-	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), false);
+	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), Canvas.DrawMode.USE_MAIN);
 	model.refreshView();
 }
 

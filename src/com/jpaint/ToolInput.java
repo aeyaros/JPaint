@@ -22,12 +22,12 @@ void toolEntered(MouseEvent e);
 void toolExited(MouseEvent e);
 
 //how to set the pixel
-void draw(int x, int y, int color);
+void draw(int x, int y, int color, Canvas.DrawMode drawMode);
 
 //determine how many pixels to set
-void drawBrush(int x, int y, int color);
+void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode);
+
+//draw the cursor
+void drawCursor(int x, int y, int color);
 
 }
-
-
-

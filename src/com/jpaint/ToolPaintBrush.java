@@ -10,16 +10,13 @@ private final int DEFAULT_RADIUS = 8;
 private final int MAX_RADIUS = 24;
 ToolbarButton triangleButton;
 ToolbarButton squareButton;
-//this is here so eraser has ability to not use overlay when using the triangle or square brushes
-boolean useOverlayForBrushFill;
-private int radius;
+int radius;
 private JLabel radiusLabel;
 private JSlider radiusSlider;
-private SelectedBrush selectedBrush;
+SelectedBrush selectedBrush;
 
 ToolPaintBrush(ImageModel model, String iconSource) {
 	super(model, iconSource);
-	useOverlayForBrushFill = true; //set to true for paintbrush
 	
 	//set up upper card
 	upperCard.removeAll();
@@ -104,18 +101,18 @@ private void setRadius(int r) {
 	radiusLabel.setText(Double.toString((radius * 2 + 1) / 2d));
 }
 
-@Override public void drawBrush(int x, int y, int color) {
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
 	switch (selectedBrush) {
 		case CIRCLE:
-			makeCircle(x, y, color, radius, false);
+			makeCircle(x, y, color, radius, false, drawMode);
 			break;
 		case TRIANGLE:
-			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false);
-			fill(x, y, color, useOverlayForBrushFill);
+			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false, drawMode);
+			fill(x, y, color, drawMode);
 			break;
 		case SQUARE:
-			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false);
-			fill(x, y, color, useOverlayForBrushFill);
+			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false, drawMode);
+			fill(x, y, color, drawMode);
 			break;
 		default:
 			break;
@@ -123,5 +120,6 @@ private void setRadius(int r) {
 	
 }
 
-private enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
+enum SelectedBrush {CIRCLE, TRIANGLE, SQUARE}
+
 }

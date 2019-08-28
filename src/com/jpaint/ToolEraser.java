@@ -7,8 +7,6 @@ private boolean eraseToTransparent;
 
 ToolEraser(ImageModel model, String iconSource) {
 	super(model, iconSource);
-	//set this to false to override the paintbrush setting
-	useOverlayForBrushFill = false; //when erasing with square or triangle brushes, write directly to canvas
 	//issue with fill algorithm, so need to disable buttons
 	triangleButton.setEnabled(false);
 	squareButton.setEnabled(false);
@@ -42,8 +40,31 @@ private void setEraseToTransparent(boolean eraseToTransparent) {
 	this.eraseToTransparent = eraseToTransparent;
 }
 
-@Override public void draw(int x, int y, int color) {
+//@Override public void drawCursor(int x, int y, int color) { }
+
+@Override public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
 	model.erasePixel(x, y, eraseToTransparent);
+	//eraser is unusual; it gets to draw to main without any alpha blending,
+	// and uses its own function for setting pixels
+}
+
+@Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
+	switch (selectedBrush) {
+		case CIRCLE:
+			makeCircle(x, y, color, radius, false, Canvas.DrawMode.USE_MAIN);
+			break;
+		case TRIANGLE:
+			makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2d, color, false, Canvas.DrawMode.USE_MAIN);
+			fill(x, y, color, drawMode);
+			break;
+		case SQUARE:
+			makeRegularPolygon(x, y, 4, radius, Math.PI / 4d, color, false, Canvas.DrawMode.USE_MAIN);
+			fill(x, y, color, drawMode);
+			break;
+		default:
+			break;
+	}
+	
 }
 
 }
