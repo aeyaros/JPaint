@@ -4,7 +4,9 @@ import javax.swing.*;
 
 public class ToolEraser extends ToolPaintBrush {
 private boolean eraseToTransparent;
-private final int ERASER_COLOR = new Color(255, 0, 0, 0).getARGB();
+private final int BLACK_COLOR = new Color(255, 0, 0, 0).getARGB();
+private final int WHITE_COLOR = new Color(255, 255, 255, 255).getARGB();
+private final int MINIMUM_RADIUS_FOR_NICER_CURSOR = 4;
 
 ToolEraser(ImageModel model, String iconSource) {
 	super(model, iconSource);
@@ -37,6 +39,11 @@ ToolEraser(ImageModel model, String iconSource) {
 	setEraseToTransparent(false);
 }
 
+@Override void onButtonSelect() {
+	if (radius < MINIMUM_RADIUS_FOR_NICER_CURSOR) model.updateSwingCursor(getCrossHairCursor());
+	else model.updateSwingCursor(getBlankCursor());
+}
+
 private void setEraseToTransparent(boolean eraseToTransparent) {
 	this.eraseToTransparent = eraseToTransparent;
 }
@@ -52,8 +59,37 @@ private void setEraseToTransparent(boolean eraseToTransparent) {
 
 @Override public void drawCursor(int x, int y, int color) {
 	model.clearCanvasCursor();
-	drawBrush(x, y, ERASER_COLOR, Canvas.DrawMode.USE_CURSOR);
+	drawEraserCursor(x, y);
 	model.refreshCanvasCursor();
+}
+
+//special function for eraser; draws a black outline and a white filling
+private void drawEraserCursor(int x, int y) {
+	if (radius < MINIMUM_RADIUS_FOR_NICER_CURSOR) {
+		drawBrush(x, y, BLACK_COLOR, Canvas.DrawMode.USE_CURSOR);
+		model.updateSwingCursor(getCrossHairCursor());
+	} else {
+		model.updateSwingCursor(getBlankCursor());
+		switch (selectedBrush) {
+			case CIRCLE:
+				makeRegularPolygon(
+					  x, y, 32, radius, 3 * Math.PI / 2.0d, BLACK_COLOR, false, Canvas.DrawMode.USE_CURSOR);
+				fill(x, y, WHITE_COLOR, Canvas.DrawMode.USE_CURSOR);
+				break;
+			case TRIANGLE:
+				makeRegularPolygon(x, y, 3, radius, 3 * Math.PI / 2.0d, BLACK_COLOR, false,
+				                   Canvas.DrawMode.USE_CURSOR
+				                  );
+				fill(x, y, WHITE_COLOR, Canvas.DrawMode.USE_CURSOR);
+				break;
+			case SQUARE:
+				makeRegularPolygon(x, y, 4, radius, Math.PI / 4.0d, BLACK_COLOR, false, Canvas.DrawMode.USE_CURSOR);
+				fill(x, y, WHITE_COLOR, Canvas.DrawMode.USE_CURSOR);
+				break;
+			default:
+				break;
+		}
+	}
 }
 
 }

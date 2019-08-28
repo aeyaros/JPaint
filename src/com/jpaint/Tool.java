@@ -43,6 +43,9 @@ abstract void onButtonSelect();
 Cursor getDefaultCursor() {
 	return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 }
+Cursor getCrossHairCursor() {
+	return Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR);
+}
 Cursor getBlankCursor() {
 	return Toolkit.getDefaultToolkit().createCustomCursor(
 		  new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");

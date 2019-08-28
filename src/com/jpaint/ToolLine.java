@@ -60,7 +60,7 @@ ToolLine(ImageModel model, String iconSource) {
 	});
 }
 @Override void onButtonSelect() {
-	model.updateSwingCursor(getBlankCursor());
+	model.updateSwingCursor(getCrossHairCursor());
 }
 
 private void setWidth(int w) {

@@ -324,6 +324,10 @@ void WindowSetup(int width, int height) {
 				image = image.getScaledInstance(116, 116, java.awt.Image.SCALE_SMOOTH);
 			}
 		} catch (NullPointerException ignored) { }
+		ImageIcon appIcon;
+		if (image == null) appIcon = null;
+		else appIcon = new ImageIcon(image);
+		
 		JOptionPane.showMessageDialog(mainFrame, APPLICATION_NAME +
 		                                         " is a fun painting program \n" +
 		                                         "inspired by Apple's MacPaint (from \n" +
@@ -332,7 +336,7 @@ void WindowSetup(int width, int height) {
 		                                         "2019, originally for the CS 338 \n" +
 		                                         "(GUIs) class at Drexel University.",
 		                              "About " + APPLICATION_NAME, JOptionPane.INFORMATION_MESSAGE,
-		                              new ImageIcon(image)
+		                              appIcon
 		                             );
 	}));
 	
