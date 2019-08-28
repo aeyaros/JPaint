@@ -7,13 +7,13 @@ import java.awt.event.ItemEvent;
 public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
-private final int MAX_RADIUS = 24;
-protected JPanel mainPanel;
+final int MAX_RADIUS = 64;
+JPanel mainPanel;
 ToolbarButton triangleButton;
 ToolbarButton squareButton;
 int radius;
 private JLabel radiusLabel;
-private JSlider radiusSlider;
+JSlider radiusSlider;
 SelectedBrush selectedBrush;
 
 ToolPaintBrush(ImageModel model, String iconSource) {
@@ -34,11 +34,12 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	radiusSlider.setPreferredSize(radiusSlider.getMinimumSize());
 	radiusSlider.setSize(radiusSlider.getMinimumSize());
 	radiusSlider.setMinorTickSpacing(1);
+	radiusSlider.setMajorTickSpacing(10);
 	radiusSlider.setSnapToTicks(true);
 	radiusSlider.setPaintTicks(true);
 	
 	radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
-	radiusLabel.setPreferredSize(new Dimension(32, 24));
+	radiusLabel.setPreferredSize(new Dimension(48, 24));
 	radiusLabel.setMinimumSize(radiusLabel.getPreferredSize());
 	radiusLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 3));
 	
@@ -51,8 +52,6 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	radiusPanel.add(radiusSlider);
 	
 	setRadius(DEFAULT_RADIUS);
-	
-	mainPanel.add(radiusPanel);
 	
 	
 	//brush shapes
@@ -99,7 +98,9 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	selectedBrush = SelectedBrush.CIRCLE;
 	circleButton.setSelected(true);
 	
+	//add stuff to main panel, and add main panel to upper card
 	mainPanel.add(shapeButtons);
+	mainPanel.add(radiusPanel);
 	upperCard.add(mainPanel);
 }
 

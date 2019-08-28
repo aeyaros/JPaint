@@ -10,6 +10,8 @@ private final int MINIMUM_RADIUS_FOR_NICER_CURSOR = 4;
 
 ToolEraser(ImageModel model, String iconSource) {
 	super(model, iconSource);
+	radiusSlider.setMaximum(24);
+	
 	//issue with fill algorithm, so need to disable buttons
 	triangleButton.setEnabled(false);
 	squareButton.setEnabled(false);

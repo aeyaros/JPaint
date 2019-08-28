@@ -8,7 +8,7 @@ import java.awt.event.MouseEvent;
 
 public class ToolLine extends Tool {
 private final int MIN_WIDTH = 0; //technically width is 2n+1
-private final int MAX_WIDTH = 11;
+private final int MAX_WIDTH = 31;
 private final int DEFAULT_WIDTH = 1;
 JSlider widthSlider;
 JLabel widthLabel;

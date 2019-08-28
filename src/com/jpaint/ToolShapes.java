@@ -12,6 +12,7 @@ public class ToolShapes extends ToolLine {
 private final int SIDES_IN_A_CIRCLE = 64;
 private final int MINIMUM_POSSIBLE_NUMBER_OF_SIDES = 3;
 private final int MAX_ALLOWED_NUMBER_OF_SIDES = 9; //really 8; at max number setting we will do a circle
+
 //colors
 private int strokeColor;
 private int fillColor;
@@ -24,6 +25,7 @@ private JSlider sidesChangerSlider;
 
 ToolShapes(ImageModel model, String iconSource) {
 	super(model, iconSource);
+	widthSlider.setMaximum(11); //we dont want shape borders to be too thick
 	
 	upperCard.removeAll();
 	upperCard.setLayout(new GridLayout(1, 0));
