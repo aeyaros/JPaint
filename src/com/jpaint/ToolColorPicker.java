@@ -42,7 +42,8 @@ ToolColorPicker(ImageModel model, String iconSource) {
 	clearStatus();
 }
 @Override void onButtonSelect() {
-	model.updateSwingCursor(getDefaultCursor());
+	model.updateSwingCursor(getCustomCursor(
+		  "Colorpicker cursor", "icons/cursor_icons/colorPickerCursor.png", 0, 15));
 }
 
 void addColorManager(ManageColors manageColors) {

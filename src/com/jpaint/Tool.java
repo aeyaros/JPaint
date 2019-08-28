@@ -1,5 +1,6 @@
 package com.jpaint;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
@@ -49,6 +50,14 @@ Cursor getCrossHairCursor() {
 Cursor getBlankCursor() {
 	return Toolkit.getDefaultToolkit().createCustomCursor(
 		  new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
+}
+Cursor getCustomCursor(String cursorName, String cursorSource, int xHotSpot, int yHotSpot) {
+	try {
+		BufferedImage cursorImage = ImageIO.read(getClass().getResource(cursorSource));
+		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(xHotSpot, yHotSpot), cursorName);
+	} catch (java.io.IOException e) {
+		return getDefaultCursor();
+	}
 }
 
 //how to set the pixel

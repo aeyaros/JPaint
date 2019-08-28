@@ -18,7 +18,8 @@ ToolPaintBucket(ImageModel model, String iconSource) {
 	upperCard.add(infoText, 0);
 }
 @Override void onButtonSelect() {
-	model.updateSwingCursor(getDefaultCursor());
+	model.updateSwingCursor(getCustomCursor(
+		  "Paintbucket", "icons/cursor_icons/paintBucketCursor.png", 13, 13));
 }
 
 @Override
@@ -29,28 +30,16 @@ public void draw(int x, int y, int color, Canvas.DrawMode drawMode) {
 @Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {
 	model.setPixel(x, y, color, Canvas.DrawMode.USE_MAIN);
 }
-@Override public void drawCursor(int x, int y, int color) {
 
-}
-
-@Override
-public void toolClicked(MouseEvent e) {
-	//System.out.println("clicked");
-	model.saveCurrentState();
-	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), Canvas.DrawMode.USE_MAIN);
-	model.refreshView();
-	
-}
-
-@Override
-public void toolPressed(MouseEvent e) {
-	//System.out.println("pressed");
+@Override public void toolReleased(MouseEvent e) {
 	model.saveCurrentState();
 	fill(e.getX(), e.getY(), getColorIntByButton(e.getButton()), Canvas.DrawMode.USE_MAIN);
 	model.refreshView();
 }
 
-@Override public void toolReleased(MouseEvent e) { }
+@Override public void drawCursor(int x, int y, int color) { }
+@Override public void toolClicked(MouseEvent e) { }
+@Override public void toolPressed(MouseEvent e) { }
 @Override public void toolDragged(MouseEvent e) { }
 @Override public void toolMoved(MouseEvent e) { }
 @Override public void toolEntered(MouseEvent e) { }
