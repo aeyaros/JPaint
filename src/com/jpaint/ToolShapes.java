@@ -90,7 +90,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	mainPanel.add(borderOptions, BorderLayout.WEST);
 	JPanel widthPanel = new JPanel();
 	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
-	widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Stroke Width"));
+	widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Border Width"));
 	widthPanel.add(widthLabel);
 	widthPanel.add(widthSlider);
 	mainPanel.add(widthPanel);
