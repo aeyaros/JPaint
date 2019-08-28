@@ -33,14 +33,14 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	radiusSlider.setPaintTicks(true);
 	
 	radiusLabel = new JLabel(Integer.toString(radiusSlider.getValue()), SwingConstants.CENTER);
-	radiusLabel.setPreferredSize(new Dimension(48, 24));
+	radiusLabel.setPreferredSize(new Dimension(32, 24));
 	radiusLabel.setMinimumSize(radiusLabel.getPreferredSize());
-	radiusLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 0, 12));
+	radiusLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 3));
 	
 	
 	JPanel radiusPanel = new JPanel();
 	radiusPanel.setLayout(new BoxLayout(radiusPanel, BoxLayout.X_AXIS));
-	radiusPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Brush Radius"));
+	radiusPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Brush width"));
 	
 	radiusPanel.add(radiusLabel);
 	radiusPanel.add(radiusSlider);
@@ -102,7 +102,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 }
 private void setRadius(int r) {
 	radius = r;
-	radiusLabel.setText(Double.toString((radius * 2 + 1) / 2d));
+	radiusLabel.setText(Integer.toString((radius * 2 + 1)));
 }
 
 @Override public void drawBrush(int x, int y, int color, Canvas.DrawMode drawMode) {

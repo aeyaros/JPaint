@@ -28,10 +28,17 @@ ToolShapes(ImageModel model, String iconSource) {
 	upperCard.removeAll();
 	upperCard.setLayout(new GridLayout(1, 0));
 	
+	//panel holding everything
+	JPanel mainPanel = new JPanel();
+	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+	
+	
 	//setting border mode/width
 	JPanel borderOptions = new JPanel();
 	borderOptions.setLayout(new BoxLayout(borderOptions, BoxLayout.X_AXIS));
 	ButtonGroup borderOptionButtons = new ButtonGroup();
+	
+	//first button
 	ToolbarButton borderOnly = new ToolbarButton("icons/shape_tool_icons/onlystroke.png"); //stroke only
 	borderOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -44,7 +51,9 @@ ToolShapes(ImageModel model, String iconSource) {
 	//set values for first button; button event doesnt happen initially
 	setFillEnabled(false);
 	setStrokeEnabled(true);
+	borderOnly.setSelected(true);
 	
+	//second button
 	ToolbarButton borderWithFill = new ToolbarButton("icons/shape_tool_icons/strokeandfill.png"); //border + fill
 	borderWithFill.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -53,6 +62,8 @@ ToolShapes(ImageModel model, String iconSource) {
 			System.out.println("Border and fill");
 		}
 	});
+	
+	//third button
 	ToolbarButton fillOnly = new ToolbarButton("icons/shape_tool_icons/onlyfill.png"); //fill only
 	fillOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -61,7 +72,7 @@ ToolShapes(ImageModel model, String iconSource) {
 			System.out.println("Fill only");
 		}
 	});
-	
+	//add buttons to panel
 	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP,
 	                                                    ToolbarButton.TOOL_BUTTON_GAP)));
 	borderOptions.add(borderOnly);
@@ -71,17 +82,18 @@ ToolShapes(ImageModel model, String iconSource) {
 	borderOptions.add(fillOnly);
 	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
 	
+	//add to button group
 	borderOptionButtons.add(borderOnly);
 	borderOptionButtons.add(borderWithFill);
 	borderOptionButtons.add(fillOnly);
 	
-	JPanel borderPanel = new JPanel();
-	borderPanel.setLayout(new BoxLayout(borderPanel, BoxLayout.X_AXIS));
-	borderPanel.add(borderOptions, BorderLayout.WEST);
-	borderPanel.add(widthSlider, BorderLayout.CENTER);
-	borderPanel.add(widthLabel, BorderLayout.EAST);
-	
-	upperCard.add(borderPanel);
+	mainPanel.add(borderOptions, BorderLayout.WEST);
+	JPanel widthPanel = new JPanel();
+	widthPanel.setLayout(new BoxLayout(widthPanel, BoxLayout.X_AXIS));
+	widthPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Stroke Width"));
+	widthPanel.add(widthLabel);
+	widthPanel.add(widthSlider);
+	mainPanel.add(widthPanel);
 	
 	
 	//set number of sides
@@ -91,7 +103,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	setNumberOfSides(MINIMUM_POSSIBLE_NUMBER_OF_SIDES);
 	
 	sidesChangerSlider.setMajorTickSpacing(1);
-	sidesChangerSlider.setPaintTicks(true);
+	sidesChangerSlider.setPaintTicks(false);
 	sidesChangerSlider.setPaintLabels(true);
 	sidesChangerSlider.setSnapToTicks(true);
 	
@@ -104,10 +116,13 @@ ToolShapes(ImageModel model, String iconSource) {
 	sidesChangerSlider.setLabelTable(sideLengthLabels);
 	//add listener
 	sidesChangerSlider.addChangeListener(e -> setNumberOfSides(sidesChangerSlider.getValue()));
-	JPanel sidesChangeerPanel = new JPanel();
-	sidesChangeerPanel.add(sidesChangerSlider);
+	JPanel sidesChangerPanel = new JPanel();
+	mainPanel.add(sidesChangerSlider);
 	
-	upperCard.add(sidesChangeerPanel);
+	
+	upperCard.add(mainPanel);
+	
+	//upperCard.add(sidesChangerPanel);
 }
 
 private void setStrokeEnabled(boolean isEnabled) {
