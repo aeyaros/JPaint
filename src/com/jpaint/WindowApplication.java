@@ -220,8 +220,8 @@ void WindowSetup(int width, int height) {
 	
 	Hashtable<String, MenuItem> menuItems = new Hashtable<>();
 	
-	int cmdCtrlModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-	int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx() | InputEvent.SHIFT_DOWN_MASK;
+	int cmdCtrlModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
+	int cmdCtrlShiftModifier = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask() | InputEvent.SHIFT_DOWN_MASK;
 	
 	//file menu
 	menuItems.put("new", new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N,
