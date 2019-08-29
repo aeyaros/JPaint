@@ -51,7 +51,23 @@ Cursor getBlankCursor() {
 	return Toolkit.getDefaultToolkit().createCustomCursor(
 		  new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
 }
-Cursor getCustomCursor(String cursorName, String cursorSource16,  String cursorSource32, String cursorSource64, int Hx16, int Hy16, int Hx32, int Hy32, int Hx64, int Hy64) {
+Cursor getCustomCursor(
+	  String cursorName,
+	  String cursorSource16,
+	  String cursorSource24,
+	  String cursorSource32,
+	  String cursorSource48,
+	  String cursorSource64,
+	  String cursorSource96,
+	  String cursorSource128,
+	  int Hx16, int Hy16,
+	  int Hx24, int Hy24,
+	  int Hx32, int Hy32,
+	  int Hx48, int Hy48,
+	  int Hx64, int Hy64,
+	  int Hx96, int Hy96,
+	  int Hx128, int Hy128
+                      ) {
 	try {
 		String cursorSource;
 		int x;
@@ -59,16 +75,38 @@ Cursor getCustomCursor(String cursorName, String cursorSource16,  String cursorS
 		Dimension bestCursorSize =
 				Toolkit.getDefaultToolkit().getBestCursorSize(32, 32);
 		System.out.println("Best size:" + bestCursorSize.toString());
-		if (bestCursorSize.width > 32) {
+		//change cursor based on size
+		//need this because necessary for High DPI displays
+		if (bestCursorSize.width > 96) {
+			x = Hx128;
+			y = Hy128;
+			cursorSource = cursorSource128;
+			System.out.println("Using 128");
+		} else if (bestCursorSize.width > 64) {
+			x = Hx96;
+			y = Hy96;
+			cursorSource = cursorSource96;
+			System.out.println("Using 96");
+		} else if (bestCursorSize.width > 48) {
 			x = Hx64;
 			y = Hy64;
 			cursorSource = cursorSource64;
 			System.out.println("Using 64");
-		} else if (bestCursorSize.width > 16) {
+		} else if (bestCursorSize.width > 32) {
+			x = Hx48;
+			y = Hy48;
+			cursorSource = cursorSource48;
+			System.out.println("Using 48");
+		} else if (bestCursorSize.width > 24) {
 			x = Hx32;
 			y = Hy32;
 			cursorSource = cursorSource32;
 			System.out.println("Using 32");
+		} else if (bestCursorSize.width > 16) {
+			x = Hx24;
+			y = Hy24;
+			cursorSource = cursorSource24;
+			System.out.println("Using 24");
 		} else{
 			x = Hx16;
 			y = Hy16;
@@ -77,7 +115,9 @@ Cursor getCustomCursor(String cursorName, String cursorSource16,  String cursorS
 		}
 		BufferedImage cursorImage = ImageIO.read(getClass().getResource(cursorSource));
 		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(x, y), cursorName);
-	} catch (java.io.IOException e) {
+	} catch (Exception e) {
+		System.err.println("Couldn't get cursor image, or invalid hotspot. Reverting to default cursor");
+		e.printStackTrace();
 		return getDefaultCursor();
 	}
 }

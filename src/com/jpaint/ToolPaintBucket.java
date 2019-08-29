@@ -19,10 +19,22 @@ ToolPaintBucket(ImageModel model, String iconSource) {
 }
 @Override void onButtonSelect() {
 	model.updateSwingCursor(getCustomCursor(
-		  "Paintbucket", "icons/cursor_icons/paintBucketCursor.png",
-			"icons/cursor_icons/paintBucketCursor32.png",
-			"icons/cursor_icons/paintBucketCursor64.png",
-			13, 13, 28,28, 56,58));
+		  "Paintbucket",
+		  "icons/cursor_icons/paintBucketCursor16.png",
+		  "icons/cursor_icons/paintBucketCursor24.png",
+		  "icons/cursor_icons/paintBucketCursor32.png",
+		  "icons/cursor_icons/paintBucketCursor48.png",
+		  "icons/cursor_icons/paintBucketCursor64.png",
+		  "icons/cursor_icons/paintBucketCursor96.png",
+		  "icons/cursor_icons/paintBucketCursor128.png",
+		  13, 13,
+		  21, 20,
+		  28, 28,
+		  42, 43,
+		  56, 58,
+		  84, 87,
+		  112, 117
+	                                       ));
 }
 
 @Override
