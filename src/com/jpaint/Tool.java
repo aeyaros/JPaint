@@ -41,7 +41,7 @@ Tool(ImageModel model, String iconSource) {
 }
 abstract void onButtonSelect();
 
-Cursor getDefaultCursor() {
+private Cursor getDefaultCursor() {
 	return Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR);
 }
 Cursor getCrossHairCursor() {
@@ -51,10 +51,32 @@ Cursor getBlankCursor() {
 	return Toolkit.getDefaultToolkit().createCustomCursor(
 		  new BufferedImage(4, 4, BufferedImage.TYPE_INT_ARGB), new Point(0, 0), "blank");
 }
-Cursor getCustomCursor(String cursorName, String cursorSource, int xHotSpot, int yHotSpot) {
+Cursor getCustomCursor(String cursorName, String cursorSource16,  String cursorSource32, String cursorSource64, int Hx16, int Hy16, int Hx32, int Hy32, int Hx64, int Hy64) {
 	try {
+		String cursorSource;
+		int x;
+		int y;
+		Dimension bestCursorSize =
+				Toolkit.getDefaultToolkit().getBestCursorSize(32, 32);
+		System.out.println("Best size:" + bestCursorSize.toString());
+		if (bestCursorSize.width > 32) {
+			x = Hx64;
+			y = Hy64;
+			cursorSource = cursorSource64;
+			System.out.println("Using 64");
+		} else if (bestCursorSize.width > 16) {
+			x = Hx32;
+			y = Hy32;
+			cursorSource = cursorSource32;
+			System.out.println("Using 32");
+		} else{
+			x = Hx16;
+			y = Hy16;
+			cursorSource = cursorSource16;
+			System.out.println("Using 16");
+		}
 		BufferedImage cursorImage = ImageIO.read(getClass().getResource(cursorSource));
-		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(xHotSpot, yHotSpot), cursorName);
+		return Toolkit.getDefaultToolkit().createCustomCursor(cursorImage, new Point(x, y), cursorName);
 	} catch (java.io.IOException e) {
 		return getDefaultCursor();
 	}

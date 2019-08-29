@@ -24,7 +24,10 @@ ToolPencil(ImageModel model, String iconSource) {
 }
 @Override void onButtonSelect() {
 	model.updateSwingCursor(getCustomCursor(
-		  "Pencil", "icons/cursor_icons/pencilCursor.png", 0, 15));
+		  "Pencil", "icons/cursor_icons/pencilCursor.png",
+			"icons/cursor_icons/pencilCursor32.png",
+			"icons/cursor_icons/pencilCursor64.png",
+			0, 15, 0,31, 0,63));
 }
 
 private boolean canDraw() {
