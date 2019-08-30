@@ -41,7 +41,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	ButtonGroup borderOptionButtons = new ButtonGroup();
 	
 	//first button
-	ToolbarButton borderOnly = new ToolbarButton("icons/shape_tool_icons/onlystroke.png"); //stroke only
+	ButtonToolbar borderOnly = new ButtonToolbar("icons/shape_tool_icons/onlystroke.png"); //stroke only
 	borderOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(false);
@@ -56,7 +56,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	borderOnly.setSelected(true);
 	
 	//second button
-	ToolbarButton borderWithFill = new ToolbarButton("icons/shape_tool_icons/strokeandfill.png"); //border + fill
+	ButtonToolbar borderWithFill = new ButtonToolbar("icons/shape_tool_icons/strokeandfill.png"); //border + fill
 	borderWithFill.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -66,7 +66,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	});
 	
 	//third button
-	ToolbarButton fillOnly = new ToolbarButton("icons/shape_tool_icons/onlyfill.png"); //fill only
+	ButtonToolbar fillOnly = new ButtonToolbar("icons/shape_tool_icons/onlyfill.png"); //fill only
 	fillOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -75,14 +75,20 @@ ToolShapes(ImageModel model, String iconSource) {
 		}
 	});
 	//add buttons to panel
-	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP,
-	                                                    ToolbarButton.TOOL_BUTTON_GAP)));
+	borderOptions.add(Box.createRigidArea(new Dimension(
+		  ButtonToolbar.TOOL_BUTTON_GAP,
+		  ButtonToolbar.TOOL_BUTTON_GAP
+	)));
 	borderOptions.add(borderOnly);
-	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	borderOptions.add(Box.createRigidArea(new Dimension(
+		  ButtonToolbar.TOOL_BUTTON_GAP,
+		  ButtonToolbar.TOOL_BUTTON_GAP
+	)));
 	borderOptions.add(borderWithFill);
-	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	borderOptions.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP,
+	                                                    ButtonToolbar.TOOL_BUTTON_GAP)));
 	borderOptions.add(fillOnly);
-	borderOptions.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	borderOptions.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
 	//add to button group
 	borderOptionButtons.add(borderOnly);
@@ -97,7 +103,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	widthPanel.add(widthSlider);
 	mainPanel.add(widthPanel);
 	
-	mainPanel.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	mainPanel.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
 	
 	//set number of sides

@@ -6,7 +6,7 @@ import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
 public class ToolColorPicker extends Tool {
-private ManageColors manageColors;
+private ManagerColors managerColors;
 private CardLayout cards;
 private JPanel coordinates;
 private JLabel[] ARGB;
@@ -61,8 +61,8 @@ ToolColorPicker(ImageModel model, String iconSource) {
 	                                       ));
 }
 
-void addColorManager(ManageColors manageColors) {
-	this.manageColors = manageColors;
+void addColorManager(ManagerColors managerColors) {
+	this.managerColors = managerColors;
 }
 
 private Color getColorAtPixel(int x, int y) {
@@ -94,7 +94,7 @@ private void updateStatus(int x, int y) {
 private void setColor(int x, int y, int buttonCode) {
 	if (model.isInBounds(x, y)) {
 		Color c = getColorAtPixel(x, y);
-		manageColors.setButtonColor(c, buttonCode);
+		managerColors.setButtonColor(c, buttonCode);
 	}
 }
 

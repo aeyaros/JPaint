@@ -8,23 +8,23 @@ import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.image.BufferedImage;
 
-class ToolbarButton extends JToggleButton {
+class ButtonToolbar extends JToggleButton {
 final static int TOOL_BUTTON_SIZE = 48;
 static final int TOOL_BUTTON_GAP = 4;
 
-ToolbarButton(String iconSource) {
+ButtonToolbar(String iconSource) {
 	super();
 	this.setOpaque(true);
 	this.setBorderPainted(true);
 	//this.setBorder(BorderFactory.createEtchedBorder(EtchedBorder.RAISED));
 	this.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-	this.setSize(ToolbarButton.TOOL_BUTTON_SIZE, ToolbarButton.TOOL_BUTTON_SIZE);
+	this.setSize(ButtonToolbar.TOOL_BUTTON_SIZE, ButtonToolbar.TOOL_BUTTON_SIZE);
 	this.setPreferredSize(this.getSize());
 	this.setMaximumSize(this.getSize());
 	
 	try { //get icon of button
 		Image image = ImageIO.read(getClass().getResource(iconSource));
-		image = image.getScaledInstance(ToolbarButton.TOOL_BUTTON_SIZE, ToolbarButton.TOOL_BUTTON_SIZE,
+		image = image.getScaledInstance(ButtonToolbar.TOOL_BUTTON_SIZE, ButtonToolbar.TOOL_BUTTON_SIZE,
 		                                Image.SCALE_SMOOTH
 		                               );
 		this.setIcon(new ImageIcon(image));
@@ -43,7 +43,7 @@ ToolbarButton(String iconSource) {
 			}
 			this.setSelectedIcon(new ImageIcon(
 				  selectedImage.getScaledInstance(
-						ToolbarButton.TOOL_BUTTON_SIZE, ToolbarButton.TOOL_BUTTON_SIZE, Image.SCALE_REPLICATE)));
+					    ButtonToolbar.TOOL_BUTTON_SIZE, ButtonToolbar.TOOL_BUTTON_SIZE, Image.SCALE_REPLICATE)));
 		}
 	} catch (Exception e) {
 		e.printStackTrace();

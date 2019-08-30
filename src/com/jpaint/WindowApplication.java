@@ -27,8 +27,8 @@ private JLabel coordinatesLabel;
 private JLabel sizeLabel;
 private ImageModel theModel;
 private ImageView theView;
-private ManageFiles manageFiles;
-private ManageMenus manageMenus;
+private ManagerFiles managerFiles;
+private ManagerMenus managerMenus;
 
 WindowApplication() {
 }
@@ -138,7 +138,7 @@ void WindowSetup(int width, int height) {
 	//tools panel
 	JPanel toolsPanel =
 		  new JPanel(
-				new GridLayout(0, NUMBER_TOOL_COLUMNS, ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP));
+			    new GridLayout(0, NUMBER_TOOL_COLUMNS, ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP));
 	toolsPanel.setBorder(sidePanelBorder);
 	gridBagConstraints.gridy = 0; //y - will be changed as I add components
 	sidePanel.add(toolsPanel, gridBagConstraints);
@@ -172,32 +172,32 @@ void WindowSetup(int width, int height) {
 	/*====== SET UP TOOLS ======*/
 	
 	//class for managing tools
-	ManageTools manageTools = new ManageTools(toolsPanel, theModel, theView);
+	ManagerTools managerTools = new ManagerTools(toolsPanel, theModel, theView);
 	
 	//add top panel to the north of the center panel
-	centerPanel.add(manageTools.getTopPanel(), BorderLayout.NORTH);
+	centerPanel.add(managerTools.getTopPanel(), BorderLayout.NORTH);
 	
 	/*====== SET UP COLORS ======*/
 	
 	//color manager for managing selected colors and giving tools access to them
 	//created with three initial colors
-	ManageColors manageColors =
-		  new ManageColors(manageTools.getTools(), mainFrame, presetPanel, selectedColorsPanel, opacityPanel);
-	manageTools.addColorManager(manageColors);
+	ManagerColors managerColors =
+		  new ManagerColors(managerTools.getTools(), mainFrame, presetPanel, selectedColorsPanel, opacityPanel);
+	managerTools.addColorManager(managerColors);
 	
 	/*====== File I/O Manager Object ======*/
-	manageFiles = new ManageFiles(theModel, mainFrame);
+	managerFiles = new ManagerFiles(theModel, mainFrame);
 	
 	/*====== MENU BAR ======*/
-	manageMenus = new ManageMenus(theModel, mainFrame, manageFiles);
+	managerMenus = new ManagerMenus(theModel, mainFrame, managerFiles);
 	
 	/*====== SET TITLE ======*/
-	manageFiles.setTitle(NEW_DOCUMENT);
+	managerFiles.setTitle(NEW_DOCUMENT);
 	
 	//ask to save when closing window
 	mainFrame.addWindowListener(new WindowListener() {
 		@Override public void windowClosing(WindowEvent e) {
-			manageFiles.exit();
+			managerFiles.exit();
 		}
 		@Override public void windowOpened(WindowEvent e) { }
 		@Override public void windowClosed(WindowEvent e) {}

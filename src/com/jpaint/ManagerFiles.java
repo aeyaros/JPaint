@@ -9,7 +9,7 @@ import java.io.File;
 import static com.jpaint.WindowApplication.APPLICATION_NAME;
 import static com.jpaint.WindowApplication.NEW_DOCUMENT;
 
-class ManageFiles {
+class ManagerFiles {
 
 private ImageModel theModel;
 private JFrame mainFrame;
@@ -17,7 +17,7 @@ private JFrame mainFrame;
 //path of opened/saved file
 private File theFile;
 
-ManageFiles(ImageModel imageModel, JFrame jFrame) {
+ManagerFiles(ImageModel imageModel, JFrame jFrame) {
 	theModel = imageModel;
 	mainFrame = jFrame;
 }

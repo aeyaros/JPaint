@@ -13,16 +13,16 @@ import java.awt.print.PrinterJob;
 import java.io.IOException;
 import java.util.Hashtable;
 
-class ManageMenus {
+class ManagerMenus {
 private ImageModel theModel;
 private JFrame mainFrame;
 private Hashtable<String, MenuItem> menuItems;
-private ManageFiles manageFiles;
+private ManagerFiles managerFiles;
 
-ManageMenus(ImageModel imageModel, JFrame jFrame, ManageFiles fileManager) {
+ManagerMenus(ImageModel imageModel, JFrame jFrame, ManagerFiles fileManager) {
 	theModel = imageModel;
 	mainFrame = jFrame;
-	manageFiles = fileManager;
+	managerFiles = fileManager;
 	
 	//create the menu
 	JMenuBar menuBar = new JMenuBar();
@@ -50,25 +50,25 @@ ManageMenus(ImageModel imageModel, JFrame jFrame, ManageFiles fileManager) {
 	
 	//file menu
 	menuItems.put("new", new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N,
-	                                  e -> manageFiles.newFile(false)
+	                                  e -> managerFiles.newFile(false)
 	));
 	
 	menuItems.put(
 		  "newtrans",
 		  new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T,
-		               e -> manageFiles.newFile(true)
+		               e -> managerFiles.newFile(true)
 		  )
 	             );
 	fileMenu.addSeparator();
 	
 	menuItems.put("open", new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,
-	                                   e -> manageFiles.openFile()
+	                                   e -> managerFiles.openFile()
 	));
 	menuItems.put("save", new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,
-	                                   e -> manageFiles.save()
+	                                   e -> managerFiles.save()
 	));
 	menuItems.put("saveas", new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,
-	                                     e -> manageFiles.saveas()
+	                                     e -> managerFiles.saveas()
 	));
 	fileMenu.addSeparator();
 	
@@ -80,11 +80,11 @@ ManageMenus(ImageModel imageModel, JFrame jFrame, ManageFiles fileManager) {
 	
 	if (Main.IS_MAC)
 		menuItems.put("close", new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,
-		                                    e -> manageFiles.exit()
+		                                    e -> managerFiles.exit()
 		));
 	else
 		menuItems.put("exit", new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,
-		                                   e -> manageFiles.exit()
+		                                   e -> managerFiles.exit()
 		));
 	
 	//edit menu

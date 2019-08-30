@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-class ManageTools {
+class ManagerTools {
 private static int INITIAL_TOOL = 3;
 private Tool[] tools;
 private ControllerMouseStatic controllerMouseStatic;
@@ -17,7 +17,7 @@ private CardLayout topLayout;
 private ToolColorPicker toolColorPicker;
 private ImageView imageView;
 
-ManageTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
+ManagerTools(JPanel toolsPanel, ImageModel theModel, ImageView theView) {
 	//create tools
 	//add them to arraylist one by one, then copy to regular array to avoid magic numbers
 	ArrayList<Tool> newTools = new ArrayList<>();
@@ -120,8 +120,8 @@ JPanel getTopPanel() {
 	return topPanel;
 }
 
-void addColorManager(ManageColors manageColors) {
-	toolColorPicker.addColorManager(manageColors);
+void addColorManager(ManagerColors managerColors) {
+	toolColorPicker.addColorManager(managerColors);
 }
 
 private void setCurrentTool(int i) {

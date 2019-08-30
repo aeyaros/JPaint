@@ -7,10 +7,10 @@ import java.awt.event.ItemEvent;
 public class ToolPaintBrush extends ToolPencil {
 private final int MIN_RADIUS = 0;
 private final int DEFAULT_RADIUS = 8;
-final int MAX_RADIUS = 64;
+private final int MAX_RADIUS = 64;
 JPanel mainPanel;
-ToolbarButton triangleButton;
-ToolbarButton squareButton;
+ButtonToolbar triangleButton;
+ButtonToolbar squareButton;
 int radius;
 private JLabel radiusLabel;
 JSlider radiusSlider;
@@ -58,7 +58,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 	JPanel shapeButtons = new JPanel();
 	shapeButtons.setLayout(new BoxLayout(shapeButtons, BoxLayout.X_AXIS));
 	ButtonGroup shapeButtonGroup = new ButtonGroup();
-	ToolbarButton circleButton = new ToolbarButton("icons/brush_tool_icons/brushcircle.png");
+	ButtonToolbar circleButton = new ButtonToolbar("icons/brush_tool_icons/brushcircle.png");
 	circleButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.CIRCLE;
@@ -66,7 +66,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 		}
 	});
 	
-	triangleButton = new ToolbarButton("icons/brush_tool_icons/brushtriangle.png");
+	triangleButton = new ButtonToolbar("icons/brush_tool_icons/brushtriangle.png");
 	triangleButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.TRIANGLE;
@@ -74,7 +74,7 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 		}
 	});
 	
-	squareButton = new ToolbarButton("icons/brush_tool_icons/brushsquare.png");
+	squareButton = new ButtonToolbar("icons/brush_tool_icons/brushsquare.png");
 	squareButton.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			selectedBrush = SelectedBrush.SQUARE;
@@ -82,13 +82,13 @@ ToolPaintBrush(ImageModel model, String iconSource) {
 		}
 	});
 	
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	shapeButtons.add(circleButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	shapeButtons.add(triangleButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	shapeButtons.add(squareButton);
-	shapeButtons.add(Box.createRigidArea(new Dimension(ToolbarButton.TOOL_BUTTON_GAP, ToolbarButton.TOOL_BUTTON_GAP)));
+	shapeButtons.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
 	shapeButtonGroup.add(circleButton);
 	shapeButtonGroup.add(triangleButton);

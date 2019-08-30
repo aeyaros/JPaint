@@ -17,11 +17,11 @@ private final Dimension colorSize = new Dimension(256, 470);
 private JFrame frame;
 private JLabel[] labels;
 private JSlider[] sliders;
-private ColorPresetButton colorLabel;
+private ButtonColorPreset colorLabel;
 //color stuff
 private Color colorBeingChanged;
-private ColorPresetButton colorPresetButton;
-private ManageColors manageColors;
+private ButtonColorPreset buttonColorPreset;
+private ManagerColors managerColors;
 private JLabel originalColorText;
 private JLabel newColorText;
 
@@ -32,7 +32,7 @@ WindowColorEditor() {
 
 void close() {
 	try {
-		colorPresetButton.resetBorder();
+		buttonColorPreset.resetBorder();
 		frame.dispatchEvent(new WindowEvent(frame, WindowEvent.WINDOW_CLOSING));
 	} catch (Exception e) {
 		//System.out.println(
@@ -41,19 +41,19 @@ void close() {
 }
 
 private void save() {
-	colorPresetButton.setColor(colorBeingChanged);
-	manageColors.notifyTools();
+	buttonColorPreset.setColor(colorBeingChanged);
+	managerColors.notifyTools();
 	close();
 }
 
 //each time color button double clicked, set up the window and open it
-void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame, ManageColors manageColors) {
+void setColorPickerWindow(ButtonColorPreset buttonColorPreset, JFrame mainFrame, ManagerColors managerColors) {
 	
-	this.colorPresetButton = colorPresetButton; //not used until saving
-	this.manageColors = manageColors; //not used until saving
-	colorBeingChanged = new Color(colorPresetButton.getColor()); //store a copy of the original color
+	this.buttonColorPreset = buttonColorPreset; //not used until saving
+	this.managerColors = managerColors; //not used until saving
+	colorBeingChanged = new Color(buttonColorPreset.getColor()); //store a copy of the original color
 	
-	this.colorPresetButton.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, SystemColor.controlHighlight,
+	this.buttonColorPreset.setBorder(BorderFactory.createBevelBorder(BevelBorder.LOWERED, SystemColor.controlHighlight,
 	                                                                 SystemColor.controlHighlight
 	                                                                ));
 	
@@ -74,23 +74,23 @@ void setColorPickerWindow(ColorPresetButton colorPresetButton, JFrame mainFrame,
 	JPanel colorLabels = new JPanel(new GridLayout(1, 2));
 	
 	//label to show original color, is never changed once set
-	ColorPresetButton originalColorLabel =
-		  new ColorPresetButton(colorPresetButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
+	ButtonColorPreset originalColorLabel =
+		  new ButtonColorPreset(buttonColorPreset.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
 	originalColorLabel.setBorder(null);
 	colorLabels.add(originalColorLabel);
 	setColorPane(originalColorLabel);
 	originalColorText = new JLabel("OldColor");
 	originalColorLabel.add(originalColorText);
-	setColorLabelTextColor(originalColorText, colorPresetButton.getColor());
+	setColorLabelTextColor(originalColorText, buttonColorPreset.getColor());
 	
 	//label to show new color color, changes when user uses controls on the window
-	colorLabel = new ColorPresetButton(colorPresetButton.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
+	colorLabel = new ButtonColorPreset(buttonColorPreset.getColor(), COLOR_LABEL_WIDTH, COLOR_LABEL_HEIGHT);
 	colorLabel.setBorder(null);
 	colorLabels.add(colorLabel);
 	setColorPane(colorLabel);
 	newColorText = new JLabel("New color");
 	colorLabel.add(newColorText);
-	setColorLabelTextColor(newColorText, colorPresetButton.getColor());
+	setColorLabelTextColor(newColorText, buttonColorPreset.getColor());
 	
 	//panel containing both titles and colors
 	JPanel colorPanel = new JPanel();
@@ -184,7 +184,7 @@ private void updateChannel(int i) {
 	setColorLabelTextColor(newColorText, colorBeingChanged);
 }
 
-private void setColorPane(ColorPresetButton pane) {
+private void setColorPane(ButtonColorPreset pane) {
 	pane.setColor(colorBeingChanged);
 }
 

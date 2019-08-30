@@ -32,7 +32,7 @@ Tool(ImageModel model, String iconSource) {
 	upperCard = new JPanel();
 	
 	//button for toolbar
-	button = new ToolbarButton(iconSource);
+	button = new ButtonToolbar(iconSource);
 	
 	button.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) onButtonSelect();
