@@ -56,6 +56,36 @@ ToolShapes(ImageModel model, String iconSource) {
 	//panel holding everything
 	JPanel mainPanel = new JPanel();
 	mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.X_AXIS));
+	upperCard.add(mainPanel);
+	
+	//setup combo box
+	int numShapes = shapeNames.length;
+	System.out.println("Number of shapes = " + numShapes);
+	shapeIcons = new ImageIcon[numShapes];
+	Integer[] integerArray = new Integer[numShapes];
+	for (int i = 0; i < numShapes; i++) {
+		integerArray[i] = i;
+		shapeIcons[i] = getIconFromFile(sideIconPathName + shapeFileNames[i]);
+		if (shapeIcons[i] != null) shapeIcons[i].setDescription(shapeNames[i]);
+	}
+	shapeBox = new JComboBox<>(integerArray);
+	BoxRenderer shapeBoxRenderer = new BoxRenderer();
+	shapeBox.setMaximumSize(new Dimension(
+		  (int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5),
+		  ButtonToolbar.TOOL_BUTTON_SIZE
+	));
+	shapeBox.setPreferredSize(new Dimension(
+		  (int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5),
+		  ButtonToolbar.TOOL_BUTTON_SIZE
+	));
+	shapeBox.setRenderer(shapeBoxRenderer);
+	shapeBox.setMaximumRowCount(numShapes);
+	shapeBox.addActionListener(e -> setNumberOfSides(shapeBox.getSelectedIndex() + 3));
+	shapeBox.setSelectedIndex(0);
+	numberOfSides = 3;
+	
+	mainPanel.add(shapeBox);
+	mainPanel.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
 	
 	//setting border mode/width
@@ -125,35 +155,6 @@ ToolShapes(ImageModel model, String iconSource) {
 	widthPanel.add(widthLabel);
 	widthPanel.add(widthSlider);
 	mainPanel.add(widthPanel);
-	
-	mainPanel.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
-	
-	//setup combo box
-	int numShapes = shapeNames.length;
-	System.out.println("Number of shapes = " + numShapes);
-	shapeIcons = new ImageIcon[numShapes];
-	Integer[] integerArray = new Integer[numShapes];
-	for (int i = 0; i < numShapes; i++) {
-		integerArray[i] = i;
-		shapeIcons[i] = getIconFromFile(sideIconPathName + shapeFileNames[i]);
-		if (shapeIcons[i] != null) shapeIcons[i].setDescription(shapeNames[i]);
-	}
-	shapeBox = new JComboBox<>(integerArray);
-	BoxRenderer shapeBoxRenderer = new BoxRenderer();
-	shapeBox
-		  .setMaximumSize(new Dimension((int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5), ButtonToolbar.TOOL_BUTTON_SIZE));
-	shapeBox.setPreferredSize(
-		  new Dimension((int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5), ButtonToolbar.TOOL_BUTTON_SIZE));
-	shapeBox.setRenderer(shapeBoxRenderer);
-	
-	shapeBox.setMaximumRowCount(numShapes);
-	shapeBox.addActionListener(e -> setNumberOfSides(shapeBox.getSelectedIndex() + 3));
-	
-	shapeBox.setSelectedIndex(0);
-	numberOfSides = 3;
-	
-	mainPanel.add(shapeBox);
-	upperCard.add(mainPanel);
 }
 
 private ImageIcon getIconFromFile(String path) {
