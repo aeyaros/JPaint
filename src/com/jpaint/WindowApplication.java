@@ -70,8 +70,11 @@ void WindowSetup(int width, int height) {
 	JPanel centerPanel = new JPanel(new BorderLayout());
 	mainPanel.add(centerPanel, BorderLayout.CENTER);
 	mainPanel
-		  .setBorder(new EmptyBorder(WINDOW_CHROME_SIZE, WINDOW_CHROME_SIZE, WINDOW_CHROME_SIZE,
-		                             WINDOW_CHROME_SIZE
+		  .setBorder(new EmptyBorder(
+				WINDOW_CHROME_SIZE,
+				WINDOW_CHROME_SIZE,
+				WINDOW_CHROME_SIZE,
+				WINDOW_CHROME_SIZE
 		  ));
 	
 	//image panel: a container which is inside a panel with scrollbars
@@ -138,7 +141,10 @@ void WindowSetup(int width, int height) {
 	//tools panel
 	JPanel toolsPanel =
 		  new JPanel(
-			    new GridLayout(0, NUMBER_TOOL_COLUMNS, ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP));
+			    new GridLayout(0, NUMBER_TOOL_COLUMNS,
+			                   ButtonToolbar.TOOL_BUTTON_GAP,
+			                   ButtonToolbar.TOOL_BUTTON_GAP
+			    ));
 	toolsPanel.setBorder(sidePanelBorder);
 	gridBagConstraints.gridy = 0; //y - will be changed as I add components
 	sidePanel.add(toolsPanel, gridBagConstraints);
@@ -154,14 +160,22 @@ void WindowSetup(int width, int height) {
 	BoxLayout opacityLayout = new BoxLayout(opacityPanel, BoxLayout.Y_AXIS);
 	opacityPanel.setLayout(opacityLayout);
 	opacityPanel
-		  .setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE * 3, THIN_EMPTY_BORDER_SIZE, 0, THIN_EMPTY_BORDER_SIZE));
+		  .setBorder(new EmptyBorder(THIN_EMPTY_BORDER_SIZE * 3,
+		                             THIN_EMPTY_BORDER_SIZE, 0,
+		                             THIN_EMPTY_BORDER_SIZE
+		  ));
 	//gridBagConstraints.gridy++;
 	//sidePanel.add(opacityPanel, gridBagConstraints);
 	
 	//selected colors panel
 	JPanel selectedColorsPanel = new JPanel(new GridBagLayout());
 	selectedColorsPanel
-		  .setBorder(new EmptyBorder(0, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE, THIN_EMPTY_BORDER_SIZE));
+		  .setBorder(new EmptyBorder(
+				0,
+				THIN_EMPTY_BORDER_SIZE,
+				THIN_EMPTY_BORDER_SIZE,
+				THIN_EMPTY_BORDER_SIZE
+		  ));
 	gridBagConstraints.gridy++;
 	sidePanel.add(selectedColorsPanel, gridBagConstraints);
 	

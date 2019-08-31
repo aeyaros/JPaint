@@ -1,11 +1,11 @@
 package com.jpaint;
 
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
 import java.awt.event.MouseEvent;
-import java.util.Hashtable;
 
 public class ToolShapes extends ToolLine {
 //values
@@ -22,6 +22,29 @@ private boolean shouldFill;
 private int numberOfSides;
 //objects
 private JSlider sidesChangerSlider;
+private JComboBox<Integer> shapeBox;
+
+//for combo box - the shape selection menu
+private String sideIconPathName = "icons/shape_tool_sides_icons/";
+private ImageIcon[] shapeIcons;
+private String[] shapeNames = {
+	  "Triangle",
+	  "Square",
+	  "Pentagon",
+	  "Hexagon",
+	  "Heptagon",
+	  "Octagon",
+	  "Circle"
+};
+private String[] shapeFileNames = {
+	  "3_black_triangle.png",
+	  "4_black_square.png",
+	  "5_black_pentagon.png",
+	  "6_black_hexagon.png",
+	  "7_black_heptagon.png",
+	  "8_black_octagon.png",
+	  "9_black_circle.png"
+};
 
 ToolShapes(ImageModel model, String iconSource) {
 	super(model, iconSource);
@@ -41,7 +64,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	ButtonGroup borderOptionButtons = new ButtonGroup();
 	
 	//first button
-	ButtonToolbar borderOnly = new ButtonToolbar("icons/shape_tool_icons/onlystroke.png"); //stroke only
+	ButtonToolbar borderOnly = new ButtonToolbar("icons/shape_tool_mode_icons/onlystroke.png"); //stroke only
 	borderOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(false);
@@ -56,7 +79,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	borderOnly.setSelected(true);
 	
 	//second button
-	ButtonToolbar borderWithFill = new ButtonToolbar("icons/shape_tool_icons/strokeandfill.png"); //border + fill
+	ButtonToolbar borderWithFill = new ButtonToolbar("icons/shape_tool_mode_icons/strokeandfill.png"); //border + fill
 	borderWithFill.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -66,7 +89,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	});
 	
 	//third button
-	ButtonToolbar fillOnly = new ButtonToolbar("icons/shape_tool_icons/onlyfill.png"); //fill only
+	ButtonToolbar fillOnly = new ButtonToolbar("icons/shape_tool_mode_icons/onlyfill.png"); //fill only
 	fillOnly.addItemListener(e -> {
 		if (e.getStateChange() == ItemEvent.SELECTED) {
 			setFillEnabled(true);
@@ -90,7 +113,7 @@ ToolShapes(ImageModel model, String iconSource) {
 	borderOptions.add(fillOnly);
 	borderOptions.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
-	//add to button group
+	//add buttons to button group
 	borderOptionButtons.add(borderOnly);
 	borderOptionButtons.add(borderWithFill);
 	borderOptionButtons.add(fillOnly);
@@ -105,40 +128,104 @@ ToolShapes(ImageModel model, String iconSource) {
 	
 	mainPanel.add(Box.createRigidArea(new Dimension(ButtonToolbar.TOOL_BUTTON_GAP, ButtonToolbar.TOOL_BUTTON_GAP)));
 	
+	//setup combo box
+	int numShapes = shapeNames.length;
+	System.out.println("Number of shapes = " + numShapes);
+	shapeIcons = new ImageIcon[numShapes];
+	Integer[] integerArray = new Integer[numShapes];
+	for (int i = 0; i < numShapes; i++) {
+		integerArray[i] = i;
+		shapeIcons[i] = getIconFromFile(sideIconPathName + shapeFileNames[i]);
+		if (shapeIcons[i] != null) shapeIcons[i].setDescription(shapeNames[i]);
+	}
+	shapeBox = new JComboBox<>(integerArray);
+	BoxRenderer shapeBoxRenderer = new BoxRenderer();
+	shapeBox
+		  .setMaximumSize(new Dimension((int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5), ButtonToolbar.TOOL_BUTTON_SIZE));
+	shapeBox.setPreferredSize(
+		  new Dimension((int) (ButtonToolbar.TOOL_BUTTON_SIZE * 3.5), ButtonToolbar.TOOL_BUTTON_SIZE));
+	shapeBox.setRenderer(shapeBoxRenderer);
 	
-	//set number of sides
-	sidesChangerSlider = new JSlider(SwingConstants.HORIZONTAL, MINIMUM_POSSIBLE_NUMBER_OF_SIDES,
-	                                 MAX_ALLOWED_NUMBER_OF_SIDES, MINIMUM_POSSIBLE_NUMBER_OF_SIDES
-	);
-	setNumberOfSides(MINIMUM_POSSIBLE_NUMBER_OF_SIDES);
+	shapeBox.setMaximumRowCount(numShapes);
+	shapeBox.addActionListener(e -> setNumberOfSides(shapeBox.getSelectedIndex() + 3));
 	
-	sidesChangerSlider.setMajorTickSpacing(1);
-	sidesChangerSlider.setPaintTicks(false);
-	sidesChangerSlider.setPaintLabels(true);
-	sidesChangerSlider.setSnapToTicks(true);
+	shapeBox.setSelectedIndex(0);
+	numberOfSides = 3;
 	
-	//labe max value with text "circle"
-	Hashtable<Integer, JLabel> sideLengthLabels = new Hashtable<>();
-	//add labels for numerical values
-	for (int i = MINIMUM_POSSIBLE_NUMBER_OF_SIDES; i < MAX_ALLOWED_NUMBER_OF_SIDES; i++)
-		sideLengthLabels.put(i, new JLabel(Integer.toString(i)));
-	sideLengthLabels.put(MAX_ALLOWED_NUMBER_OF_SIDES, new JLabel("    Circle"));
-	sidesChangerSlider.setLabelTable(sideLengthLabels);
-	//add listener
-	sidesChangerSlider.addChangeListener(e -> setNumberOfSides(sidesChangerSlider.getValue()));
-	JPanel sidesChangerPanel = new JPanel();
-	sidesChangerPanel.setLayout(new BoxLayout(sidesChangerPanel, BoxLayout.X_AXIS));
-	sidesChangerPanel.setBorder(BorderFactory.createEtchedBorder());
-	JLabel sidesLabel = new JLabel("Sides:");
-	sidesLabel.setBorder(BorderFactory.createEmptyBorder(0, 6, 0, 0));
-	sidesChangerPanel.add(sidesLabel);
-	sidesChangerPanel.add(sidesChangerSlider);
-	mainPanel.add(sidesChangerPanel);
-	
-	
+	mainPanel.add(shapeBox);
 	upperCard.add(mainPanel);
+}
+
+private ImageIcon getIconFromFile(String path) {
+	try {
+		Image image = ImageIO.read(getClass().getResource(path));
+		if (Main.IS_MAC) {
+			image = image.getScaledInstance(
+				  ButtonToolbar.TOOL_BUTTON_SIZE / 3,
+				  ButtonToolbar.TOOL_BUTTON_SIZE / 3,
+				  Image.SCALE_SMOOTH
+			                               );
+		} else {
+			image = image.getScaledInstance(
+				  ButtonToolbar.TOOL_BUTTON_SIZE,
+				  ButtonToolbar.TOOL_BUTTON_SIZE,
+				  Image.SCALE_SMOOTH
+			                               );
+		}
+		return new ImageIcon(image);
+	} catch (Exception e) {
+		System.err.println("Couldn't get icon from " + path);
+		e.printStackTrace();
+		return null;
+	}
+}
+
+//Based on the java custom combobox demo
+private class BoxRenderer extends JLabel implements ListCellRenderer {
+	BoxRenderer() {
+		this.setOpaque(true);
+		this.setHorizontalAlignment(LEFT);
+		this.setVerticalAlignment(CENTER);
+	}
 	
-	//upperCard.add(sidesChangerPanel);
+	public Component getListCellRendererComponent(
+		  JList list,
+		  Object value, int index, boolean isSelected, boolean cellHasFocus
+	                                             ) {
+		//get index
+		int selectedIndex = (Integer) value;
+		Dimension size;
+		if (Main.IS_MAC) {
+			size = new Dimension(
+				  ButtonToolbar.TOOL_BUTTON_SIZE,
+				  ButtonToolbar.TOOL_BUTTON_SIZE / 2
+			);
+		} else {
+			size = new Dimension(
+				  ButtonToolbar.TOOL_BUTTON_SIZE,
+				  ButtonToolbar.TOOL_BUTTON_SIZE
+			);
+		}
+		setPreferredSize(size);
+		setMinimumSize(size);
+		
+		//set background/foreground colors
+		if (isSelected) {
+			setBackground(list.getSelectionBackground());
+			setForeground(list.getSelectionForeground());
+		} else {
+			setBackground(list.getBackground());
+			setForeground(list.getForeground());
+		}
+		
+		//set icon
+		ImageIcon icon = shapeIcons[selectedIndex];
+		String string = shapeNames[selectedIndex];
+		setIcon(icon);
+		setText(string);
+		setFont(list.getFont());
+		return this;
+	}
 }
 
 private void setStrokeEnabled(boolean isEnabled) {
