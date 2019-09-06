@@ -35,7 +35,7 @@ Tool(ImageModel model, String iconSource) {
 	//button for toolbar
 	button = new ButtonToolbar(iconSource);
 
-	button.addItemListener(new ItemListener() {
+    button.addItemListener(new ItemListener() {
 		@Override
 		public void itemStateChanged(ItemEvent e) {
 			if (e.getStateChange() == ItemEvent.SELECTED) onButtonSelect();
