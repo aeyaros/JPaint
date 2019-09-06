@@ -12,6 +12,7 @@ final static int DEFAULT_WINDOW_HEIGHT = 360;
 static boolean IS_MAC;
 
 public static void main(String[] args) {
+	System.out.println("Starting JPaint!");
 	String lcOSName = System.getProperty("os.name").toLowerCase();
 	IS_MAC = lcOSName.startsWith("mac os x");
 	

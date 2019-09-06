@@ -9,6 +9,7 @@ private static final String[] channelNames = {"Opacity", "Red", "Green", "Blue"}
 private static final int NUMBER_OF_VALUES = 256;
 private static final int NUMBER_OF_CHANNELS = 4;
 private short[] channels;
+	private static int BYTES_IN_INTEGER = 4;
 
 /*====== CONSTRUCTORS ======*/
 
@@ -49,13 +50,13 @@ Color(int argb) {
 	}
 	
 	//4 shorts <-> 4 channels <-> 4 bytes in int
-	channels = new short[Integer.BYTES];
+	channels = new short[BYTES_IN_INTEGER];
 	
 	//need to access channels in reverse order
 	// for example, "a" channel appears last in binArray but should be first in _channels
-	int maxIndex = Integer.BYTES - 1;
+	int maxIndex = BYTES_IN_INTEGER - 1;
 	//for each channel of 8 bits
-	for (int i = 0; i < Integer.BYTES; i++) {
+	for (int i = 0; i < BYTES_IN_INTEGER; i++) {
 		//construct a number from the bits
 		channels[maxIndex - i] = 0;
 		
@@ -127,7 +128,7 @@ private static int[] gcA(int input) {
 //get the ARGB 32-bit integer for the current color
 int getARGB() {
 	int argb = 0; //4 bytes
-	for (int i = 0; i < Integer.BYTES; i++) {
+	for (int i = 0; i < BYTES_IN_INTEGER; i++) {
 		//ith item is shifted left 32 - (8 * 1|2|3|4)
 		argb += channels[i] << (Integer.SIZE - (Byte.SIZE * (i + 1)));
 	}
