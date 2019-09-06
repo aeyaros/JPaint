@@ -1,6 +1,8 @@
 package com.jpaint;
 
 import javax.swing.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 public class ToolEraser extends ToolPaintBrush {
 private boolean eraseToTransparent;
@@ -20,9 +22,19 @@ ToolEraser(ImageModel model, String iconSource) {
 	eraseWhite.setSelected(true);
 	JRadioButton eraseTrans = new JRadioButton("Transparent");
 	eraseTrans.setSelected(false);
-	
-	eraseWhite.addActionListener(e -> setEraseToTransparent(false));
-	eraseTrans.addActionListener(e -> setEraseToTransparent(true));
+
+    eraseWhite.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setEraseToTransparent(false);
+        }
+    });
+    eraseTrans.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            setEraseToTransparent(true);
+        }
+    });
 	
 	ButtonGroup eraserButtons = new ButtonGroup();
 	eraserButtons.add(eraseWhite);

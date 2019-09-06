@@ -5,6 +5,8 @@ import javax.swing.border.BevelBorder;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowFocusListener;
 
@@ -143,9 +145,20 @@ void setColorPickerWindow(ButtonColorPreset buttonColorPreset, JFrame mainFrame,
 	
 	JButton applyButton = new JButton("Apply");
 	JButton cancelButton = new JButton("Cancel");
-	
-	applyButton.addActionListener(e -> save());
-	cancelButton.addActionListener(e -> close());
+
+    applyButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            save();
+        }
+    });
+
+    cancelButton.addActionListener(new ActionListener() {
+        @Override
+        public void actionPerformed(ActionEvent e) {
+            close();
+        }
+    });
 	
 	buttons.add(applyButton);
 	buttons.add(cancelButton);

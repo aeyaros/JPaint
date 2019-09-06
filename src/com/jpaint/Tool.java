@@ -4,6 +4,7 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
 import java.util.ArrayDeque;
@@ -33,9 +34,12 @@ Tool(ImageModel model, String iconSource) {
 	
 	//button for toolbar
 	button = new ButtonToolbar(iconSource);
-	
-	button.addItemListener(e -> {
-		if (e.getStateChange() == ItemEvent.SELECTED) onButtonSelect();
+
+	button.addItemListener(new ItemListener() {
+		@Override
+		public void itemStateChanged(ItemEvent e) {
+			if (e.getStateChange() == ItemEvent.SELECTED) onButtonSelect();
+		}
 	});
 	
 }

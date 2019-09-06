@@ -1,0 +1,8 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="JPaint.jar" type="JarApplication">
+    <option name="JAR_PATH" value="$PROJECT_DIR$/out/artifacts/JPaint_jar/JPaint.jar" />
+    <option name="ALTERNATIVE_JRE_PATH" />
+    <module name="JPaint" />
+    <method v="2" />
+  </configuration>
+</component>

@@ -1,8 +1,11 @@
 package com.jpaint;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 
@@ -28,7 +31,12 @@ ToolLine(ImageModel model, String iconSource) {
 	widthSlider.setMinorTickSpacing(1);
 	widthSlider.setSnapToTicks(true);
 	widthSlider.setPaintTicks(true);
-	widthSlider.addChangeListener(e -> setWidth(widthSlider.getValue()));
+    widthSlider.addChangeListener(new ChangeListener() {
+        @Override
+        public void stateChanged(ChangeEvent e) {
+            setWidth(widthSlider.getValue());
+        }
+    });
 	widthSlider.setPreferredSize(new Dimension(96, 24));
 	widthSlider.setMinimumSize(widthSlider.getPreferredSize());
 	
@@ -53,9 +61,12 @@ ToolLine(ImageModel model, String iconSource) {
 	resetStates();
 	
 	//cancel the operation if we select a different tool
-	button.addItemListener(e -> {
-		if (e.getStateChange() == ItemEvent.DESELECTED) {
-			cancelDrawing();
+    button.addItemListener(new ItemListener() {
+        @Override
+        public void itemStateChanged(ItemEvent e) {
+            if (e.getStateChange() == ItemEvent.DESELECTED) {
+                cancelDrawing();
+            }
 		}
 	});
 }

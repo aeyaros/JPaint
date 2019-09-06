@@ -5,8 +5,11 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.awt.print.PrinterException;
 import java.awt.print.PrinterJob;
@@ -50,131 +53,243 @@ ManagerMenus(ImageModel imageModel, JFrame jFrame, ManagerFiles fileManager) {
 	
 	//file menu
 	menuItems.put("new", new MenuItem("New Opaque Image", KeyEvent.VK_N, cmdCtrlModifier, fileMenu, KeyEvent.VK_N,
-	                                  e -> managerFiles.newFile(false)
-	));
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					managerFiles.newFile(false);
+				}
+			}));
 	
 	menuItems.put(
 		  "newtrans",
 		  new MenuItem("New Transparent Image", KeyEvent.VK_N, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_T,
-		               e -> managerFiles.newFile(true)
-		  )
-	             );
+				  new ActionListener() {
+					  @Override
+					  public void actionPerformed(ActionEvent e) {
+						  managerFiles.newFile(true);
+					  }
+				  }));
 	fileMenu.addSeparator();
 	
 	menuItems.put("open", new MenuItem("Open", KeyEvent.VK_O, cmdCtrlModifier, fileMenu, KeyEvent.VK_O,
-	                                   e -> managerFiles.openFile()
-	));
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					managerFiles.openFile();
+				}
+			}));
 	menuItems.put("save", new MenuItem("Save", KeyEvent.VK_S, cmdCtrlModifier, fileMenu, KeyEvent.VK_S,
-	                                   e -> managerFiles.save()
-	));
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					managerFiles.save();
+				}
+			}));
 	menuItems.put("saveas", new MenuItem("Save As", KeyEvent.VK_S, cmdCtrlShiftModifier, fileMenu, KeyEvent.VK_A,
-	                                     e -> managerFiles.saveas()
-	));
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					managerFiles.saveas();
+				}
+			}));
 	fileMenu.addSeparator();
 	
 	menuItems
 		  .put("print", new MenuItem("Print", KeyEvent.VK_P, cmdCtrlModifier, fileMenu, KeyEvent.VK_P,
-		                             e -> print()
+				  new ActionListener() {
+					  @Override
+					  public void actionPerformed(ActionEvent e) {
+						  print();
+					  }
+				  }
 		  ));
 	fileMenu.addSeparator();
 	
 	if (Main.IS_MAC)
 		menuItems.put("close", new MenuItem("Close", KeyEvent.VK_W, cmdCtrlModifier, fileMenu, KeyEvent.VK_W,
-		                                    e -> managerFiles.exit()
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						managerFiles.exit();
+					}
+				}
 		));
 	else
 		menuItems.put("exit", new MenuItem("Exit", KeyEvent.VK_E, cmdCtrlModifier, fileMenu, KeyEvent.VK_E,
-		                                   e -> managerFiles.exit()
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						managerFiles.exit();
+					}
+				}
 		));
 	
 	//edit menu
 	menuItems.put("undo", new MenuItem("Undo", KeyEvent.VK_Z, cmdCtrlModifier, editMenu, KeyEvent.VK_Z,
-	                                   e -> undo()
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					undo();
+				}
+			}
 	));
 	
 	MenuItem redoItem; //shortcut changes depending on platform
 	if (Main.IS_MAC)
-		redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z, e -> redo());
-	else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y, e -> redo());
+		redoItem = new MenuItem("Redo", KeyEvent.VK_Z, cmdCtrlShiftModifier, editMenu, KeyEvent.VK_Z,
+				new ActionListener() {
+					@Override
+					public void actionPerformed(ActionEvent e) {
+						redo();
+					}
+				});
+	else redoItem = new MenuItem("Redo", KeyEvent.VK_Y, cmdCtrlModifier, editMenu, KeyEvent.VK_Y,
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					redo();
+				}
+			});
 	menuItems.put("redo", redoItem);
 	
 	editMenu.addSeparator();
 	
 	menuItems.put("selectall", new MenuItem("Select All", KeyEvent.VK_A, cmdCtrlModifier, editMenu, KeyEvent.VK_A,
-	                                        e -> dummy()
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dummy();
+				}
+			}
 	));
 	editMenu.addSeparator();
 	
 	menuItems.put("cut", new MenuItem("Cut", KeyEvent.VK_X, cmdCtrlModifier, editMenu, KeyEvent.VK_X,
-	                                  e -> dummy()
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dummy();
+				}
+			}
 	));
 	menuItems.put("copy", new MenuItem("Copy", KeyEvent.VK_C, cmdCtrlModifier, editMenu, KeyEvent.VK_C,
-	                                   e -> dummy()
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dummy();
+				}
+			}
 	));
 	menuItems.put("paste", new MenuItem("Paste", KeyEvent.VK_V, cmdCtrlModifier, editMenu, KeyEvent.VK_V,
-	                                    e -> dummy()
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					dummy();
+				}
+			}
 	));
 	
 	//image menu
-	menuItems.put("resize", new MenuItem("Resize", imageMenu, KeyEvent.VK_R, e -> resize()));
+	menuItems.put("resize", new MenuItem("Resize", imageMenu, KeyEvent.VK_R,
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					resize();
+				}
+			}));
 	imageMenu.addSeparator();
 	
 	menuItems.put("fliph", new MenuItem("Flip Image Horizontally", imageMenu, KeyEvent.VK_H,
-	                                    e -> flip(true)
-	));
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					flip(true);
+				}
+			}));
 	menuItems.put("flipv", new MenuItem("Flip Image Vertically", imageMenu, KeyEvent.VK_V,
-	                                    e -> flip(false)
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					flip(false);
+				}
+			}
 	));
 	imageMenu.addSeparator();
 	
 	menuItems.put("rotateleft", new MenuItem("Rotate Left 90\u00B0", imageMenu, KeyEvent.VK_L,
-	                                         e -> rotate(Canvas.Transform.ROTATE_LEFT)
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					rotate(Canvas.Transform.ROTATE_LEFT);
+				}
+			}
 	));
 	menuItems.put("rotateright", new MenuItem("Rotate Right 90\u00B0", imageMenu, KeyEvent.VK_R,
-	                                          e -> rotate(Canvas.Transform.ROTATE_RIGHT)
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					rotate(Canvas.Transform.ROTATE_RIGHT);
+				}
+			}
 	));
 	menuItems.put("rotate180", new MenuItem("Rotate 180\u00B0", imageMenu, KeyEvent.VK_U,
-	                                        e -> rotate(Canvas.Transform.ROTATE_180)
-	));
-	
-	menuItems.put("about", new MenuItem("About " + WindowApplication.APPLICATION_NAME, helpMenu, KeyEvent.VK_U, e -> {
-		Image image = null;
-		try {
-			image = ImageIO.read(getClass().getResource("icons/appicon.png"));
-		} catch (IOException ex) {
-			ex.printStackTrace();
-		}
-		try {
-			if (image != null) {
-				image = image.getScaledInstance(116, 116, java.awt.Image.SCALE_SMOOTH);
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					rotate(Canvas.Transform.ROTATE_180);
+				}
 			}
-		} catch (NullPointerException ignored) { }
-		ImageIcon appIcon;
-		if (image == null) appIcon = null;
-		else appIcon = new ImageIcon(image);
-		
-		JOptionPane.showMessageDialog(mainFrame, WindowApplication.APPLICATION_NAME +
-		                                         " is a fun painting program \n" +
-		                                         "inspired by Apple's MacPaint (from \n" +
-		                                         "1984) and old versions of Microsoft \n" +
-		                                         "Paint. Created by Andrew Yaros in \n" +
-		                                         "2019, originally for the CS 338 \n" +
-		                                         "(GUIs) class at Drexel University.",
-		                              "About " + WindowApplication.APPLICATION_NAME, JOptionPane.INFORMATION_MESSAGE,
-		                              appIcon
-		                             );
-	}));
+	));
+
+	menuItems.put("about", new MenuItem("About " + WindowApplication.APPLICATION_NAME, helpMenu, KeyEvent.VK_U,
+			new ActionListener() {
+				@Override
+				public void actionPerformed(ActionEvent e) {
+					Image image = null;
+					try {
+						image = ImageIO.read(getClass().getResource("icons/appicon.png"));
+					} catch (IOException ex) {
+						ex.printStackTrace();
+					}
+					try {
+						if (image != null) {
+							image = image.getScaledInstance(116, 116, java.awt.Image.SCALE_SMOOTH);
+						}
+					} catch (NullPointerException ignored) {
+					}
+					ImageIcon appIcon;
+					if (image == null) appIcon = null;
+					else appIcon = new ImageIcon(image);
+
+					JOptionPane.showMessageDialog(mainFrame, WindowApplication.APPLICATION_NAME +
+									" is a fun painting program \n" +
+									"inspired by Apple's MacPaint (from \n" +
+									"1984) and old versions of Microsoft \n" +
+									"Paint. Created by Andrew Yaros in \n" +
+									"2019, originally for the CS 338 \n" +
+									"(GUIs) class at Drexel University.",
+							"About " + WindowApplication.APPLICATION_NAME, JOptionPane.INFORMATION_MESSAGE,
+							appIcon
+					);
+				}
+			}));
 	
 }
 
 //cross platform print dialog based on java example
 private void print() {
 	PrinterJob printJob = PrinterJob.getPrinterJob();
-	printJob.setPrintable((graphics, pageFormat, pageIndex) -> {
-		if (pageIndex != 0) { return Printable.NO_SUCH_PAGE; }
-		graphics.drawImage(theModel.getImage(), 0, 0, theModel.getWidth(), theModel.getHeight(), null);
-		return Printable.PAGE_EXISTS;
+	printJob.setPrintable(new Printable() {
+		@Override
+		public int print(Graphics graphics, PageFormat pageFormat, int pageIndex) {
+			if (pageIndex != 0) {
+				return Printable.NO_SUCH_PAGE;
+			}
+			graphics.drawImage(theModel.getImage(), 0, 0, theModel.getWidth(), theModel.getHeight(), null);
+			return Printable.PAGE_EXISTS;
+		}
 	});
+
 	PrintRequestAttributeSet attributeSet = new HashPrintRequestAttributeSet();
 	printJob.pageDialog(attributeSet);
 	boolean isOK = printJob.printDialog(attributeSet);

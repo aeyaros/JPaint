@@ -1,6 +1,8 @@
 package com.jpaint;
 
 import javax.swing.*;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -125,9 +127,12 @@ ManagerColors(
 	));
 	
 	//add action listener to slider to update opacity of current color
-	opacitySlider.addChangeListener(e -> {
-		setOpacityLabel();
-		setSelectedColorOpacity(opacitySlider.getValue());
+	opacitySlider.addChangeListener(new ChangeListener() {
+		@Override
+		public void stateChanged(ChangeEvent e) {
+			setOpacityLabel();
+			setSelectedColorOpacity(opacitySlider.getValue());
+		}
 	});
 	
 	//disabling opacity slider for now by not adding it
