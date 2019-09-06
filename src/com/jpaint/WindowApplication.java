@@ -39,7 +39,7 @@ void WindowSetup(int width, int height) {
 	//initial setup
 	mainFrame = new JFrame(APPLICATION_NAME);
 	mainFrame.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
-	
+
 	if (Main.IS_MAC) { //mac specific stuff
 		System.setProperty("apple.laf.useScreenMenuBar", "true"); //put menu at top of screen
 		

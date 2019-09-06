@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title></title>
+    <style>
+        @font-face {
+            font-family: "Java";
+            src: url("./Fonts/QuattrocentoSans-Regular.ttf");
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "Java";
+            src: url("./Fonts/QuattrocentoSans-Italic.ttf");
+            font-weight: normal;
+            font-style: italic;
+        }
+
+        @font-face {
+            font-family: "Java";
+            src: url("./Fonts/QuattrocentoSans-Bold.ttf");
+            font-weight: bold;
+            font-style: normal;
+        }
+
+        @font-face {
+            font-family: "Java";
+            src: url("./Fonts/QuattrocentoSans-BoldItalic.ttf");
+            font-weight: bold;
+            font-style: italic;
+        }
+
+        body {
+            font-size: 1em;
+            font-family: "Java";
+            font-style: normal;
+            background-color: black;
+            color: white;
+            background-image: url("Images/bg.png");
+            background-position: center top;
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+
+        #mainDiv {
+            width: 40%; /* width of title */
+            padding-bottom: 2em;
+            margin: auto;
+            /* border: 1px solid white; */
+        }
+
+        #title {
+            font-weight: bold;
+            font-size: 15vw;
+            text-shadow: 0em .1em .15em black, 0em 0em .075em black;
+            padding-top: 0.375em; /* note: works in conjunction with font size*/
+        }
+
+        #description {
+            font-weight: normal;
+            font-size: 3.75vw;
+            text-align: center;
+            text-shadow: 0em .1em .2em black, 0em 0em .15em black;
+        }
+
+        #screenshotPanel {
+            padding: 2em;
+            max-width: 80%; /* width of screenshot slideshow area */
+            margin: auto;
+        }
+
+        #screenshot {
+            width: 100%;
+            padding-bottom: 65.5% !important; /* 1029/1570 * 100 */
+            background-color: transparent;
+            background-position: center bottom;
+            background-repeat: no-repeat;
+            background-size: cover;
+            transition: background 1s ease-out;
+            box-shadow: 0em 1.5em 2em black, 0em .75em 1em black;
+        }
+
+        #imageDescription {
+            max-width: 100%;
+            font-size: 2.5vw;
+            padding: 1em;
+            text-align: center;
+            background-color: rgba(0, 0, 0, .25);
+            min-height: 1em;
+            border-bottom-left-radius: 1.5em;
+            border-bottom-right-radius: 1.5em;
+            box-shadow: 0em 0em .5em rgba(0, 0, 0, .25);
+        }
+
+        #downloadButtons {
+            width: 100%;
+            padding-top: 5em;
+            padding-bottom: 5em;
+            margin: auto;
+            text-align: center;
+        }
+
+        .linkButton {
+            color: black;
+            background-color: white;
+            font-size: 2vw;
+            font-style: bold;
+            border: .1em solid white;
+            padding: 1em;
+            border-radius: 1em;
+            margin: 1em;
+            text-decoration: none;
+            box-shadow: 0em .5em 1.5em black;
+        }
+
+        .linkButton:hover {
+            color: white;
+            background-color: black;
+        }
+
+        .linkButton:active {
+            color: black;
+            background-color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div id="mainDiv">
+    <div id="title">JPaint</div>
+    <div id="description">Where the <i>only</i> limit to what you can make is your imagination.</div>
+</div>
+
+
+<div id="screenshotPanel">
+    <div id="screenshot"></div>
+    <div id="imageDescription">JPaint has a variety of useful tools to work with.</div>
+</div>
+
+<div id="download area">
+    <div id="downloadButtons">
+        <a class="linkButton" href="./">Download .jar file</a>
+        <a class="linkButton" href="./">View Source Code</a>
+    </div>
+</div>
+
+</body>
+<script>
+    var imageFolder = "./Images/Screenshots/"
+    var imageNames = [
+        "pencil.png",
+        "brush.png",
+        "bucket.png",
+        "shapes.png",
+        "line.png",
+        "picker.png",
+        "eraser.png"
+    ];
+    var descriptions = [
+        "JPaint has many tools you can use!",
+        "Your paintbrush has an adjustable size and shape.",
+        "Fill in large areas with the paint bucket.",
+        "Draw circles, triangles, squares, and more!",
+        "Draw straight lines at any width.",
+        "The color picker: choose a color from the canvas.",
+        "Erase to solid white, or to a transparent canvas."
+    ];
+
+    function setSlide(index) {
+        document.getElementById("screenshot").style.backgroundImage = "url('" + imageFolder + "" + imageNames[index % imageNames.length] + "')";
+        document.getElementById("imageDescription").innerHTML = descriptions[index % descriptions.length];
+    }
+
+    setSlide(0); //set initial slide
+    var currentSlide = 1.0;
+    const NUMBER_OF_SLIDES = imageNames.size;
+    const SLIDE_TIME_SECONDS = 5;
+    //set slides every few seconds
+    setInterval(function () {
+        setSlide(currentSlide);
+        currentSlide++;
+        if (currentSlide <= NUMBER_OF_SLIDES) currentSlide = 0.0; //reset counter
+    }, SLIDE_TIME_SECONDS * 1000);
+</script>
+</html>
