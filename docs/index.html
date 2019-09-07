@@ -66,7 +66,7 @@
         }
 
         .contentContainer {
-            max-width: 80%; /* width of screenshot slideshow area */
+            max-width: 65%; /* width of screenshot slideshow area */
             margin: auto;
         }
 
@@ -77,7 +77,7 @@
 
         #description {
             font-weight: normal;
-            font-size: 5vw;
+            font-size: 4.5vw;
             text-align: center;
             text-shadow: 0 .1em .2em black, 0 0 .15em black;
             padding-top: .5em;
@@ -95,9 +95,13 @@
             box-shadow: 0 1.5em 2em black, 0 .75em 1em black;
         }
 
+        #text, #imageDescription {
+            font-size: 1.5vw;
+            line-height: 2.5vw;
+        }
+
         #imageDescription {
             max-width: 100%;
-            font-size: 2.5vw;
             padding: 1em;
             text-align: center;
             background-color: rgba(0, 0, 0, .625);
@@ -110,8 +114,6 @@
         #text {
             width: 92%;
             padding: 4%;
-            font-size: 2.5vw;
-            line-height: 3.5vw;
             text-shadow: 0 0 .3em black, 0 0 .5em black;
             text-indent: 2em;
             background: rgba(0, 0, 0, .625);
@@ -127,16 +129,17 @@
         }
 
         .linkButton {
+            margin: 1em;
+            display: inline-block;
             color: black;
             background-color: white;
-            font-size: 2vw;
+            font-size: 1em;
             font-weight: bold;
             border: .1em solid white;
             padding: 1em;
             border-radius: 1em;
-            margin: .5em;
             text-decoration: none;
-            box-shadow: 0 .5em 1.5em black;
+            box-shadow: 0 .5em 1.25em black;
         }
 
         .linkButton:hover {
@@ -152,11 +155,51 @@
         #footer {
             text-align: center;
             background: rgba(0, 0, 0, .625);
-            padding: 6px;
+            padding: 12px;
             margin-bottom: 0;
             font-size: 12px;
         }
 
+        @media only screen and (max-width: 900px) {
+            .contentContainer {
+                max-width: 80%; /* width of screenshot slideshow area */
+                margin: auto;
+            }
+
+            .linkButton {
+                margin: 1em;
+                font-size: 1.5em;
+            }
+
+            #text, #imageDescription {
+                font-size: 2.5vw;
+                line-height: 3.5vw;
+            }
+        }
+
+        @media only screen and (max-width: 767px) {
+            .contentContainer {
+                max-width: 80%; /* width of screenshot slideshow area */
+                margin: auto;
+            }
+
+            #text, #imageDescription {
+                font-size: 4.5vw;
+                line-height: 5.5vw;
+            }
+        }
+
+        @media only screen and (max-width: 512px) {
+            .contentContainer {
+                max-width: 90%; /* width of screenshot slideshow area */
+                margin: auto;
+            }
+
+            #text, #imageDescription {
+                font-size: 6.5vw;
+                line-height: 7.5vw;
+            }
+        }
     </style>
 </head>
 <body>
@@ -183,8 +226,8 @@
 </div>
 
 <div id="downloadButtons">
-    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar file (&#x3B2;)</a>
-    <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">View Source Code</a>
+    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar&nbsp;file&nbsp;(&#x3B2;)</a>
+    <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">View Source&nbsp;Code</a>
 </div>
 
 <div id="footer">
