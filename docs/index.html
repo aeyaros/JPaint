@@ -69,13 +69,16 @@
             margin: auto;
         }
 
+        .contentItem {
+            margin-top: 2em;
+            margin-bottom: 2em;
+        }
+
         #description {
             font-weight: normal;
             font-size: 2.75vw;
             text-align: center;
             text-shadow: 0 .1em .2em black, 0 0 .15em black;
-            padding-top: 0;
-            padding-bottom: 2.5em;
         }
 
         #screenshot {
@@ -109,7 +112,6 @@
             text-shadow: 0 0 .3em black, 0 0 .5em black;
             text-indent: 2em;
             background: rgba(0, 0, 0, .625);
-            margin-top: 1em;
             border-radius: 1.5em;
         }
 
@@ -129,7 +131,7 @@
             border: .1em solid white;
             padding: 1em;
             border-radius: 1em;
-            margin: 1em;
+            margin: .5em;
             text-decoration: none;
             box-shadow: 0 .5em 1.5em black;
         }
@@ -155,15 +157,18 @@
 </div>
 
 <div class="contentContainer">
-    <div id="description">Where the <i>only</i> limit to what you can make is your imagination.</div>
-    <div id="screenshot"></div>
-    <div id="imageDescription">JPaint has a variety of useful tools to work with.</div>
-    <div id="text">
+    <div class="contentItem" id="description">Where the <i>only</i> limit to what you can make is your imagination.
+    </div>
+    <div class="contentItem">
+        <div id="screenshot"></div>
+        <div id="imageDescription">JPaint has a variety of useful tools to work with.</div>
+    </div>
+    <div class="contentItem" id="text">
         <p>JPaint is a paint program that you can use to create anything your imagination desires! It comes with a
             variety of tools, such as a pencil, a paintbrush, a shape tool, and more!</p>
         <p>JPaint can be run on a Mac or PC with Java 7 or later installed. It opens and saves PNG files (with an alpha
             channel). It was written using Java's Swing GUI widget toolkit. You can download the program as an
-            executable .jar file, or see the source code on GitHub.</p>
+            executable .jar file, or view the source code on GitHub.</p>
     </div>
 </div>
 <div id="downloadButtons">
