@@ -4,4 +4,4 @@ This is a simple paint program similar to MacPaint and MSPaint. It is written in
 
 ---
 
-**Note: JPaint is currently in beta and is not feature complete. There are still some things I need to add before I consider this finished.**
+**Note: JPaint is currently in beta. It is stable (as far as I can tell) but there are some features I have not yet implemented. There are still some things I need to add before I consider this finished.**
