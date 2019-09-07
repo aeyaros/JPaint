@@ -106,7 +106,7 @@
             color: black;
             background-color: white;
             font-size: 2vw;
-            font-style: bold;
+            font-weight: bold;
             border: .1em solid white;
             padding: 1em;
             border-radius: 1em;
@@ -141,8 +141,8 @@
 
 <div id="download area">
     <div id="downloadButtons">
-        <a class="linkButton" href="./">Download .jar file</a>
-        <a class="linkButton" href="./">View Source Code</a>
+        <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">Download .jar file</a>
+        <a class="linkButton" href="../JPaint.jar" target="_blank">View Source Code</a>
     </div>
 </div>
 
@@ -175,8 +175,8 @@
 
     setSlide(0); //set initial slide
     var currentSlide = 1.0;
-    const NUMBER_OF_SLIDES = imageNames.size;
-    const SLIDE_TIME_SECONDS = 5;
+    var NUMBER_OF_SLIDES = imageNames.size;
+    var SLIDE_TIME_SECONDS = 5;
     //set slides every few seconds
     setInterval(function () {
         setSlide(currentSlide);
