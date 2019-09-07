@@ -1,8 +1,10 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>JPaint | By Andrew Yaros</title>
+    <meta name="description"
+          content="Paint application written using the Java Swing framework. Created by Andrew Yaros">
     <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" charset="UTF-8"/>
     <link rel="icon" type="image/png" sizes="32x32" href="./favicon.png">
     <link rel="apple-touch-icon" sizes="167x167" href="./Images/Icons/apple-touch-icon.png?">
@@ -37,7 +39,7 @@
 
         body {
             font-size: 1em;
-            font-family: "Java";
+            font-family: "Java", Helvetica, "Trebuchet MS", sans-serif;
             font-style: normal;
             background-color: black;
             color: white;
@@ -57,15 +59,15 @@
         #title {
             font-weight: bold;
             font-size: 15vw;
-            text-shadow: 0em .1em .15em black, 0em 0em .075em black;
-            padding-top: 0.375em; /* note: works in conjunction with font size*/
+            text-shadow: 0 .1em .15em black, 0 0 .075em black;
+            padding-top: 1.375em; /* note: works in conjunction with font size*/
         }
 
         #description {
             font-weight: normal;
             font-size: 3.75vw;
             text-align: center;
-            text-shadow: 0em .1em .2em black, 0em 0em .15em black;
+            text-shadow: 0 .1em .2em black, 0 0 .15em black;
         }
 
         #screenshotPanel {
@@ -82,7 +84,7 @@
             background-repeat: no-repeat;
             background-size: cover;
             transition: background 1s ease-out;
-            box-shadow: 0em 1.5em 2em black, 0em .75em 1em black;
+            box-shadow: 0 1.5em 2em black, 0 .75em 1em black;
         }
 
         #imageDescription {
@@ -94,7 +96,7 @@
             min-height: 1em;
             border-bottom-left-radius: 1.5em;
             border-bottom-right-radius: 1.5em;
-            box-shadow: 0em 0em .5em rgba(0, 0, 0, .85);
+            box-shadow: 0 0 .5em rgba(0, 0, 0, .85);
         }
 
         #downloadButtons {
@@ -115,7 +117,7 @@
             border-radius: 1em;
             margin: 1em;
             text-decoration: none;
-            box-shadow: 0em .5em 1.5em black;
+            box-shadow: 0 .5em 1.5em black;
         }
 
         .linkButton:hover {
@@ -151,15 +153,11 @@
 
 </body>
 <script>
-    var imageFolder = "./Images/Screenshots/"
-    var imageNames = [
-        "pencil.png",
-        "brush.png",
-        "bucket.png",
-        "shapes.png",
-        "line.png",
-        "picker.png",
-        "eraser.png"
+    //image directory
+    var imageFolder = "./Images/Screenshots/";
+    //image file names
+    var imageNames = ["pencil.png", "brush.png", "bucket.png",
+        "shapes.png", "line.png", "picker.png", "eraser.png"
     ];
 
     //preload images
@@ -180,7 +178,8 @@
     ];
 
     function setSlide(index) {
-        document.getElementById("screenshot").style.backgroundImage = "url('" + imageFolder + "" + imageNames[index % imageNames.length] + "')";
+        document.getElementById("screenshot").style.backgroundImage = "url('"
+            + imageFolder + "" + imageNames[index % imageNames.length] + "')";
         document.getElementById("imageDescription").innerHTML = descriptions[index % descriptions.length];
     }
 
