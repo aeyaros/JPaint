@@ -43,37 +43,39 @@
             font-style: normal;
             background-color: black;
             color: white;
-            background-image: url("Images/bg_web.png");
+            background-image: url("Images/bg_web_flip_x2.png");
             background-position: center top;
             background-repeat: no-repeat;
             background-size: cover;
         }
 
-        #mainDiv {
+        #titleContainer {
             width: 40%; /* width of title */
-            padding-bottom: 2em;
             margin: auto;
             /* border: 1px solid white; */
         }
 
         #title {
             font-weight: bold;
-            font-size: 15vw;
+            text-align: center;
+            font-size: 14vw;
             text-shadow: 0 .1em .15em black, 0 0 .075em black;
-            padding-top: 1.375em; /* note: works in conjunction with font size*/
+            padding-top: .25em; /* note: works in conjunction with font size*/
+            padding-bottom: .15em;
+        }
+
+        .contentContainer {
+            max-width: 80%; /* width of screenshot slideshow area */
+            margin: auto;
         }
 
         #description {
             font-weight: normal;
-            font-size: 3.75vw;
+            font-size: 2.75vw;
             text-align: center;
             text-shadow: 0 .1em .2em black, 0 0 .15em black;
-        }
-
-        #screenshotPanel {
-            padding: 2em;
-            max-width: 80%; /* width of screenshot slideshow area */
-            margin: auto;
+            padding-top: 0;
+            padding-bottom: 2.5em;
         }
 
         #screenshot {
@@ -92,16 +94,28 @@
             font-size: 2.5vw;
             padding: 1em;
             text-align: center;
-            background-color: rgba(0, 0, 0, .85);
+            background-color: rgba(0, 0, 0, .625);
             min-height: 1em;
             border-bottom-left-radius: 1.5em;
             border-bottom-right-radius: 1.5em;
             box-shadow: 0 0 .5em rgba(0, 0, 0, .85);
         }
 
+        #text {
+            width: 92%;
+            padding: 4%;
+            font-size: 2.5vw;
+            line-height: 3.5vw;
+            text-shadow: 0 0 .3em black, 0 0 .5em black;
+            text-indent: 2em;
+            background: rgba(0, 0, 0, .625);
+            margin-top: 1em;
+            border-radius: 1.5em;
+        }
+
         #downloadButtons {
             width: 100%;
-            padding-top: 5em;
+            padding-top: 2em;
             padding-bottom: 5em;
             margin: auto;
             text-align: center;
@@ -129,27 +143,34 @@
             color: black;
             background-color: white;
         }
+
+
     </style>
 </head>
 <body>
 
-<div id="mainDiv">
+<div id="titleContainer">
     <div id="title">JPaint</div>
-    <div id="description">Where the <i>only</i> limit to what you can make is your imagination.</div>
+
 </div>
 
-
-<div id="screenshotPanel">
+<div class="contentContainer">
+    <div id="description">Where the <i>only</i> limit to what you can make is your imagination.</div>
     <div id="screenshot"></div>
     <div id="imageDescription">JPaint has a variety of useful tools to work with.</div>
-</div>
-
-<div id="download area">
-    <div id="downloadButtons">
-        <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar file</a>
-        <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">View Source Code</a>
+    <div id="text">
+        <p>JPaint is a paint program that you can use to create anything your imagination desires! It comes with a
+            variety of tools, such as a pencil, a paintbrush, a shape tool, and more!</p>
+        <p>JPaint can be run on a Mac or PC with Java 7 or later installed. It opens and saves PNG files (with an alpha
+            channel). It was written using Java's Swing GUI widget toolkit. You can download the program as an
+            executable .jar file, or see the source code on GitHub.</p>
     </div>
 </div>
+<div id="downloadButtons">
+    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar file</a>
+    <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">View Source Code</a>
+</div>
+
 
 </body>
 <script>
