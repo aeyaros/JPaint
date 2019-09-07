@@ -47,6 +47,8 @@
             background-position: center top;
             background-repeat: no-repeat;
             background-size: cover;
+            padding: 0 !important;
+            margin: 0 !important;
         }
 
         #titleContainer {
@@ -78,8 +80,8 @@
             font-size: 5vw;
             text-align: center;
             text-shadow: 0 .1em .2em black, 0 0 .15em black;
-            padding-top: 1em;
-            padding-bottom: 0;
+            padding-top: .5em;
+            padding-bottom: .25em;
         }
 
         #screenshot {
@@ -147,6 +149,13 @@
             background-color: white;
         }
 
+        #footer {
+            text-align: center;
+            background: rgba(0, 0, 0, .625);
+            padding: 6px;
+            margin-bottom: 0;
+            font-size: 12px;
+        }
 
     </style>
 </head>
@@ -154,11 +163,10 @@
 
 <div id="titleContainer">
     <div id="title">JPaint</div>
-
 </div>
 
 <div class="contentContainer">
-    <div id="description">Where the <i>only</i> limit to what you can make is your imagination.
+    <div id="description">Where the <i>only</i> limit to what you can create is your imagination.
     </div>
     <div class="contentItem">
         <div id="screenshot"></div>
@@ -167,19 +175,28 @@
     <div class="contentItem" id="text">
         <p>JPaint is a paint program that you can use to create anything your imagination desires! It comes with a
             variety of tools, such as a pencil, a paintbrush, a shape tool, and more!</p>
-        <p>JPaint can be run on a Mac or PC with Java 7 or later installed. It opens and saves PNG files (with an alpha
-            channel). It was written using Java's Swing GUI widget toolkit. You can download the program as an
+        <p>JPaint can be run on a Mac or PC with Java 7 or later installed. You can download the program as an
             executable .jar file, or view the source code on GitHub.</p>
+        <p>JPaint was written using Java's Swing GUI widget toolkit and uses a model-view-controller architecture. It
+            opens and saves PNG files (with an alpha channel).</p>
     </div>
 </div>
+
 <div id="downloadButtons">
-    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar file</a>
+    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download .jar file (&#x3B2;)</a>
     <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">View Source Code</a>
 </div>
 
+<div id="footer">
+    &copy;&nbsp;2013-<span id="currentDate">2019</span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros.
+    ALL&nbsp;RIGHTS&nbsp;RESERVED
+</div>
 
 </body>
 <script>
+    //update the copyright date
+    document.getElementById("currentDate").innerHTML = (new Date).getFullYear();
+
     //image directory
     var imageFolder = "./Images/Screenshots/";
     //image file names
