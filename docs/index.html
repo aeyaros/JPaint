@@ -107,7 +107,8 @@
             max-width: 100%;
             padding: 1em;
             text-align: center;
-
+            font-style: italic;
+            color: lightgray;
             min-height: 1em;
             border-bottom-left-radius: 1.5em;
             border-bottom-right-radius: 1.5em;
@@ -139,7 +140,7 @@
             padding: 1em;
             border-radius: 1em;
             text-decoration: none;
-            box-shadow: 0 .5em 1.25em black, inset 0 -.75em 1.5em gray;
+            box-shadow: 0 .5em 1.25em black; /*, inset 0 -.75em 1.5em gray;*/
             text-align: center;
         }
 
@@ -282,13 +283,13 @@
     }
 
     var descriptions = [
-        "JPaint has several useful tools for drawing.",
-        "Your paintbrush has an adjustable size and shape.",
-        "Fill in large areas with the paint bucket.",
-        "Create circles, triangles, squares, and more!",
+        "Choose from a variety of drawing tools...",
+        "Brush tool with adjustable size and shape.",
+        "Paint bucket: to fill in large areas.",
+        "Draw circles, triangles, squares, and more!",
         "Draw straight lines at any width.",
-        "The color picker: choose a color from the canvas.",
-        "Erase to solid white or to a transparent canvas."
+        "Pick colors directly from the canvas.",
+        "Erase to white, or to a transparent canvas."
     ];
 
     function setSlide(index) {
