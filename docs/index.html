@@ -100,6 +100,7 @@
         #imageDescription, #text {
             box-shadow: 0 0 .5em rgba(0, 0, 0, .85);
             background-color: rgba(0, 0, 0, .625);
+            text-shadow: .05em .1em 0 black;
         }
 
         #imageDescription {
@@ -115,7 +116,6 @@
         #text {
             width: 90%;
             padding: 5%;
-            text-shadow: 0 0 .3em black, 0 0 .5em black;
             text-indent: 2em;
             border-radius: 1.5em;
         }
@@ -135,17 +135,19 @@
             background-color: white;
             font-size: 2vw;
             font-weight: bold;
-            border: .1em solid white;
+            border: 1px solid black;
             padding: 1em;
             border-radius: 1em;
             text-decoration: none;
-            box-shadow: 0 .5em 1.25em black;
+            box-shadow: 0 .5em 1.25em black, inset 0 -.75em 1.5em gray;
             text-align: center;
         }
 
         .linkButton:hover {
             color: white;
             background-color: black;
+            box-shadow: 0 .5em 1.25em black;
+            border: 1px solid white;
         }
 
         .linkButton:active {
@@ -158,6 +160,15 @@
             padding: 12px;
             margin-bottom: 0;
             font-size: 12px;
+            line-height: 20px;
+        }
+
+        #footer a, #footer a:active {
+            color: white;
+        }
+
+        #footer a:hover {
+            color: orange;
         }
 
         @media only screen and (max-width: 900px) {
@@ -242,13 +253,13 @@
 </div>
 
 <div id="downloadButtons">
-    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download&nbsp;&#x3B2; (.jar&nbsp;file&nbsp;)</a>
-    <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">Source @ GitHub</a>
+    <a class="linkButton" href="./Files/JPaint.jar" target="_blank">Download&nbsp;&#x3B2; (.jar&nbsp;file)</a>
+    <a class="linkButton" href="https://github.com/aeyaros/JPaint" target="_blank">Source @&nbsp;GitHub</a>
 </div>
 
 <div id="footer">
-    &copy;&nbsp;2013-<span id="currentDate">2019</span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros.
-    ALL&nbsp;RIGHTS&nbsp;RESERVED
+    <a href="https://yaros.ae">&copy;&nbsp;2013-<span id="currentDate">2019</span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros.
+        ALL&nbsp;RIGHTS&nbsp;RESERVED</a>
 </div>
 
 </body>
