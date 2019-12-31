@@ -273,16 +273,16 @@
 </div>
 
 <div id="footer">
-    <!-- DO NOT DELETE THIS COMMENTED OUT COPYRIGHT TAG; IT SHOULD BE USED STARTING 2020.-->
-    <!--<a href="https://yaros.ae">&copy;&nbsp;2020-<span id="currentDate">2019</span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros. ALL&nbsp;RIGHTS&nbsp;RESERVED</a>-->
-
-    <!-- THE TAG BELOW IS TEMPORARY AND ONLY HAS ONE YEAR ("2019")
-     ONCE 2020 STARTS, REMOVE THIS TAG AND UNCOMMENT THE ONE ABOVE-->
-    <a href="https://yaros.ae">&copy;<span id="currentDate">2019</span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros. ALL&nbsp;RIGHTS&nbsp;RESERVED</a>
+    <a href="https://yaros.ae">&copy;<span id="initialYear">2019-</span><span id="currentDate"></span>&nbsp;Andrew&nbsp;Ethan&nbsp;Yaros. ALL&nbsp;RIGHTS&nbsp;RESERVED</a>
 </div>
 
 </body>
 <script>
+    //if after 2019 then show initial year before the current year
+    var initialYear = 2019;
+    if ((new Date).getFullYear() > initialYear) document.getElementById("initialYear").innerHTML = String(initialYear) + "-";
+    else document.getElementById("initialYear").innerHTML = "";
+    
     //update the copyright date
     document.getElementById("currentDate").innerHTML = (new Date).getFullYear();
 
