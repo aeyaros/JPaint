@@ -1,0 +1,4 @@
+User-agent: *
+Disallow: /files/
+Disallow: /fonts/
+Disallow: /images/
